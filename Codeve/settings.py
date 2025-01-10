@@ -101,15 +101,22 @@ WSGI_APPLICATION = 'Codeve.wsgi.application'
 
 DATABASES = {
     'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    },
+
+    'production': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DB_NAME'),
-        'USER': os.getenv('DB_USER'),
-        'PASSWORD': os.getenv('DB_PASSWORD'),
-        'HOST': os.getenv('DB_HOST'),
-        'PORT': os.getenv('DB_PORT'),
+        'NAME': 'codeve_db',
+        'USER': 'codeve_user',
+        'PASSWORD': 'your_password_here',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
+# DEBUG가 True일 때는 SQLite를 사용하고, False일 때는 PostgreSQL을 사용하도록 설정
+DATABASES["default"] = DATABASES["default" if DEBUG else "production"]
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
