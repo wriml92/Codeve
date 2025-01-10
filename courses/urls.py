@@ -1,0 +1,16 @@
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from . import views
+
+app_name = 'courses'
+
+router = DefaultRouter()
+router.register(r'courses', views.CourseViewSet)
+router.register(r'lessons', views.LessonViewSet)
+router.register(r'quizzes', views.QuizViewSet)
+router.register(r'exercises', views.PracticeExerciseViewSet)
+router.register(r'user-courses', views.UserCourseViewSet, basename='user-course')
+
+urlpatterns = [
+    path('', include(router.urls)),
+] 
