@@ -14,11 +14,11 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 
-load_dotenv(dotenv_path=os.path.join(BASE_DIR, '.env'))
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# .env 파일 로드
+load_dotenv(dotenv_path=os.path.join(BASE_DIR, '.env'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -163,6 +163,12 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+
+# 이메일 발신자 표시명
+DEFAULT_FROM_EMAIL = 'Codeve <wriml92@knou.ac.kr>'
+
+# 비밀번호 재설정 링크 만료 시간 (초 단위, 기본값: 3일)
+PASSWORD_RESET_TIMEOUT = 259200  # 3일
 
 # 미디어 파일 설정
 MEDIA_URL = '/media/'
