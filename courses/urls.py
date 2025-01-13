@@ -13,4 +13,5 @@ router.register(r'user-courses', views.UserCourseViewSet, basename='user-course'
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('theory-lesson/', views.theory_lesson_view, name='theory-lesson'),
 ] 

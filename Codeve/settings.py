@@ -50,7 +50,7 @@ INSTALLED_APPS = [
     'courses',
     'roadmaps',
     'communities',
-    'ai_services',
+    'chatbots',
     'performances',
     'django.contrib.sites',
     'allauth',

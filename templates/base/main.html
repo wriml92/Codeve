@@ -7,7 +7,7 @@
     <title>Codeve - 코딩 교육 플랫폼</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-amber-50">
+<body class="bg-yellow-100">
     <!-- Navigation -->
     <nav class="p-4 flex items-center justify-between">
         <div class="flex items-center space-x-4">
@@ -15,7 +15,7 @@
                 <span class="font-bold text-gray-800">Codeve</span>
             </a>
             <div class="space-x-4">
-                <a href="#" class="text-gray-700 hover:text-gray-900">Python</a>
+                <a href="{% url 'courses:theory-lesson' %}" class="text-gray-700 hover:text-gray-900">Python</a>
                 <a href="#" class="text-gray-700 hover:text-gray-900">CS</a>
                 <a href="#" class="text-gray-700 hover:text-gray-900">커뮤니티</a>
             </div>
