@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-# PythonTutor
-
-update
-=======
 ### 프로젝트 구조
 ```
 Codeve/
@@ -234,4 +229,3 @@ Codeve/
 | **데이터베이스** | PostgreSQL |
 | **AI 및 분석 도구** | OpenAI GPT API, LangChain, FAISS |
 | **협업 도구** | Google Docs, GitHub, Notion, Slack |
->>>>>>> 86e4db7 (Initial commit from origin/hyuk to develop)
