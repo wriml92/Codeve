@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Codeve - 게시글 목록</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-yellow-100 min-h-screen">
+    {% load static %}
+    
+    <nav class="flex justify-between items-center p-4 bg-yellow-100 border-b border-yellow-200">
+        <div class="flex items-center space-x-8">
+            <a href="{% url 'home' %}" class="font-bold text-lg px-4 py-2 bg-yellow-300 rounded-xl hover:bg-yellow-400">
+                Codeve
+            </a>
+            <div class="flex space-x-6">
+                <a href="#" class="hover:text-gray-600">홈</a>
+                <a href="#" class="hover:text-gray-600">CS</a>
+                <a href="#" class="hover:text-gray-600">Python</a>
+            </div>
+        </div>
+        <div class="flex items-center space-x-4">
+            <span class="text-gray-700">로그아웃</span>
+            <div class="w-10 h-10 bg-green-200 rounded-full"></div>
+        </div>
+    </nav>
+
+    <div class="flex items-start p-4">
+        <a href="#" class="px-4 py-2 bg-yellow-200 rounded-lg hover:bg-yellow-300">뒤로 가기</a>
+    </div>
+
+    <main class="container mx-auto px-4 py-8">
+        <div class="max-w-3xl mx-auto space-y-4">
+            {% for i in "123" %}
+            <a href="#" class="block group">
+                <div class="flex items-center justify-between bg-white rounded-2xl p-6 hover:shadow-md transition-shadow">
+                    <h2 class="text-xl">게시글 {{ i }}</h2>
+                    <svg 
+                        class="w-6 h-6 text-gray-400 group-hover:text-gray-600 transition-colors"
+                        xmlns="http://www.w3.org/2000/svg" 
+                        fill="none" 
+                        viewBox="0 0 24 24" 
+                        stroke="currentColor"
+                    >
+                        <path 
+                            stroke-linecap="round" 
+                            stroke-linejoin="round" 
+                            stroke-width="2" 
+                            d="M9 5l7 7-7 7"
+                        />
+                    </svg>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+
+        <div class="absolute right-8 top-20">
+            <div class="w-16 h-16 bg-blue-200 rounded-full flex items-center justify-center">
+                뱃지
+            </div>
+        </div>
+    </main>
+</body>
+</html>
+

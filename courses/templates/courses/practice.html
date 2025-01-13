@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Codeve - 실습</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-yellow-100 min-h-screen">
+    {% load static %}
+    
+    <nav class="flex justify-between items-center p-4 bg-yellow-100 border-b border-yellow-200">
+        <div class="flex items-center space-x-8">
+            <a href="{% url 'main' %}" class="font-bold text-lg px-4 py-2 bg-yellow-300 rounded-xl hover:bg-yellow-400">
+                Codeve
+            </a>
+            <div class="flex space-x-6">
+                <a href="{% url 'main' %}" class="hover:text-gray-600">홈</a>
+                <a href="#" class="hover:text-gray-600">CS</a>
+                <a href="#" class="hover:text-gray-600">Python</a>
+            </div>
+        </div>
+        <div class="flex items-center space-x-4">
+            <span class="text-gray-700">로그아웃</span>
+            <div class="w-10 h-10 bg-green-200 rounded-full"></div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 py-8">
+        <!-- Tab Navigation -->
+        <div class="flex justify-center space-x-4 mb-8">
+            <a href="{% url 'courses:theory-lesson' %}" class="px-6 py-2 bg-yellow-200 rounded-lg hover:bg-yellow-300">이론</a>
+            <a href="{% url 'courses:practice' %}" class="px-6 py-2 bg-yellow-300 rounded-lg font-medium">실습</a>
+            <a href="{% url 'courses:assignment' %}" class="px-6 py-2 bg-yellow-200 rounded-lg hover:bg-yellow-300">과제</a>
+            <a href="#" class="px-6 py-2 bg-yellow-200 rounded-lg hover:bg-yellow-300">회고</a>
+        </div>
+
+        <div class="max-w-3xl mx-auto bg-white rounded-2xl p-8 shadow-sm">
+            <!-- Practice Title -->
+            <h1 class="text-xl font-bold text-red-500 mb-4">[실습 LLM 내용 꺼내오기]</h1>
+            <p class="mb-8 text-gray-800">이제 앞서 설명해준 내용을 바탕으로 VSCODE에서 실습을 진행해보겠습니다.</p>
+
+            <!-- VSCode Setup -->
+            <section class="mb-8">
+                <h2 class="text-lg font-bold mb-4">1. VSCODE 실행하기</h2>
+                <p class="text-gray-800">VSCODE를 실행해 Codeve 폴더를 열고 새 파일을 만드세요. 파일 이름은 variable_practice.py로 저장합니다.</p>
+            </section>
+
+            <!-- File Creation -->
+            <section class="mb-8">
+                <h2 class="text-lg font-bold mb-4">2. 파일 작성</h2>
+                <div class="bg-gray-100 p-4 rounded-lg">
+                    <p class="text-gray-600">_________________ 를 만들어 보세요.</p>
+                </div>
+            </section>
+
+            <!-- Execution Steps -->
+            <section class="mb-8">
+                <h2 class="text-lg font-bold mb-4">실행 단계</h2>
+                <ol class="list-decimal list-inside space-y-2 text-gray-800">
+                    <li>코드를 작성한 뒤 Ctrl+S(Windows) 또는 Cmd+S(Mac)로 파일을 저장합니다.</li>
+                    <li>터미널 열기
+                        <ul class="ml-6 mt-1">
+                            <li>• VSCODE 하단에서 Terminal 메뉴를 열고, 터미널에 아래 명령어를 입력하여 코드를 실행합니다.</li>
+                        </ul>
+                    </li>
+                </ol>
+            </section>
+
+            <!-- Code Preview -->
+            <div class="bg-gray-900 rounded-lg p-4 mb-8">
+                <pre class="text-white font-mono text-sm">python variable_practice.py</pre>
+            </div>
+
+            <!-- Result Section -->
+            <section class="mb-8">
+                <h2 class="text-lg font-bold mb-4">3. 결과 확인</h2>
+                <button class="px-6 py-2 bg-yellow-300 rounded-lg hover:bg-yellow-400">
+                    이미지 제출하기
+                </button>
+                <span class="ml-2 text-red-500">(이거 꼭 필요없는 초반부분에는 안넣을것도 생각중)</span>
+            </section>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="flex justify-between items-center max-w-3xl mx-auto mt-8">
+            <a href="{% url 'courses:theory-lesson' %}" class="px-6 py-2 bg-yellow-300 rounded-lg hover:bg-yellow-400">이전</a>
+            <a href="{% url 'courses:assignment' %}" class="px-6 py-2 bg-yellow-300 rounded-lg hover:bg-yellow-400">다음</a>
+            <button class="w-12 h-12 bg-blue-200 rounded-full flex items-center justify-center">
+                챗봇
+            </button>
+        </div>
+    </main>
+</body>
+</html>
+

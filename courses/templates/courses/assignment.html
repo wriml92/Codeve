@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Codeve - 과제</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-yellow-100 min-h-screen">
+    {% load static %}
+    
+    <nav class="flex justify-between items-center p-4 bg-yellow-100 border-b border-yellow-200">
+        <div class="flex items-center space-x-8">
+            <a href="{% url 'main' %}" class="font-bold text-lg px-4 py-2 bg-yellow-300 rounded-xl hover:bg-yellow-400">
+                Codeve
+            </a>
+            <div class="flex space-x-6">
+                <a href="{% url 'main' %}" class="hover:text-gray-600">홈</a>
+                <a href="#" class="hover:text-gray-600">CS</a>
+                <a href="#" class="hover:text-gray-600">Python</a>
+            </div>
+        </div>
+        <div class="flex items-center space-x-4">
+            <span class="text-gray-700">로그아웃</span>
+            <div class="w-10 h-10 bg-green-200 rounded-full"></div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 py-8">
+        <!-- Tab Navigation -->
+        <div class="flex justify-center space-x-4 mb-8">
+            <a href="{% url 'courses:theory-lesson' %}" class="px-6 py-2 bg-yellow-200 rounded-lg hover:bg-yellow-300">이론</a>
+            <a href="{% url 'courses:practice' %}" class="px-6 py-2 bg-yellow-200 rounded-lg hover:bg-yellow-300">실습</a>
+            <a href="{% url 'courses:assignment' %}" class="px-6 py-2 bg-yellow-300 rounded-lg font-medium">과제</a>
+            <a href="{% url 'courses:reflection' %}" class="px-6 py-2 bg-yellow-200 rounded-lg hover:bg-yellow-300">회고</a>
+        </div>
+
+        <div class="max-w-3xl mx-auto bg-white rounded-2xl p-8 shadow-sm">
+            <!-- Assignment Title -->
+            <h1 class="text-xl font-bold mb-6">
+                <span class="text-red-500">[과제 LLM 내용 꺼내오기]</span>
+                <span class="text-gray-600">[분석 에이전트 연결됨]</span>
+            </h1>
+            <p class="mb-8 text-gray-800">이제 퀴즈를 진행해보겠습니다. 아래 퀴즈에 대한 답안을 제출하세요.</p>
+
+            <!-- Quiz 1 -->
+            <section class="mb-8">
+                <h2 class="text-lg font-bold mb-4">퀴즈1: 변수의 역할</h2>
+                <p class="mb-4">변수를 저금통에 비유할 때, 아래 설명에서 빈칸을 채워보세요.</p>
+                <ol class="list-decimal list-inside space-y-2 mb-4">
+                    <li>변수 이름은 저금통에 붙은 <span class="text-red-500">텍스트 입력</span> 와 같습니다.</li>
+                    <li>변수에 저장된 데이터는 저금통 안에 들어있는 <span class="text-red-500">텍스트 입력</span>와 같습니다.</li>
+                </ol>
+                <button class="px-6 py-2 bg-yellow-300 rounded-lg hover:bg-yellow-400">제출</button>
+            </section>
+
+            <!-- Quiz 2 -->
+            <section class="mb-8">
+                <h2 class="text-lg font-bold mb-4">퀴즈 2: 코드 이해하기</h2>
+                <p class="mb-4">다음 코드를 실행했을 때, 출력 결과를 적어보세요.</p>
+                <div class="bg-gray-900 rounded-lg p-4 mb-4">
+                    <pre class="text-white font-mono text-sm">진짜 가능있는 코드셀</pre>
+                </div>
+                <p class="mb-4">답변:</p>
+                <div class="bg-gray-900 rounded-lg p-4 mb-4">
+                    <pre class="text-white font-mono text-sm">진짜 가능있는 코드셀</pre>
+                </div>
+                <button class="px-6 py-2 bg-yellow-300 rounded-lg hover:bg-yellow-400">제출</button>
+            </section>
+
+            <!-- Quiz 3 -->
+            <section class="mb-8">
+                <h2 class="text-lg font-bold mb-4">퀴즈 3: 변수의 값 업데이트</h2>
+                <p class="mb-4">아래 코드를 완성하여 변수 savings에 200원을 추가한 뒤, 최종 값을 출력하도록 작성하세요. (savings 앞의 주석은 뭐죠.)</p>
+                <div class="bg-gray-900 rounded-lg p-4 mb-4">
+                    <pre class="text-white font-mono text-sm">진짜 가능있는 코드셀</pre>
+                </div>
+                <button class="px-6 py-2 bg-yellow-300 rounded-lg hover:bg-yellow-400">제출</button>
+            </section>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="flex justify-between items-center max-w-3xl mx-auto mt-8">
+            <a href="{% url 'courses:practice' %}" class="px-6 py-2 bg-yellow-300 rounded-lg hover:bg-yellow-400">이전</a>
+            <a href="{% url 'courses:reflection' %}" class="px-6 py-2 bg-yellow-300 rounded-lg hover:bg-yellow-400">다음</a>
+            <button class="w-12 h-12 bg-blue-200 rounded-full flex items-center justify-center">
+                챗봇
+            </button>
+        </div>
+    </main>
+</body>
+</html>
+

@@ -94,3 +94,15 @@ class UserCourseViewSet(viewsets.ModelViewSet):
         
         return Response({'error': '진행률이 제공되지 않았습니다.'}, 
             status=status.HTTP_400_BAD_REQUEST)
+
+def theory_lesson_view(request):
+    return render(request, 'courses/theory-lesson.html')
+
+def practice_view(request):
+    return render(request, 'courses/practice.html')
+
+def assignment_view(request):
+    return render(request, 'courses/assignment.html')
+
+def reflection_view(request):
+    return render(request, 'courses/reflection.html')

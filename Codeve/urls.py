@@ -30,7 +30,7 @@ urlpatterns = [
     path('', main_view, name='main'),
     path('practice/', main2_view, name='main2'),
     path('admin/', admin.site.urls),
-    path('api/accounts/', include('accounts.urls')),
+    path('accounts/', include('accounts.urls')),
     path('api/courses/', include('courses.urls')),
     path('', include('social_django.urls', namespace='social')),
     path('api/communities/', include('communities.urls')), #커뮤니티 패스 추가

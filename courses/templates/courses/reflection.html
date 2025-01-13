@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Codeve - 회고</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-yellow-100 min-h-screen">
+    {% load static %}
+    
+    <nav class="flex justify-between items-center p-4 bg-yellow-100 border-b border-yellow-200">
+        <div class="flex items-center space-x-8">
+            <a href="{% url 'main' %}" class="font-bold text-lg px-4 py-2 bg-yellow-300 rounded-xl hover:bg-yellow-400">
+                Codeve
+            </a>
+            <div class="flex space-x-6">
+                <a href="{% url 'main' %}" class="hover:text-gray-600">홈</a>
+                <a href="#" class="hover:text-gray-600">CS</a>
+                <a href="#" class="hover:text-gray-600">Python</a>
+            </div>
+        </div>
+        <div class="flex items-center space-x-4">
+            <span class="text-gray-700">로그아웃</span>
+            <div class="w-10 h-10 bg-green-200 rounded-full"></div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 py-8">
+        <!-- Tab Navigation -->
+        <div class="flex justify-center space-x-4 mb-8">
+            <a href="{% url 'courses:theory-lesson' %}" class="px-6 py-2 bg-yellow-200 rounded-lg hover:bg-yellow-300">이론</a>
+            <a href="{% url 'courses:practice' %}" class="px-6 py-2 bg-yellow-200 rounded-lg hover:bg-yellow-300">실습</a>
+            <a href="{% url 'courses:assignment' %}" class="px-6 py-2 bg-yellow-200 rounded-lg hover:bg-yellow-300">과제</a>
+            <a href="{% url 'courses:reflection' %}" class="px-6 py-2 bg-yellow-300 rounded-lg font-medium">회고</a>
+        </div>
+
+        <div class="max-w-3xl mx-auto bg-white rounded-2xl p-8 shadow-sm">
+            <form method="post" action="{% url 'submit_reflection' %}">
+                {% csrf_token %}
+                <div class="space-y-4">
+                    <textarea 
+                        name="reflection" 
+                        rows="20" 
+                        class="w-full p-4 border border-gray-200 rounded-lg focus:ring-2 focus:ring-yellow-300 focus:border-yellow-300 resize-none"
+                        placeholder="쓸라쓸라"
+                    ></textarea>
+                </div>
+            </form>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="flex justify-between items-center max-w-3xl mx-auto mt-8">
+            <a href="{% url 'courses:assignment' %}" class="px-6 py-2 bg-yellow-300 rounded-lg hover:bg-yellow-400">이전</a>
+            <button class="px-6 py-2 bg-yellow-300 rounded-lg hover:bg-yellow-400">종료</button>
+            <button class="w-12 h-12 bg-blue-200 rounded-full flex items-center justify-center">
+                챗봇
+            </button>
+        </div>
+    </main>
+</body>
+</html>
+
