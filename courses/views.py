@@ -97,3 +97,12 @@ class UserCourseViewSet(viewsets.ModelViewSet):
 
 def theory_lesson_view(request):
     return render(request, 'courses/theory-lesson.html')
+
+def practice_view(request):
+    return render(request, 'courses/practice.html')
+
+def assignment_view(request):
+    return render(request, 'courses/assignment.html')
+
+def reflection_view(request):
+    return render(request, 'courses/reflection.html')
