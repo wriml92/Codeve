@@ -34,4 +34,5 @@ urlpatterns = [
     path('api/courses/', include('courses.urls')),
     path('', include('social_django.urls', namespace='social')),
     path('api/communities/', include('communities.urls')), #커뮤니티 패스 추가
+    path('', include('chatbots.urls')),  # chatbots의 URL 포함
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
