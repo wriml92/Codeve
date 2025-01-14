@@ -49,90 +49,43 @@
             <a href="{% url 'courses:reflection' %}" class="px-6 py-2 bg-yellow-200 rounded-lg hover:bg-yellow-300">회고</a>
         </div>
 
-        <div class="max-w-3xl mx-auto bg-white rounded-2xl p-8 shadow-sm">
-            <!-- Lesson Title -->
-            <h1 class="text-2xl font-bold mb-6">
-                <span class="text-red-500">[이론 LLM 내용 꺼내오기]</span> 변수란 무엇일까?
-            </h1>
-
-            <!-- Concept Introduction -->
-            <section class="mb-8">
-                <h2 class="text-lg font-semibold text-purple-600 mb-3">[개념 소개]</h2>
-                <p class="text-gray-800 leading-relaxed">
-                    변수(Variable)는 프로그래밍에서 데이터를 저장하고 이름을 붙여서 사용하는 공간이에요. 마치 택배를 보낼 때 물건을 담는 박스와 같다고 생각하면 돼요. 박스에는 물건(데이터)를 담고, 그 박스에 이름(변수명)을 붙여서 나중에 쉽게 꺼내 쓸 수 있어요.
-                </p>
-            </section>
-
-            <!-- Analogy -->
-            <section class="mb-8">
-                <h2 class="text-lg font-semibold text-purple-600 mb-3">[비유]</h2>
-                <p class="text-gray-800 leading-relaxed">
-                    저금통에 돈(데이터)를 넣고, 필요할 때 꺼내 쓰는 것과도 같아요. 저금통 이름을 변수로 설정하면, 쉽게 저장하고 가져올 수 있답니다.
-                </p>
-                <div class="bg-gray-900 rounded-lg p-4 mt-4">
-                    <pre class="text-white font-mono text-sm">money_box = 1000</pre>
+        <!-- 좌우 레이아웃을 위한 flex 컨테이너 -->
+        <div class="flex gap-8">
+            <!-- 왼쪽 사이드바 - 토픽 네비게이션 -->
+            <div class="w-64 flex-shrink-0">
+                <div class="bg-white rounded-2xl p-6 shadow-sm sticky top-8">
+                    <h3 class="text-lg font-semibold mb-4">학습 목차</h3>
+                    <div class="space-y-2">
+                        {% for topic in topics %}
+                            <a href="{% url 'courses:theory-lesson-detail' topic.id %}" 
+                               class="block px-4 py-2 rounded-lg {% if topic.id == topic_id %}bg-yellow-300{% else %}hover:bg-yellow-200{% endif %}">
+                                {{ topic.name }}
+                            </a>
+                        {% endfor %}
+                    </div>
                 </div>
-            </section>
+            </div>
 
-            <!-- Key Points -->
-            <section class="mb-8">
-                <h2 class="text-lg font-semibold text-purple-600 mb-3">[핵심 포인트]</h2>
-                <h3 class="font-medium mb-2">변수의 규칙</h3>
-                <ul class="list-disc list-inside space-y-2 text-gray-800">
-                    <li>변수 이름은 문자와 숫자를 사용할 수 있지만, 숫자로 시작할 수 없어요.
-                        <ul class="ml-6 mt-1">
-                            <li>- 올바른 예시: 'name1', 'score'</li>
-                            <li>- 잘못된 예시: '1name'</li>
-                        </ul>
-                    </li>
-                    <li>대소문자를 구분해요.
-                        <ul class="ml-6 mt-1">
-                            <li>- 'Name'과 'name'은 서로 다른 변수예요.</li>
-                        </ul>
-                    </li>
-                    <li>변수 이름에 공백이 들어갈 수 없고, 대신 '_'(언더바)를 사용해요.
-                        <ul class="ml-6 mt-1">
-                            <li>- 예시: 'my_name', 'user_score'</li>
-                        </ul>
-                    </li>
-                    <li>예약어는 변수명으로 사용할 수 없어요.
-                        <ul class="ml-6 mt-1">
-                            <li>- 예약어: 'for', 'if', 'while', 'class' 등</li>
-                        </ul>
-                    </li>
-                </ul>
-
-                <div class="mt-6">
-                    <h3 class="font-medium mb-2">변수에는 다양한 데이터를 담을 수 있어요:</h3>
-                    <ul class="list-disc list-inside space-y-2 text-gray-800">
-                        <li>숫자: 'age = 25'</li>
-                        <li>문자열: 'name = "Alice"'</li>
-                        <li>논리값: 'is_student = True'</li>
-                        <li>리스트: 'scores = [90, 85, 80]'</li>
-                    </ul>
+            <!-- 오른쪽 메인 콘텐츠 -->
+            <div class="flex-grow">
+                <div class="bg-white rounded-2xl p-8 shadow-sm">
+                    <h1 class="text-xl font-bold mb-6">
+                        <span class="text-red-500">[이론]</span> {{ topic_name }}
+                    </h1>
+                    
+                    <!-- 이론 내용을 안전하게 표시 -->
+                    {{ content|safe }}
                 </div>
-            </section>
 
-            <!-- Precautions -->
-            <section class="mb-8">
-                <h2 class="text-lg font-semibold mb-3">주의사항</h2>
-                <ul class="list-decimal list-inside space-y-2 text-gray-800">
-                    <li>변수는 사용하기 전에 반드시 값을 할당해야 해요. <span class="text-red-500">(값을 할당한다는 의미에 대해 알려주면 좋을듯)</span></li>
-                    <li>변수 이름은 의미있게 지어주세요 ('x', 'y' 보다는 'age', 'name').</li>
-                    <li>대소문자를 정확히 구분해서 사용해야 해요.</li>
-                    <li>예약어를 변수명으로 사용하면 오류가 발생해요.</li>
-                    <li>변수에 저장된 값은 언제든 변경될 수 있어요.</li>
-                </ul>
-            </section>
-        </div>
-
-        <!-- Navigation Buttons -->
-        <div class="flex justify-between items-center max-w-3xl mx-auto mt-8">
-            <button class="px-6 py-2 bg-yellow-300 rounded-lg hover:bg-yellow-400">이전</button>
-            <a href="{% url 'courses:practice' %}" class="px-6 py-2 bg-yellow-300 rounded-lg hover:bg-yellow-400">다음</a>
-            <button class="w-12 h-12 bg-blue-200 rounded-full flex items-center justify-center">
-                챗봇
-            </button>
+                <!-- Navigation Buttons -->
+                <div class="flex justify-between items-center mt-8">
+                    <button class="px-6 py-2 bg-yellow-300 rounded-lg hover:bg-yellow-400">이전</button>
+                    <a href="{% url 'courses:practice' %}" class="px-6 py-2 bg-yellow-300 rounded-lg hover:bg-yellow-400">다음</a>
+                    <button class="w-12 h-12 bg-blue-200 rounded-full flex items-center justify-center">
+                        챗봇
+                    </button>
+                </div>
+            </div>
         </div>
     </main>
 </body>

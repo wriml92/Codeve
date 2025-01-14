@@ -46,62 +46,100 @@
             <a href="{% url 'courses:theory-lesson' %}" class="px-6 py-2 bg-yellow-200 rounded-lg hover:bg-yellow-300">이론</a>
             <a href="{% url 'courses:practice' %}" class="px-6 py-2 bg-yellow-200 rounded-lg hover:bg-yellow-300">실습</a>
             <a href="{% url 'courses:assignment' %}" class="px-6 py-2 bg-yellow-300 rounded-lg font-medium">과제</a>
-            <a href="{% url 'courses:reflection' %}" class="px-6 py-2 bg-yellow-200 rounded-lg hover:bg-yellow-300">회고</a>
+            <a href="#" class="px-6 py-2 bg-yellow-200 rounded-lg hover:bg-yellow-300">회고</a>
         </div>
 
-        <div class="max-w-3xl mx-auto bg-white rounded-2xl p-8 shadow-sm">
-            <!-- Assignment Title -->
-            <h1 class="text-xl font-bold mb-6">
-                <span class="text-red-500">[과제 LLM 내용 꺼내오기]</span>
-                <span class="text-gray-600">[분석 에이전트 연결됨]</span>
-            </h1>
-            <p class="mb-8 text-gray-800">이제 퀴즈를 진행해보겠습니다. 아래 퀴즈에 대한 답안을 제출하세요.</p>
-
-            <!-- Quiz 1 -->
-            <section class="mb-8">
-                <h2 class="text-lg font-bold mb-4">퀴즈1: 변수의 역할</h2>
-                <p class="mb-4">변수를 저금통에 비유할 때, 아래 설명에서 빈칸을 채워보세요.</p>
-                <ol class="list-decimal list-inside space-y-2 mb-4">
-                    <li>변수 이름은 저금통에 붙은 <span class="text-red-500">텍스트 입력</span> 와 같습니다.</li>
-                    <li>변수에 저장된 데이터는 저금통 안에 들어있는 <span class="text-red-500">텍스트 입력</span>와 같습니다.</li>
-                </ol>
-                <button class="px-6 py-2 bg-yellow-300 rounded-lg hover:bg-yellow-400">제출</button>
-            </section>
-
-            <!-- Quiz 2 -->
-            <section class="mb-8">
-                <h2 class="text-lg font-bold mb-4">퀴즈 2: 코드 이해하기</h2>
-                <p class="mb-4">다음 코드를 실행했을 때, 출력 결과를 적어보세요.</p>
-                <div class="bg-gray-900 rounded-lg p-4 mb-4">
-                    <pre class="text-white font-mono text-sm">진짜 가능있는 코드셀</pre>
+        <!-- 좌우 레이아웃을 위한 flex 컨테이너 -->
+        <div class="flex gap-8">
+            <!-- 왼쪽 사이드바 - 토픽 네비게이션 -->
+            <div class="w-64 flex-shrink-0">
+                <div class="bg-white rounded-2xl p-6 shadow-sm sticky top-8">
+                    <h3 class="text-lg font-semibold mb-4">학습 목차</h3>
+                    <div class="space-y-2">
+                        {% for topic in topics %}
+                            <a href="{% url 'courses:assignment-detail' topic.id %}" 
+                               class="block px-4 py-2 rounded-lg {% if topic.id == topic_id %}bg-yellow-300{% else %}hover:bg-yellow-200{% endif %}">
+                                {{ topic.name }}
+                            </a>
+                        {% endfor %}
+                    </div>
                 </div>
-                <p class="mb-4">답변:</p>
-                <div class="bg-gray-900 rounded-lg p-4 mb-4">
-                    <pre class="text-white font-mono text-sm">진짜 가능있는 코드셀</pre>
-                </div>
-                <button class="px-6 py-2 bg-yellow-300 rounded-lg hover:bg-yellow-400">제출</button>
-            </section>
+            </div>
 
-            <!-- Quiz 3 -->
-            <section class="mb-8">
-                <h2 class="text-lg font-bold mb-4">퀴즈 3: 변수의 값 업데이트</h2>
-                <p class="mb-4">아래 코드를 완성하여 변수 savings에 200원을 추가한 뒤, 최종 값을 출력하도록 작성하세요. (savings 앞의 주석은 뭐죠.)</p>
-                <div class="bg-gray-900 rounded-lg p-4 mb-4">
-                    <pre class="text-white font-mono text-sm">진짜 가능있는 코드셀</pre>
-                </div>
-                <button class="px-6 py-2 bg-yellow-300 rounded-lg hover:bg-yellow-400">제출</button>
-            </section>
-        </div>
+            <!-- 메인 콘텐츠 영역 -->
+            <div class="flex-1">
+                <div class="bg-white rounded-2xl p-8 shadow-sm">
+                    <h1 class="text-xl font-bold mb-6">
+                        <span class="text-red-500">[과제]</span> {{ topic_name }}
+                    </h1>
+                    
+                    <p class="mb-8 text-gray-800">이제 퀴즈를 풀어보겠습니다.</p>
 
-        <!-- Navigation Buttons -->
-        <div class="flex justify-between items-center max-w-3xl mx-auto mt-8">
-            <a href="{% url 'courses:practice' %}" class="px-6 py-2 bg-yellow-300 rounded-lg hover:bg-yellow-400">이전</a>
-            <a href="{% url 'courses:reflection' %}" class="px-6 py-2 bg-yellow-300 rounded-lg hover:bg-yellow-400">다음</a>
-            <button class="w-12 h-12 bg-blue-200 rounded-full flex items-center justify-center">
-                챗봇
-            </button>
+                    <!-- 각 퀴즈와 답안을 함께 표시 -->
+                    {% for quiz in quizzes %}
+                    <div class="mb-12 bg-white rounded-2xl p-6 shadow-sm border border-yellow-200">
+                        <!-- 퀴즈 문제 -->
+                        <div class="mb-8">
+                            <h2 class="text-lg font-bold mb-4">
+                                퀴즈 {{ quiz.id }}: 
+                                {% if quiz.id == 1 %}개념 이해
+                                {% elif quiz.id == 2 %}코드 분석
+                                {% else %}코드 구현
+                                {% endif %}
+                            </h2>
+                            <div class="text-gray-800">
+                                {{ quiz.content|safe }}
+                            </div>
+                        </div>
+
+                        <!-- 퀴즈 답안 -->
+                        <div class="pt-4 border-t border-yellow-200">
+                            <h3 class="text-md font-bold mb-4">퀴즈 {{ quiz.id }} 답안</h3>
+                            {% if quiz.id == 1 %}
+                                <!-- 객관식 답안 (퀴즈 1) -->
+                                <div class="space-y-3">
+                                    {% for i in "1234"|make_list %}
+                                    <div class="flex items-center space-x-3">
+                                        <input type="radio" 
+                                               id="quiz1_answer{{ i }}" 
+                                               name="quiz1_answer" 
+                                               value="{{ i }}" 
+                                               class="w-4 h-4 text-yellow-400">
+                                        <label for="quiz1_answer{{ i }}" class="text-gray-800">{{ i }}</label>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            {% elif quiz.type == 'code' %}
+                                <div class="bg-gray-900 rounded-lg p-4">
+                                    <textarea 
+                                        id="quiz{{ quiz.id }}_answer"
+                                        class="w-full h-32 bg-gray-900 text-white font-mono text-sm p-2 focus:outline-none"
+                                        placeholder="여기에 파이썬 코드를 작성하세요..."
+                                    ></textarea>
+                                </div>
+                            {% endif %}
+                            <button 
+                                onclick="submitQuiz({{ quiz.id }}, '{{ quiz.type }}')"
+                                class="w-full mt-4 px-6 py-2 bg-yellow-300 rounded-lg hover:bg-yellow-400">
+                                제출하기
+                            </button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="flex justify-between items-center mt-8">
+                    <a href="{% url 'courses:practice-detail' topic_id %}" class="px-6 py-2 bg-yellow-300 rounded-lg hover:bg-yellow-400">이전</a>
+                    <a href="{% url 'courses:reflection' %}" class="px-6 py-2 bg-yellow-300 rounded-lg hover:bg-yellow-400">다음</a>
+                    <button class="w-12 h-12 bg-blue-200 rounded-full flex items-center justify-center">
+                        챗봇
+                    </button>
+                </div>
+            </div>
         </div>
     </main>
 </body>
 </html>
+
 
