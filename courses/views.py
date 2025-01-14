@@ -112,7 +112,7 @@ class UserCourseViewSet(viewsets.ModelViewSet):
         return Response({'error': '진행률이 제공되지 않았습니다.'}, 
             status=status.HTTP_400_BAD_REQUEST)
 
-def theory_lesson_view(request, topic_id='variables'):
+def theory_lesson_view(request, topic_id='input_output'):
     # 데이터 파일 경로
     data_dir = Path(__file__).parent / 'data' / 'theory'
     file_path = data_dir / f"{topic_id}.json"

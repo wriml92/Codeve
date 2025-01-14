@@ -15,10 +15,10 @@
                 Codeve
             </a>
             <div class="flex space-x-6">
-                <a href="{% url 'main' %}" class="hover:text-gray-600">홈</a>
-                <a href="#" class="hover:text-gray-600">CS</a>
-                <a href="{% url 'courses:theory-lesson' %}" class="hover:text-gray-600">Python</a>
-                <a href="{% url 'communities:posts-list' %}" class="hover:text-gray-600">Topic</a>
+                <div class="space-x-4">
+                    <a href="{% url 'courses:theory-lesson' %}" class="text-gray-700 hover:text-gray-900">Python</a>
+                    <a href="{% url 'communities:posts-list' %}" class="text-gray-700 hover:text-gray-900">Archive</a>
+                </div>
             </div>
         </div>
         <div class="flex items-center space-x-4">

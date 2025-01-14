@@ -94,7 +94,7 @@ class LoginView(APIView):
 
     def get(self, request):
         if request.user.is_authenticated:
-            return redirect('main2')
+            return redirect('main')
         return render(request, self.template_name)
 
     def post(self, request):
@@ -118,7 +118,7 @@ class LoginView(APIView):
             
             login(request, user)
             user.reset_login_attempts()
-            return redirect('main2')
+            return redirect('main')
         
         # API 요청 처리
         email = request.data.get('email')

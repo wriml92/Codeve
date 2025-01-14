@@ -12,7 +12,7 @@ charset-normalizer==3.4.1
 cryptography==44.0.0
 defusedxml==0.8.0rc2
 distro==1.9.0
-Django==5.1.4
+Django==4.2
 django-allauth==65.3.1
 django-seed==0.3.1
 djangorestframework==3.15.2
