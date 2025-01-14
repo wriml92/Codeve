@@ -21,22 +21,8 @@
             </div>
         </div>
         <div class="flex items-center space-x-4">
-            {% if user.is_authenticated %}
-                <span class="text-gray-700">{{ user.username }}님</span>
-                <form action="{% url 'accounts:logout' %}" method="post" class="inline">
-                    {% csrf_token %}
-                    <button type="submit" class="bg-amber-200 px-6 py-2 rounded-r-full rounded-l-lg transform -skew-x-12 hover:bg-amber-300 transition-colors">
-                        로그아웃
-                    </button>
-                </form>
-            {% else %}
-                <a href="{% url 'accounts:login' %}" class="bg-amber-300 px-6 py-2 rounded-r-full rounded-l-lg transform -skew-x-12 hover:bg-amber-400 transition-colors">
-                    로그인
-                </a>
-                <a href="{% url 'accounts:signup' %}" class="bg-amber-200 px-6 py-2 rounded-r-full rounded-l-lg transform -skew-x-12 hover:bg-amber-300 transition-colors">
-                    회원가입
-                </a>
-            {% endif %}
+            <span class="text-gray-700">로그아웃</span>
+            <div class="w-10 h-10 bg-green-200 rounded-full"></div>
         </div>
     </nav>
 
@@ -50,7 +36,7 @@
         </div>
 
         <div class="max-w-3xl mx-auto bg-white rounded-2xl p-8 shadow-sm">
-            <form method="post">
+            <form method="post" action="{% url 'submit_reflection' %}">
                 {% csrf_token %}
                 <div class="space-y-4">
                     <textarea 
