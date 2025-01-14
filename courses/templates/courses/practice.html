@@ -35,60 +35,81 @@
             <a href="#" class="px-6 py-2 bg-yellow-200 rounded-lg hover:bg-yellow-300">회고</a>
         </div>
 
-        <div class="max-w-3xl mx-auto bg-white rounded-2xl p-8 shadow-sm">
-            <!-- Practice Title -->
-            <h1 class="text-xl font-bold text-red-500 mb-4">[실습 LLM 내용 꺼내오기]</h1>
-            <p class="mb-8 text-gray-800">이제 앞서 설명해준 내용을 바탕으로 VSCODE에서 실습을 진행해보겠습니다.</p>
-
-            <!-- VSCode Setup -->
-            <section class="mb-8">
-                <h2 class="text-lg font-bold mb-4">1. VSCODE 실행하기</h2>
-                <p class="text-gray-800">VSCODE를 실행해 Codeve 폴더를 열고 새 파일을 만드세요. 파일 이름은 variable_practice.py로 저장합니다.</p>
-            </section>
-
-            <!-- File Creation -->
-            <section class="mb-8">
-                <h2 class="text-lg font-bold mb-4">2. 파일 작성</h2>
-                <div class="bg-gray-100 p-4 rounded-lg">
-                    <p class="text-gray-600">_________________ 를 만들어 보세요.</p>
+        <!-- 좌우 레이아웃을 위한 flex 컨테이너 -->
+        <div class="flex gap-8">
+            <!-- 왼쪽 사이드바 - 토픽 네비게이션 -->
+            <div class="w-64 flex-shrink-0">
+                <div class="bg-white rounded-2xl p-6 shadow-sm sticky top-8">
+                    <h3 class="text-lg font-semibold mb-4">학습 목차</h3>
+                    <div class="space-y-2">
+                        {% for topic in topics %}
+                            <a href="{% url 'courses:practice-detail' topic.id %}" 
+                               class="block px-4 py-2 rounded-lg {% if topic.id == topic_id %}bg-yellow-300{% else %}hover:bg-yellow-200{% endif %}">
+                                {{ topic.name }}
+                            </a>
+                        {% endfor %}
+                    </div>
                 </div>
-            </section>
-
-            <!-- Execution Steps -->
-            <section class="mb-8">
-                <h2 class="text-lg font-bold mb-4">실행 단계</h2>
-                <ol class="list-decimal list-inside space-y-2 text-gray-800">
-                    <li>코드를 작성한 뒤 Ctrl+S(Windows) 또는 Cmd+S(Mac)로 파일을 저장합니다.</li>
-                    <li>터미널 열기
-                        <ul class="ml-6 mt-1">
-                            <li>• VSCODE 하단에서 Terminal 메뉴를 열고, 터미널에 아래 명령어를 입력하여 코드를 실행합니다.</li>
-                        </ul>
-                    </li>
-                </ol>
-            </section>
-
-            <!-- Code Preview -->
-            <div class="bg-gray-900 rounded-lg p-4 mb-8">
-                <pre class="text-white font-mono text-sm">python variable_practice.py</pre>
             </div>
 
-            <!-- Result Section -->
-            <section class="mb-8">
-                <h2 class="text-lg font-bold mb-4">3. 결과 확인</h2>
-                <button class="px-6 py-2 bg-yellow-300 rounded-lg hover:bg-yellow-400">
-                    이미지 제출하기
-                </button>
-                <span class="ml-2 text-red-500">(이거 꼭 필요없는 초반부분에는 안넣을것도 생각중)</span>
-            </section>
-        </div>
+            <!-- 오른쪽 메인 콘텐츠 -->
+            <div class="flex-grow">
+                <div class="bg-white rounded-2xl p-8 shadow-sm">
+                    <h1 class="text-xl font-bold mb-6">
+                        <span class="text-red-500">[실습]</span> {{ topic_name }}
+                    </h1>
+                    
+                    <p class="mb-8 text-gray-800">이제 앞서 설명해준 내용을 바탕으로 VSCODE에서 실습을 진행해보겠습니다.</p>
 
-        <!-- Navigation Buttons -->
-        <div class="flex justify-between items-center max-w-3xl mx-auto mt-8">
-            <a href="{% url 'courses:theory-lesson' %}" class="px-6 py-2 bg-yellow-300 rounded-lg hover:bg-yellow-400">이전</a>
-            <a href="{% url 'courses:assignment' %}" class="px-6 py-2 bg-yellow-300 rounded-lg hover:bg-yellow-400">다음</a>
-            <button class="w-12 h-12 bg-blue-200 rounded-full flex items-center justify-center">
-                챗봇
-            </button>
+                    <!-- VSCode Setup -->
+                    <section class="mb-8">
+                        <h2 class="text-lg font-bold mb-4">1. VSCODE 실행하기</h2>
+                        <p class="text-gray-800">VSCODE를 실행해 새 파일을 만드세요. 파일 이름은 {{ topic_id }}_practice.py로 저장합니다.</p>
+                    </section>
+
+                    <!-- File Creation -->
+                    <section class="mb-8">
+                        <h2 class="text-lg font-bold mb-4">2. 파일 작성</h2>
+                        {{ content|safe }}
+                    </section>
+
+                    <!-- Execution Steps -->
+                    <section class="mb-8">
+                        <h2 class="text-lg font-bold mb-4">실행 단계</h2>
+                        <ol class="list-decimal list-inside space-y-2 text-gray-800">
+                            <li>코드를 작성한 뒤 Ctrl+S(Windows) 또는 Cmd+S(Mac)로 파일을 저장합니다.</li>
+                            <li>터미널 열기
+                                <ul class="ml-6 mt-1">
+                                    <li>• VSCODE 하단에서 Terminal 메뉴를 열고, 터미널에 아래 명령어를 입력하여 코드를 실행합니다.</li>
+                                </ul>
+                            </li>
+                        </ol>
+                    </section>
+
+                    <!-- Code Preview -->
+                    <div class="bg-gray-900 rounded-lg p-4 mb-8">
+                        <pre class="text-white font-mono text-sm">python {{ topic_id }}_practice.py</pre>
+                    </div>
+
+                    <!-- Result Section -->
+                    <section class="mb-8">
+                        <h2 class="text-lg font-bold mb-4">3. 결과 확인</h2>
+                        <button class="px-6 py-2 bg-yellow-300 rounded-lg hover:bg-yellow-400">
+                            이미지 제출하기
+                        </button>
+                        <span class="ml-2 text-red-500"></span>
+                    </section>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="flex justify-between items-center mt-8">
+                    <a href="{% url 'courses:theory-lesson-detail' topic_id %}" class="px-6 py-2 bg-yellow-300 rounded-lg hover:bg-yellow-400">이전</a>
+                    <a href="{% url 'courses:assignment' %}" class="px-6 py-2 bg-yellow-300 rounded-lg hover:bg-yellow-400">다음</a>
+                    <button class="w-12 h-12 bg-blue-200 rounded-full flex items-center justify-center">
+                        챗봇
+                    </button>
+                </div>
+            </div>
         </div>
     </main>
 </body>
