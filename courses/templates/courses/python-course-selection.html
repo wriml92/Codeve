@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Codeve - 파이썬 코스 선택</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-yellow-100 min-h-screen">
+    {% load static %}
+    
+    <nav class="flex justify-between items-center p-4 bg-yellow-100 border-b border-yellow-200">
+        <div class="flex items-center space-x-8">
+            <a href="{% url 'main' %}" class="font-bold text-lg px-4 py-2 bg-yellow-300 rounded-xl hover:bg-yellow-400">
+                Codeve
+            </a>
+            <div class="flex space-x-6">
+                <a href="{% url 'main' %}" class="hover:text-gray-600">홈</a>
+                <a href="#" class="hover:text-gray-600">CS</a>
+                <a href="{% url 'courses:course-selection' %}" class="hover:text-gray-600">Python</a>
+                <a href="{% url 'communities:posts-list' %}" class="hover:text-gray-600">Topic</a>
+            </div>
+        </div>
+        <div class="flex items-center space-x-4">
+            {% if user.is_authenticated %}
+                <span class="text-gray-700">{{ user.username }}님</span>
+                <form action="{% url 'accounts:logout' %}" method="post" class="inline">
+                    {% csrf_token %}
+                    <button type="submit" class="bg-amber-200 px-6 py-2 rounded-r-full rounded-l-lg transform -skew-x-12 hover:bg-amber-300 transition-colors">
+                        로그아웃
+                    </button>
+                </form>
+            {% else %}
+                <a href="{% url 'accounts:login' %}" class="bg-amber-300 px-6 py-2 rounded-r-full rounded-l-lg transform -skew-x-12 hover:bg-amber-400 transition-colors">
+                    로그인
+                </a>
+                <a href="{% url 'accounts:signup' %}" class="bg-amber-200 px-6 py-2 rounded-r-full rounded-l-lg transform -skew-x-12 hover:bg-amber-300 transition-colors">
+                    회원가입
+                </a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-8">
+        <div class="flex items-start mb-8">
+            <a href="{% url 'main' %}" class="px-4 py-2 bg-yellow-200 rounded-lg hover:bg-yellow-300">
+                뒤로 가기
+            </a>
+        </div>
+
+        <h1 class="text-3xl font-bold text-center mb-12">파이썬 코스 선택</h1>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            <!-- Beginner Level -->
+            <div class="flex flex-col items-center">
+                <h2 class="text-xl font-semibold mb-4">Beginner</h2>
+                <a href="{% url 'courses:theory-lesson' %}" class="w-full">
+                    <div class="w-full aspect-square bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow cursor-pointer p-6">
+                        <h3 class="text-lg font-medium mb-2">변수와 자료형</h3>
+                        <p class="text-gray-600">파이썬의 기초를 배워보세요</p>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Normal Level -->
+            <div class="flex flex-col items-center">
+                <h2 class="text-xl font-semibold mb-4">Normal</h2>
+                <div class="w-full aspect-square bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow cursor-pointer p-6">
+                    <h3 class="text-lg font-medium mb-2">Coming Soon</h3>
+                    <p class="text-gray-600">준비 중입니다</p>
+                </div>
+            </div>
+
+            <!-- Expert Level -->
+            <div class="flex flex-col items-center">
+                <h2 class="text-xl font-semibold mb-4">Expert</h2>
+                <div class="w-full aspect-square bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow cursor-pointer p-6">
+                    <h3 class="text-lg font-medium mb-2">Coming Soon</h3>
+                    <p class="text-gray-600">준비 중입니다</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

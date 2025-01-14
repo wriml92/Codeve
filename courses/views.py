@@ -106,3 +106,6 @@ def assignment_view(request):
 
 def reflection_view(request):
     return render(request, 'courses/reflection.html')
+
+def course_selection_view(request):
+    return render(request, 'courses/python-course-selection.html')
