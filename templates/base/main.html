@@ -80,5 +80,15 @@
             {% endfor %}
         </div>
     {% endif %}
+
+    <link rel="stylesheet" href="{% static 'css/chatbot-widget.css' %}">
+    <script src="{% static 'js/chatbot-widget.js' %}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            new ChatbotWidget();
+        });
+    </script>
+
+
 </body>
 </html> 

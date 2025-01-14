@@ -52,17 +52,6 @@ class ChatbotWidget {
         const messagesContainer = document.querySelector('.chat-messages');
         const input = document.querySelector('.chat-input input');
 
-        // 새로운 메시지 요소 생성
-        const userMessageDiv = document.createElement('div');
-        userMessageDiv.className = 'user-message';
-        userMessageDiv.textContent = message;
-        messagesContainer.appendChild(userMessageDiv);
-
-        // 스크롤 최하단으로 이동
-        this.scrollToBottom(messagesContainer);
-
-        input.value = '';
-
         try {
             const response = await fetch('/api/chatbot/', {
                 method: 'POST',
@@ -73,22 +62,22 @@ class ChatbotWidget {
                 body: JSON.stringify({ message })
             });
 
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
             const data = await response.json();
             
-            // 봇 응답 요소 생성
-            const botMessageDiv = document.createElement('div');
-            botMessageDiv.className = 'bot-message';
-            botMessageDiv.textContent = data.response;
-            messagesContainer.appendChild(botMessageDiv);
-
-            // 스크롤 최하단으로 이동
+            this.displayMessage(message, 'user-message');
+            this.displayMessage(data.response, 'bot-message');
+            
+            input.value = '';
             this.scrollToBottom(messagesContainer);
         } catch (error) {
             console.error('Error:', error);
         }
     }
 
-    // 스크롤을 최하단으로 이동시키는 헬퍼 함수
     scrollToBottom(element) {
         setTimeout(() => {
             element.scrollTop = element.scrollHeight;
@@ -108,5 +97,13 @@ class ChatbotWidget {
             }
         }
         return cookieValue;
+    }
+
+    displayMessage(text, className) {
+        const messagesContainer = document.querySelector('.chat-messages');
+        const messageDiv = document.createElement('div');
+        messageDiv.className = className;
+        messageDiv.textContent = text;
+        messagesContainer.appendChild(messageDiv);
     }
 } 

@@ -5,7 +5,7 @@ from . import views
 router = DefaultRouter()
 router.register(r'chatbot', views.ChatbotViewSet, basename='chatbot')
 
-app_name = 'ai_services'
+app_name = 'chatbots'
 
 urlpatterns = [
     path('api/', include(router.urls)),
