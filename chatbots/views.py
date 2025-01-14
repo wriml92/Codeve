@@ -1,46 +1,50 @@
 from rest_framework import viewsets
 from rest_framework.response import Response
-from .models import ChatMessage, CachedResponse
+from .models import ChatMessage
 from openai import OpenAI
 from django.conf import settings
-import hashlib
 from rest_framework.exceptions import APIException
-from .cache_data import load_cached_responses
 import logging
+import json
+import os
 
 # 로깅 설정
 logger = logging.getLogger(__name__)
 
 class ChatbotViewSet(viewsets.ViewSet):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        # cached_responses.json 파일 로드
+        json_path = os.path.join(os.path.dirname(__file__), 'cached_responses.json')
+        with open(json_path, 'r', encoding='utf-8') as f:
+            self.cached_responses = json.load(f)
+
     def create(self, request):
         # 클라이언트로부터 메시지 받기
         message = request.data.get('message')
         if not message:
             return Response({'error': '메시지가 필요합니다'}, status=400)
 
-        # OpenAI API 키 확인
-        if not settings.OPENAI_API_KEY:
-            raise APIException("OpenAI API key is not configured")
-
-        # 메시지 해시 생성 및 데이터베이스 캐시 확인
-        message_hash = hashlib.sha256(message.encode()).hexdigest()
-        cached_response = CachedResponse.objects.filter(question_hash=message_hash).first()
-        
-        # 데이터베이스에 캐시된 응답이 있으면 반환
-        if cached_response:
+        # 캐시된 응답 확인
+        if message in self.cached_responses:
+            response_text = self.cached_responses[message]
             ChatMessage.objects.create(
                 user=request.user,
                 message=message,
-                response=cached_response.response,
+                response=response_text,
                 is_cached=True
             )
-            return Response({'response': cached_response.response})
+            return Response({'response': response_text})
+
+        # OpenAI API 키 확인
+        if not settings.OPENAI_API_KEY:
+            raise APIException("OpenAI API key is not configured")
         
         try:
             # OpenAI API 호출
             client = OpenAI(api_key=settings.OPENAI_API_KEY)
             response = client.chat.completions.create(
-                model="gpt-4",
+                model="gpt-4o-mini", #gpt-3.5-turbo, gpt-4로도 변경가능
                 messages=[
                     # 시스템 프롬프트 설정
                     {"role": "system", "content": """
@@ -52,13 +56,18 @@ class ChatbotViewSet(viewsets.ViewSet):
                     """},
                     {"role": "user", "content": message}
                 ],
-                temperature=0.7,  # 응답의 창의성 조절
+                temperature=0.1,  # 응답의 창의성 조절
                 max_tokens=200,   # 최대 토큰 수 제한
                 frequency_penalty=0.5  # 반복 표현 방지
             )
             
             # API 응답 처리 및 저장
             response_text = response.choices[0].message.content
+            used_model = response.model  # 사용된 모델 정보
+
+            # 모델 정보와 함께 로그 기록
+            logger.info(f"사용된 모델: {used_model}")
+
             ChatMessage.objects.create(
                 user=request.user,
                 message=message,
@@ -66,7 +75,7 @@ class ChatbotViewSet(viewsets.ViewSet):
                 is_cached=False
             )
             
-            return Response({'response': response_text})
+            return Response({'response': response_text, 'model': used_model})
             
         except Exception as e:
             # 오류 로깅 및 에러 응답

@@ -11,10 +11,6 @@ load_dotenv(dotenv_path=os.path.join(BASE_DIR, '.env'))
 # OpenAI API 키 설정 - 기본값 지정
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY', None)
 
-# API 키가 없을 경우 경고
-if not OPENAI_API_KEY:
-    print("Warning: OPENAI_API_KEY is not set in environment variables")
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
@@ -246,6 +242,3 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
 # 리디렉션 URI 설정 추가
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = 'main'
 SOCIAL_AUTH_LOGIN_ERROR_URL = 'accounts:login'
-
-# OpenAI API 키 설정
-OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
