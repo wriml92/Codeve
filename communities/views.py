@@ -109,3 +109,8 @@ class PostRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
 
     def perform_update(self, serializer):
         serializer.save(user=self.request.user)
+
+
+def posts_list_view(request):
+    posts = Post.objects.all().order_by('-created_at')
+    return render(request, 'communities/posts-list.html', {'posts': posts})
