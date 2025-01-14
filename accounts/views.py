@@ -155,7 +155,8 @@ class LogoutView(APIView):
 
     def post(self, request):
         logout(request)
-        return Response({'message': '로그아웃되었습니다.'})
+        messages.success(request, '로그아웃되었습니다.')
+        return redirect('main')
 
 class GoogleLoginView(APIView):
     permission_classes = [AllowAny]
