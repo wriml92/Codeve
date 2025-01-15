@@ -6,18 +6,19 @@
     <title>Codeve - 회고</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-yellow-100 min-h-screen">
+<body class="bg-[#FFEBA4]">
     {% load static %}
     
-    <nav class="flex justify-between items-center p-4 bg-yellow-100 border-b border-yellow-200">
+    <nav class="flex justify-between items-center p-4 bg-[#F4D151] border-b border-yellow-200">
         <div class="flex items-center space-x-8">
             <a href="{% url 'main' %}" class="font-bold text-lg px-4 py-2 bg-yellow-300 rounded-xl hover:bg-yellow-400">
                 Codeve
             </a>
             <div class="flex space-x-6">
-                <a href="{% url 'main' %}" class="hover:text-gray-600">홈</a>
-                <a href="#" class="hover:text-gray-600">CS</a>
-                <a href="#" class="hover:text-gray-600">Python</a>
+                <div class="space-x-4">
+                    <a href="{% url 'courses:theory-lesson' %}" class="text-gray-700 hover:text-gray-900">Python</a>
+                    <a href="{% url 'communities:posts-list' %}" class="text-gray-700 hover:text-gray-900">Archive</a>
+                </div>
             </div>
         </div>
         <div class="flex items-center space-x-2">
