@@ -229,9 +229,36 @@ class PasswordResetRequestView(APIView):
                     expires_at=expires_at
                 )
                 # TODO: 비밀번호 재설정 이메일 발송 로직 구현
+                reset_url = f"http://localhost:8000/accounts/password-reset-confirm/{token}/"
+                try:
+                    send_mail(
+                        subject='Codeve - 비밀번호 재설정',
+                        message=f'''안녕하세요, {user.username}님.
+
+비밀번호 재설정 요청이 있었습니다.
+아래 링크를 클릭하여 새로운 비밀번호를 설정해주세요:
+
+{reset_url}
+
+본인이 요청하지 않았다면 이 이메일을 무시하셔도 됩니다.
+계정의 비밀번호는 변경되지 않은 상태로 유지됩니다.
+
+감사합니다.
+Codeve 팀 드림''',
+                        from_email=settings.DEFAULT_FROM_EMAIL,
+                        recipient_list=[user.email],
+                        fail_silently=False,
+                    )
+                except Exception as e:
+                    print(f"이메일 발송 실패 (비밀번호 재설정): {str(e)}")
+                    print(f"발송 시도한 이메일 주소: {user.email}")
+                    print(f"SMTP 설정: {settings.EMAIL_HOST}, {settings.EMAIL_PORT}")
+                    return Response({'error': '이메일 발송에 실패했습니다. 관리자에게 문의해주세요.'}, 
+                        status=status.HTTP_500_INTERNAL_SERVER_ERROR)
                 return Response({'message': '비밀번호 재설정 링크가 이메일로 발송되었습니다.'})
             return Response({'message': '비밀번호 재설정 링크가 이메일로 발송되었습니다.'})
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
 
 class PasswordResetConfirmView(APIView):
     permission_classes = [AllowAny]
