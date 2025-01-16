@@ -157,14 +157,13 @@ GOOGLE_CLIENT_SECRET = os.getenv('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')
 
 # 이메일 설정
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
-
-# 이메일 발신자 표시명
-DEFAULT_FROM_EMAIL = 'Codeve <wriml92@knou.ac.kr>'
+EMAIL_HOST = str(os.environ.get('EMAIL_HOST'))
+EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 587))
+EMAIL_HOST_USER = str(os.environ.get('EMAIL_HOST_USER'))
+EMAIL_HOST_PASSWORD = str(os.environ.get('EMAIL_HOST_USER_PASSWORD'))
+EMAIL_USE_TLS = str(os.environ.get('EMAIL_USE_TLS')).lower() == 'true'
+DEFAULT_FROM_EMAIL = str(os.environ.get('DEFAULT_FROM_EMAIL'))
+SERVER_EMAIL = 'coated.jinee@gmail.com'
 
 # 비밀번호 재설정 링크 만료 시간 (초 단위, 기본값: 3일)
 PASSWORD_RESET_TIMEOUT = 259200  # 3일

@@ -150,7 +150,7 @@ def theory_lesson_view(request, topic_id='input_output'):
     
     return render(request, 'courses/theory-lesson.html', context)
 
-def practice_view(request, topic_id='variables'):
+def practice_view(request, topic_id='input_output'):
     # 데이터 파일 경로
     data_dir = Path(__file__).parent / 'data' / 'practice'
     file_path = data_dir / f"{topic_id}.json"
@@ -191,7 +191,7 @@ def practice_view(request, topic_id='variables'):
     
     return render(request, 'courses/practice.html', context)
 
-def assignment_view(request, topic_id='variables'):
+def assignment_view(request, topic_id='input_output'):
     # 데이터 파일 경로
     data_dir = Path(__file__).parent / 'data' / 'assignment'
     file_path = data_dir / f"{topic_id}.json"
