@@ -32,9 +32,11 @@
                         <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
                     </svg>
                 </a>
-                <form action="{% url 'accounts:logout' %}" method="post" class="inline">
+                <form action="{% url 'accounts:logout' %}" method="post" class="inline" id="logout-form">
                     {% csrf_token %}
-                    <button type="submit" class="bg-amber-200 px-6 py-2 rounded-r-full rounded-l-lg transform -skew-x-12 hover:bg-amber-300 transition-colors">
+                    <button type="submit" 
+                            onclick="handleLogout(event)" 
+                            class="bg-amber-200 px-6 py-2 rounded-r-full rounded-l-lg transform -skew-x-12 hover:bg-amber-300 transition-colors">
                         <span class="transform skew-x-12">로그아웃</span>
                     </button>
                 </form>
@@ -67,5 +69,15 @@
     {% endif %}
 
     {% block extra_scripts %}{% endblock %}
+
+    <script>
+    function handleLogout(event) {
+        event.preventDefault();
+        // 챗봇 대화 내역 삭제
+        localStorage.clear();  // 모든 localStorage 데이터 삭제
+        // 폼 제출
+        document.getElementById('logout-form').submit();
+    }
+    </script>
 </body>
 </html> 

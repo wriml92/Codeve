@@ -159,7 +159,18 @@ class LogoutView(APIView):
     def post(self, request):
         logout(request)
         messages.success(request, '로그아웃되었습니다.')
-        return redirect('main')
+        
+        response = redirect('main')
+        response.delete_cookie('chatHistory')  # 쿠키도 함께 삭제
+        
+        # JavaScript 실행을 위한 스크립트 추가
+        response.content = """
+            <script>
+                localStorage.removeItem('chatHistory');
+                window.location.href = '/';
+            </script>
+        """
+        return response
 
 class GoogleLoginView(APIView):
     permission_classes = [AllowAny]

@@ -2,6 +2,8 @@ class ChatbotWidget {
     constructor() {
         this.createWidget();
         this.isOpen = false;
+        this.loadChatHistory();
+        this.MAX_HISTORY = 10;
     }
 
     createWidget() {
@@ -105,5 +107,57 @@ class ChatbotWidget {
         messageDiv.className = className;
         messageDiv.textContent = text;
         messagesContainer.appendChild(messageDiv);
+        
+        this.saveChatHistory(text, className);
+    }
+
+    saveChatHistory(message, type) {
+        let chatHistory = this.getChatHistory();
+        
+        chatHistory.push({
+            message: message,
+            type: type,
+            timestamp: new Date().toISOString()
+        });
+
+        if (chatHistory.length > this.MAX_HISTORY) {
+            chatHistory = chatHistory.slice(-this.MAX_HISTORY);
+        }
+
+        localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
+    }
+
+    loadChatHistory() {
+        const chatHistory = this.getChatHistory();
+        const messagesContainer = document.querySelector('.chat-messages');
+        
+        if (messagesContainer) {
+            chatHistory.forEach(item => {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = item.type;
+                messageDiv.textContent = item.message;
+                messagesContainer.appendChild(messageDiv);
+            });
+            this.scrollToBottom(messagesContainer);
+        }
+    }
+
+    getChatHistory() {
+        const history = localStorage.getItem('chatHistory');
+        return history ? JSON.parse(history) : [];
+    }
+
+    clearChatHistory() {
+        localStorage.removeItem('chatHistory');
+        const messagesContainer = document.querySelector('.chat-messages');
+        if (messagesContainer) {
+            messagesContainer.innerHTML = '';
+        }
+        console.log('Chat history cleared');
+    }
+
+    static clearOnLogout() {
+        localStorage.removeItem('chatHistory');
+        console.log('Chat history cleared on logout');
     }
 } 
