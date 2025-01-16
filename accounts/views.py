@@ -253,26 +253,18 @@ class PasswordResetRequestView(APIView):
 
                         감사합니다.
                         Codeve 팀 드림''',
-                        from_email=settings.DEFAULT_FROM_EMAIL,  # DEFAULT_FROM_EMAIL 사용
+                        from_email=settings.DEFAULT_FROM_EMAIL,
                         recipient_list=[user.email],
                         fail_silently=False,
                     )
                     
                     if email_sent == 0:  # 이메일 발송 실패
-                        print(f"이메일 발송 실패 - 발송된 이메일 수: 0")
-                        print(f"수신자: {user.email}")
-                        print(f"SMTP 설정: {settings.EMAIL_HOST}, {settings.EMAIL_PORT}")
                         return Response(
                             {'error': '이메일 발송에 실패했습니다. 잠시 후 다시 시도해주세요.'}, 
                             status=status.HTTP_500_INTERNAL_SERVER_ERROR
                         )
                     
-                    print(f"이메일 발송 성공 - 수신자: {user.email}")
-                    
                 except Exception as e:
-                    print(f"이메일 발송 중 예외 발생: {str(e)}")
-                    print(f"수신자: {user.email}")
-                    print(f"SMTP 설정: {settings.EMAIL_HOST}, {settings.EMAIL_PORT}")
                     return Response(
                         {'error': '이메일 발송 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.'}, 
                         status=status.HTTP_500_INTERNAL_SERVER_ERROR
