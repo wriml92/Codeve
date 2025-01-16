@@ -6,7 +6,6 @@ class CustomPasswordResetForm(PasswordResetForm):
         """
         Override send_mail method to use custom from_email
         """
-        from_email = 'Codeve <no-reply@codeve.com>'  # 여기서 발신자 주소를 강제로 설정
         super().send_mail(
             subject_template_name=subject_template_name,
             email_template_name=email_template_name,
