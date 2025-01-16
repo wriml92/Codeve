@@ -1,156 +1,115 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Codeve - 과제</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-[#FFEBA4]">
-    {% load static %}
-    
-    <nav class="flex justify-between items-center p-4 bg-[#F4D151] border-b border-yellow-200">
-        <div class="flex items-center space-x-8">
-            <a href="{% url 'main' %}" class="font-bold text-lg px-4 py-2 bg-yellow-300 rounded-xl hover:bg-yellow-400">
-                Codeve
-            </a>
-            <div class="flex space-x-6">
-                <div class="space-x-4">
-                    <a href="{% url 'courses:theory-lesson' %}" class="text-gray-700 hover:text-gray-900">Python</a>
-                    <a href="{% url 'communities:posts-list' %}" class="text-gray-700 hover:text-gray-900">Archive</a>
-                </div>
+{% extends 'base/base.html' %}
+{% load static %}
+{% block title %}Codeve - 과제{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/chatbot-widget.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- Tab Navigation -->
+<div class="flex justify-center space-x-4 mb-8">
+    <a href="{% url 'courses:theory-lesson-detail' topic_id %}" class="px-6 py-2 bg-yellow-200 rounded-lg hover:bg-yellow-300">이론</a>
+    <a href="{% url 'courses:practice-detail' topic_id %}" class="px-6 py-2 bg-yellow-200 rounded-lg hover:bg-yellow-300">실습</a>
+    <a href="{% url 'courses:assignment-detail' topic_id %}" class="px-6 py-2 bg-yellow-300 rounded-lg font-medium">과제</a>
+    <a href="{% url 'courses:reflection' %}" class="px-6 py-2 bg-yellow-200 rounded-lg hover:bg-yellow-300">회고</a>
+</div>
+
+<!-- 좌우 레이아웃을 위한 flex 컨테이너 -->
+<div class="flex gap-8">
+    <!-- 왼쪽 사이드바 - 토픽 네비게이션 -->
+    <div class="w-64 flex-shrink-0">
+        <div class="bg-white rounded-2xl p-6 shadow-sm sticky top-8">
+            <h3 class="text-lg font-semibold mb-4">학습 목차</h3>
+            <div class="space-y-2">
+                {% for topic in topics %}
+                    <a href="{% url 'courses:assignment-detail' topic.id %}" 
+                       class="block px-4 py-2 rounded-lg {% if topic.id == topic_id %}bg-yellow-300{% else %}hover:bg-yellow-200{% endif %}">
+                        {{ topic.name }}
+                    </a>
+                {% endfor %}
             </div>
         </div>
-        <div class="flex items-center space-x-2">
-            {% if user.is_authenticated %}
-                <span class="text-gray-700">{{ user.username }}님</span>
-                <a href="{% url 'accounts:my_page' %}" class="flex items-center space-x-2 bg-amber-200 px-6 py-2 rounded-r-full rounded-l-lg transform -skew-x-12 hover:bg-amber-300 transition-colors">
-                    <span class="transform skew-x-12">마이페이지</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transform skew-x-12" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
-                    </svg>
-                </a>
-                <form action="{% url 'accounts:logout' %}" method="post" class="inline">
-                    {% csrf_token %}
-                    <button type="submit" class="bg-amber-200 px-6 py-2 rounded-r-full rounded-l-lg transform -skew-x-12 hover:bg-amber-300 transition-colors">
-                        <span class="transform skew-x-12">로그아웃</span>
-                    </button>
-                </form>
-            {% else %}
-                <a href="{% url 'accounts:login' %}" class="bg-amber-300 px-6 py-2 rounded-r-full rounded-l-lg transform -skew-x-12 hover:bg-amber-400 transition-colors">
-                    <span class="transform skew-x-12">로그인</span>
-                </a>
-                <a href="{% url 'accounts:signup' %}" class="bg-amber-200 px-6 py-2 rounded-r-full rounded-l-lg transform -skew-x-12 hover:bg-amber-300 transition-colors">
-                    <span class="transform skew-x-12">회원가입</span>
-                </a>
-            {% endif %}
-        </div>
-    </nav>
+    </div>
 
-    <main class="container mx-auto px-4 py-8">
-        <!-- Tab Navigation -->
-        <div class="flex justify-center space-x-4 mb-8">
-            <a href="{% url 'courses:theory-lesson-detail' topic_id %}" class="px-6 py-2 bg-yellow-200 rounded-lg hover:bg-yellow-300">이론</a>
-            <a href="{% url 'courses:practice-detail' topic_id %}" class="px-6 py-2 bg-yellow-200 rounded-lg hover:bg-yellow-300">실습</a>
-            <a href="{% url 'courses:assignment-detail' topic_id %}" class="px-6 py-2 bg-yellow-300 rounded-lg font-medium">과제</a>
-            <a href="{% url 'courses:reflection' %}" class="px-6 py-2 bg-yellow-200 rounded-lg hover:bg-yellow-300">회고</a>
-        </div>
+    <!-- 메인 콘텐츠 영역 -->
+    <div class="flex-1">
+        <div class="bg-white rounded-2xl p-8 shadow-sm">
+            <h1 class="text-xl font-bold mb-6">
+                <span class="text-red-500">[과제]</span> {{ topic_name }}
+            </h1>
+            
+            <p class="mb-8 text-gray-800">이제 퀴즈를 풀어보겠습니다.</p>
 
-        <!-- 좌우 레이아웃을 위한 flex 컨테이너 -->
-        <div class="flex gap-8">
-            <!-- 왼쪽 사이드바 - 토픽 네비게이션 -->
-            <div class="w-64 flex-shrink-0">
-                <div class="bg-white rounded-2xl p-6 shadow-sm sticky top-8">
-                    <h3 class="text-lg font-semibold mb-4">학습 목차</h3>
-                    <div class="space-y-2">
-                        {% for topic in topics %}
-                            <a href="{% url 'courses:assignment-detail' topic.id %}" 
-                               class="block px-4 py-2 rounded-lg {% if topic.id == topic_id %}bg-yellow-300{% else %}hover:bg-yellow-200{% endif %}">
-                                {{ topic.name }}
-                            </a>
-                        {% endfor %}
+            <!-- 각 퀴즈와 답안을 함께 표시 -->
+            {% for quiz in quizzes %}
+            <div class="mb-12 bg-white rounded-2xl p-6 shadow-sm border border-yellow-200">
+                <!-- 퀴즈 문제 -->
+                <div class="mb-8">
+                    <h2 class="text-lg font-bold mb-4">
+                        퀴즈 {{ quiz.id }}: 
+                        {% if quiz.id == 1 %}개념 이해
+                        {% elif quiz.id == 2 %}코드 분석
+                        {% else %}코드 구현
+                        {% endif %}
+                    </h2>
+                    <div class="text-gray-800">
+                        {{ quiz.content|safe }}
                     </div>
                 </div>
-            </div>
 
-            <!-- 메인 콘텐츠 영역 -->
-            <div class="flex-1">
-                <div class="bg-white rounded-2xl p-8 shadow-sm">
-                    <h1 class="text-xl font-bold mb-6">
-                        <span class="text-red-500">[과제]</span> {{ topic_name }}
-                    </h1>
-                    
-                    <p class="mb-8 text-gray-800">이제 퀴즈를 풀어보겠습니다.</p>
-
-                    <!-- 각 퀴즈와 답안을 함께 표시 -->
-                    {% for quiz in quizzes %}
-                    <div class="mb-12 bg-white rounded-2xl p-6 shadow-sm border border-yellow-200">
-                        <!-- 퀴즈 문제 -->
-                        <div class="mb-8">
-                            <h2 class="text-lg font-bold mb-4">
-                                퀴즈 {{ quiz.id }}: 
-                                {% if quiz.id == 1 %}개념 이해
-                                {% elif quiz.id == 2 %}코드 분석
-                                {% else %}코드 구현
-                                {% endif %}
-                            </h2>
-                            <div class="text-gray-800">
-                                {{ quiz.content|safe }}
+                <!-- 퀴즈 답안 -->
+                <div class="pt-4 border-t border-yellow-200">
+                    <h3 class="text-md font-bold mb-4">퀴즈 {{ quiz.id }} 답안</h3>
+                    {% if quiz.id == 1 %}
+                        <!-- 객관식 답안 (퀴즈 1) -->
+                        <div class="space-y-3">
+                            {% for i in "1234"|make_list %}
+                            <div class="flex items-center space-x-3">
+                                <input type="radio" 
+                                       id="quiz1_answer{{ i }}" 
+                                       name="quiz1_answer" 
+                                       value="{{ i }}" 
+                                       class="w-4 h-4 text-yellow-400">
+                                <label for="quiz1_answer{{ i }}" class="text-gray-800">{{ i }}</label>
                             </div>
+                            {% endfor %}
                         </div>
-
-                        <!-- 퀴즈 답안 -->
-                        <div class="pt-4 border-t border-yellow-200">
-                            <h3 class="text-md font-bold mb-4">퀴즈 {{ quiz.id }} 답안</h3>
-                            {% if quiz.id == 1 %}
-                                <!-- 객관식 답안 (퀴즈 1) -->
-                                <div class="space-y-3">
-                                    {% for i in "1234"|make_list %}
-                                    <div class="flex items-center space-x-3">
-                                        <input type="radio" 
-                                               id="quiz1_answer{{ i }}" 
-                                               name="quiz1_answer" 
-                                               value="{{ i }}" 
-                                               class="w-4 h-4 text-yellow-400">
-                                        <label for="quiz1_answer{{ i }}" class="text-gray-800">{{ i }}</label>
-                                    </div>
-                                    {% endfor %}
-                                </div>
-                            {% elif quiz.type == 'code' %}
-                                <div class="bg-gray-900 rounded-lg p-4">
-                                    <textarea 
-                                        id="quiz{{ quiz.id }}_answer"
-                                        class="w-full h-32 bg-gray-900 text-white font-mono text-sm p-2 focus:outline-none"
-                                        placeholder="여기에 파이썬 코드를 작성하세요..."
-                                    ></textarea>
-                                </div>
-                            {% endif %}
-                            <button 
-                                onclick="submitQuiz({{ quiz.id }}, '{{ quiz.type }}')"
-                                class="w-full mt-4 px-6 py-2 bg-yellow-300 rounded-lg hover:bg-yellow-400">
-                                제출하기
-                            </button>
+                    {% elif quiz.type == 'code' %}
+                        <div class="bg-gray-900 rounded-lg p-4">
+                            <textarea 
+                                id="quiz{{ quiz.id }}_answer"
+                                class="w-full h-32 bg-gray-900 text-white font-mono text-sm p-2 focus:outline-none"
+                                placeholder="여기에 파이썬 코드를 작성하세요..."
+                            ></textarea>
                         </div>
-                    </div>
-                    {% endfor %}
-                </div>
-
-                <!-- Navigation Buttons -->
-                <div class="flex justify-between items-center mt-8">
-                    <a href="{% url 'courses:practice-detail' topic_id %}" class="px-6 py-2 bg-yellow-300 rounded-lg hover:bg-yellow-400">이전</a>
-                    <a href="{% url 'courses:reflection' %}" class="px-6 py-2 bg-yellow-300 rounded-lg hover:bg-yellow-400">다음</a>
-                    <link rel="stylesheet" href="{% static 'css/chatbot-widget.css' %}">
-    <script src="{% static 'js/chatbot-widget.js' %}"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            new ChatbotWidget();
-        });
-    </script>
+                    {% endif %}
+                    <button 
+                        onclick="submitQuiz({{ quiz.id }}, '{{ quiz.type }}')"
+                        class="w-full mt-4 px-6 py-2 bg-yellow-300 rounded-lg hover:bg-yellow-400">
+                        제출하기
+                    </button>
                 </div>
             </div>
+            {% endfor %}
         </div>
-    </main>
-</body>
-</html>
+
+        <!-- Navigation Buttons -->
+        <div class="flex justify-between items-center mt-8">
+            <a href="{% url 'courses:practice-detail' topic_id %}" class="px-6 py-2 bg-yellow-300 rounded-lg hover:bg-yellow-400">이전</a>
+            <a href="{% url 'courses:reflection' %}" class="px-6 py-2 bg-yellow-300 rounded-lg hover:bg-yellow-400">다음</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{% static 'js/chatbot-widget.js' %}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        new ChatbotWidget();
+    });
+</script>
+{% endblock %}
 
 

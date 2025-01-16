@@ -163,7 +163,7 @@ EMAIL_HOST_USER = str(os.environ.get('EMAIL_HOST_USER'))
 EMAIL_HOST_PASSWORD = str(os.environ.get('EMAIL_HOST_USER_PASSWORD'))
 EMAIL_USE_TLS = str(os.environ.get('EMAIL_USE_TLS')).lower() == 'true'
 DEFAULT_FROM_EMAIL = str(os.environ.get('DEFAULT_FROM_EMAIL'))
-SERVER_EMAIL = 'coated.jinee@gmail.com'
+SERVER_EMAIL = 'wriml92@knou.ac.kr'
 
 # 비밀번호 재설정 링크 만료 시간 (초 단위, 기본값: 3일)
 PASSWORD_RESET_TIMEOUT = 259200  # 3일
