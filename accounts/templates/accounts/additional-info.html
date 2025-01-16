@@ -75,8 +75,44 @@
                     수정 완료
                 </button>
             </form>
-        </div>
 
+            <div class="mt-12 border-t pt-8">
+                <h2 class="text-xl text-center font-bold text-red-600 mb-4">계정 삭제</h2>
+                <p class="text-gray-600 mb-4">계정을 삭제하면 모든 데이터가 영구적으로 삭제되며 복구할 수 없습니다.</p>
+                <button 
+                    onclick="document.getElementById('deleteModal').classList.remove('hidden')"
+                    class="w-full bg-red-500 hover:bg-red-600 text-white py-3 rounded-lg transition-colors"
+                >
+                    회원 탈퇴
+                </button>
+            </div>
+        </div>
     </main>
+
+    <!-- Delete Account Modal -->
+    <div id="deleteModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+        <div class="bg-white p-8 rounded-lg max-w-md w-full mx-4">
+            <h2 class="text-2xl font-bold mb-4">정말 탈퇴하시겠습니까?</h2>
+            <p class="text-gray-600 mb-6">계정을 삭제하면 모든 데이터가 영구적으로 삭제되며 복구할 수 없습니다.</p>
+            <div class="flex space-x-4">
+                <button 
+                    onclick="document.getElementById('deleteModal').classList.add('hidden')"
+                    class="flex-1 bg-gray-200 hover:bg-gray-300 text-black py-2 rounded-lg transition-colors"
+                >
+                    취소
+                </button>
+                <form action="{% url 'accounts:delete_account' %}" method="post" class="flex-1">
+                    {% csrf_token %}
+                    <button 
+                        type="submit"
+                        class="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg transition-colors"
+                    >
+                        탈퇴하기
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>
