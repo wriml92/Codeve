@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     {% block extra_head %}{% endblock %}
 </head>
-<body class="bg-[#FFEBA4]">
+<body class="bg-[#FFEBA4] {% if user.is_authenticated %}user-logged-in{% endif %}">
     {% load static %}
     
     <!-- Navigation -->

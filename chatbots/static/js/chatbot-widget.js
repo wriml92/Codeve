@@ -1,9 +1,16 @@
 class ChatbotWidget {
     constructor() {
+        if (!this.isLoggedIn()) {
+            return;
+        }
         this.createWidget();
         this.isOpen = false;
         this.loadChatHistory();
         this.MAX_HISTORY = 10;
+    }
+
+    isLoggedIn() {
+        return document.body.classList.contains('user-logged-in');
     }
 
     createWidget() {
@@ -160,4 +167,14 @@ class ChatbotWidget {
         localStorage.removeItem('chatHistory');
         console.log('Chat history cleared on logout');
     }
+}
+
+function handleLogout(event) {
+    event.preventDefault();
+    localStorage.removeItem('chatHistory');
+    const chatbotWidget = document.querySelector('.chatbot-widget');
+    if (chatbotWidget) {
+        chatbotWidget.remove();
+    }
+    document.getElementById('logout-form').submit();
 } 
