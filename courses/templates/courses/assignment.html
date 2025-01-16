@@ -50,10 +50,10 @@
     <main class="container mx-auto px-4 py-8">
         <!-- Tab Navigation -->
         <div class="flex justify-center space-x-4 mb-8">
-            <a href="{% url 'courses:theory-lesson' %}" class="px-6 py-2 bg-yellow-200 rounded-lg hover:bg-yellow-300">이론</a>
-            <a href="{% url 'courses:practice' %}" class="px-6 py-2 bg-yellow-200 rounded-lg hover:bg-yellow-300">실습</a>
-            <a href="{% url 'courses:assignment' %}" class="px-6 py-2 bg-yellow-300 rounded-lg font-medium">과제</a>
-            <a href="#" class="px-6 py-2 bg-yellow-200 rounded-lg hover:bg-yellow-300">회고</a>
+            <a href="{% url 'courses:theory-lesson-detail' topic_id %}" class="px-6 py-2 bg-yellow-200 rounded-lg hover:bg-yellow-300">이론</a>
+            <a href="{% url 'courses:practice-detail' topic_id %}" class="px-6 py-2 bg-yellow-200 rounded-lg hover:bg-yellow-300">실습</a>
+            <a href="{% url 'courses:assignment-detail' topic_id %}" class="px-6 py-2 bg-yellow-300 rounded-lg font-medium">과제</a>
+            <a href="{% url 'courses:reflection' %}" class="px-6 py-2 bg-yellow-200 rounded-lg hover:bg-yellow-300">회고</a>
         </div>
 
         <!-- 좌우 레이아웃을 위한 flex 컨테이너 -->
