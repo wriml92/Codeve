@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Codeve{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="bg-[#FFEBA4]">
+    {% load static %}
+    
+    <!-- Navigation -->
+    <nav class="flex justify-between items-center p-4 bg-[#F4D151] border-b border-yellow-200">
+        <div class="flex items-center space-x-8">
+            <a href="{% url 'main' %}" class="font-bold text-lg px-4 py-2 bg-yellow-300 rounded-xl hover:bg-yellow-400">
+                Codeve
+            </a>
+            <div class="flex space-x-6">
+                <div class="space-x-4">
+                    <a href="{% url 'courses:theory-lesson' %}" class="text-gray-700 hover:text-gray-900">Python</a>
+                    <a href="{% url 'communities:posts-list' %}" class="text-gray-700 hover:text-gray-900">Archive</a>
+                </div>
+            </div>
+        </div>
+        <div class="flex items-center space-x-2">
+            {% if user.is_authenticated %}
+                <span class="text-gray-700">{{ user.username }}님</span>
+                <a href="{% url 'accounts:my_page' %}" class="flex items-center space-x-2 bg-amber-200 px-6 py-2 rounded-r-full rounded-l-lg transform -skew-x-12 hover:bg-amber-300 transition-colors">
+                    <span class="transform skew-x-12">마이페이지</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transform skew-x-12" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+                    </svg>
+                </a>
+                <form action="{% url 'accounts:logout' %}" method="post" class="inline">
+                    {% csrf_token %}
+                    <button type="submit" class="bg-amber-200 px-6 py-2 rounded-r-full rounded-l-lg transform -skew-x-12 hover:bg-amber-300 transition-colors">
+                        <span class="transform skew-x-12">로그아웃</span>
+                    </button>
+                </form>
+            {% else %}
+                <a href="{% url 'accounts:login' %}" class="bg-amber-300 px-6 py-2 rounded-r-full rounded-l-lg transform -skew-x-12 hover:bg-amber-400 transition-colors">
+                    <span class="transform skew-x-12">로그인</span>
+                </a>
+                <a href="{% url 'accounts:signup' %}" class="bg-amber-200 px-6 py-2 rounded-r-full rounded-l-lg transform -skew-x-12 hover:bg-amber-300 transition-colors">
+                    <span class="transform skew-x-12">회원가입</span>
+                </a>
+            {% endif %}
+        </div>
+    </nav>
+
+    {% block back_button %}{% endblock %}
+
+    <!-- Main Content -->
+    <main class="container mx-auto mt-8 px-4 {% block main_class %}{% endblock %}">
+        {% block content %}{% endblock %}
+    </main>
+
+    {% if messages %}
+        <div class="fixed bottom-4 right-4">
+            {% for message in messages %}
+                <div class="mb-2 p-4 rounded-lg {% if message.tags == 'error' %}bg-red-100 text-red-700{% else %}bg-green-100 text-green-700{% endif %} shadow-lg">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html> 
