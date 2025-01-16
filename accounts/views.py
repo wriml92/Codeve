@@ -219,44 +219,67 @@ class PasswordResetRequestView(APIView):
         serializer = PasswordResetRequestSerializer(data=request.data)
         if serializer.is_valid():
             email = serializer.validated_data['email']
-            user = User.objects.filter(email=email).first()
+            user = User.objects.filter(email=email, is_email_verified=True).first()
+            
+            # 이메일이 존재하고 인증된 경우에만 실제로 이메일 발송
             if user:
-                token = str(uuid.uuid4())
-                expires_at = timezone.now() + timedelta(hours=24)
-                PasswordReset.objects.create(
-                    user=user,
-                    token=token,
-                    expires_at=expires_at
-                )
-                # TODO: 비밀번호 재설정 이메일 발송 로직 구현
-                reset_url = f"http://localhost:8000/accounts/password-reset-confirm/{token}/"
                 try:
-                    send_mail(
+                    # 토큰 생성 및 저장
+                    token = str(uuid.uuid4())
+                    expires_at = timezone.now() + timedelta(hours=24)
+                    PasswordReset.objects.create(
+                        user=user,
+                        token=token,
+                        expires_at=expires_at
+                    )
+                    
+                    reset_url = f"http://localhost:8000/accounts/password-reset-confirm/{token}/"
+                    
+                    # 이메일 발송
+                    email_sent = send_mail(
                         subject='Codeve - 비밀번호 재설정',
                         message=f'''안녕하세요, {user.username}님.
 
-비밀번호 재설정 요청이 있었습니다.
-아래 링크를 클릭하여 새로운 비밀번호를 설정해주세요:
+                        비밀번호 재설정 요청이 있었습니다.
+                        아래 링크를 클릭하여 새로운 비밀번호를 설정해주세요:
 
-{reset_url}
+                        {reset_url}
 
-본인이 요청하지 않았다면 이 이메일을 무시하셔도 됩니다.
-계정의 비밀번호는 변경되지 않은 상태로 유지됩니다.
+                        본인이 요청하지 않았다면 이 이메일을 무시하셔도 됩니다.
+                        계정의 비밀번호는 변경되지 않은 상태로 유지됩니다.
 
-감사합니다.
-Codeve 팀 드림''',
-                        from_email=settings.DEFAULT_FROM_EMAIL,
+                        감사합니다.
+                        Codeve 팀 드림''',
+                        from_email=settings.DEFAULT_FROM_EMAIL,  # DEFAULT_FROM_EMAIL 사용
                         recipient_list=[user.email],
                         fail_silently=False,
                     )
+                    
+                    if email_sent == 0:  # 이메일 발송 실패
+                        print(f"이메일 발송 실패 - 발송된 이메일 수: 0")
+                        print(f"수신자: {user.email}")
+                        print(f"SMTP 설정: {settings.EMAIL_HOST}, {settings.EMAIL_PORT}")
+                        return Response(
+                            {'error': '이메일 발송에 실패했습니다. 잠시 후 다시 시도해주세요.'}, 
+                            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                        )
+                    
+                    print(f"이메일 발송 성공 - 수신자: {user.email}")
+                    
                 except Exception as e:
-                    print(f"이메일 발송 실패 (비밀번호 재설정): {str(e)}")
-                    print(f"발송 시도한 이메일 주소: {user.email}")
+                    print(f"이메일 발송 중 예외 발생: {str(e)}")
+                    print(f"수신자: {user.email}")
                     print(f"SMTP 설정: {settings.EMAIL_HOST}, {settings.EMAIL_PORT}")
-                    return Response({'error': '이메일 발송에 실패했습니다. 관리자에게 문의해주세요.'}, 
-                        status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-                return Response({'message': '비밀번호 재설정 링크가 이메일로 발송되었습니다.'})
-            return Response({'message': '비밀번호 재설정 링크가 이메일로 발송되었습니다.'})
+                    return Response(
+                        {'error': '이메일 발송 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.'}, 
+                        status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                    )
+            
+            # 이메일 존재 여부와 관계없이 동일한 메시지 반환
+            return Response({
+                'message': '입력하신 이메일 주소로 비밀번호 재설정 안내를 발송했습니다. 메일이 오지 않은 경우 스팸함을 확인해주세요.'
+            })
+            
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
@@ -282,3 +305,19 @@ class PasswordResetConfirmView(APIView):
             
             return Response({'message': '비밀번호가 재설정되었습니다.'})
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class MyPageView(APIView):
+    permission_classes = [IsAuthenticated]
+    template_name = 'accounts/additional-info.html'
+
+    def get(self, request):
+        return render(request, self.template_name)
+
+    def post(self, request):
+        nickname = request.POST.get('nickname')
+        if nickname:
+            user = request.user
+            user.username = nickname
+            user.save()
+            messages.success(request, '닉네임이 성공적으로 변경되었습니다.')
+        return redirect('accounts:my_page')

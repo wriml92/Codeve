@@ -12,6 +12,7 @@ urlpatterns = [
     path('google/login/', views.GoogleLoginView.as_view(), name='google_login'),
     path('profile/', views.UserProfileView.as_view(), name='profile'),
     path('password/change/', views.PasswordChangeView.as_view(), name='password_change'),
+    path('my-page/', views.MyPageView.as_view(), name='my_page'),
     
     # 비밀번호 재설정 관련 URL 패턴
     path('password/reset/', 
