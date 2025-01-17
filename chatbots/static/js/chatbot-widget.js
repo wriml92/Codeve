@@ -62,6 +62,13 @@ class ChatbotWidget {
         const input = document.querySelector('.chat-input input');
 
         try {
+            this.displayMessage(message, 'user-message');
+            
+            // 봇 메시지를 위한 컨테이너 미리 생성
+            const botMessageDiv = document.createElement('div');
+            botMessageDiv.className = 'bot-message';
+            messagesContainer.appendChild(botMessageDiv);
+            
             const response = await fetch('/api/chatbot/', {
                 method: 'POST',
                 headers: {
@@ -75,13 +82,25 @@ class ChatbotWidget {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
 
-            const data = await response.json();
-            
-            this.displayMessage(message, 'user-message');
-            this.displayMessage(data.response, 'bot-message');
-            
+            const reader = response.body.getReader();
+            let accumulatedText = '';
+
+            while (true) {
+                const {done, value} = await reader.read();
+                if (done) break;
+                
+                // 새로운 텍스트 청크를 디코딩
+                const text = new TextDecoder().decode(value);
+                accumulatedText += text;
+                
+                // 봇 메시지 업데이트
+                botMessageDiv.textContent = accumulatedText;
+                this.scrollToBottom(messagesContainer);
+            }
+
             input.value = '';
-            this.scrollToBottom(messagesContainer);
+            this.saveChatHistory(accumulatedText, 'bot-message');
+            
         } catch (error) {
             console.error('Error:', error);
         }

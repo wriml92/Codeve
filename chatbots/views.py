@@ -8,20 +8,18 @@ import logging
 import json
 import os
 import random
+import re
 
 # 로깅 설정
 logger = logging.getLogger(__name__)
 
 def load_cached_responses():
     try:
-        # JSON 파일 경로 설정
         json_path = os.path.join(os.path.dirname(__file__), 'responses.json')
         
-        # JSON 파일 읽기
         with open(json_path, 'r', encoding='utf-8') as f:
             return json.load(f)
     except FileNotFoundError:
-        # 파일이 없을 경우 빈 딕셔너리 반환
         return {}
 
 class ChatbotViewSet(viewsets.ViewSet):
@@ -31,62 +29,102 @@ class ChatbotViewSet(viewsets.ViewSet):
         self.cached_responses = load_cached_responses()
             
     def extract_keywords(self, message):
-        # 불필요한 단어들 제거
-        stop_words = ['이란', '란', '이', '가', '은', '는', '을', '를', '에', '대해', '뭐야', '무엇', '설명', '해줘', '알려줘', '?', '.']
+        # 특수문자 및 공백 정리
+        message = re.sub(r'[^\w\s]', ' ', message)
+        message = message.lower()  # 소문자 변환
         
-        # 메시지를 단어로 분리
-        words = message.replace('?', ' ').replace('.', ' ').split()
+        # 불용어 목록
+        stop_words = ['이란', '란', '이', '가', '은', '는', '을', '를', '에', 
+                     '대해', '뭐야', '무엇', '설명', '해줘', '알려줘', '?', '.']
         
-        # 불필요한 단어 제거
+        # 단어 분리 및 불용어 제거
+        words = message.split()
         keywords = [word for word in words if word not in stop_words]
         
         return keywords
 
     def find_best_match(self, keywords):
+        if not keywords:
+            return None
+        
+        # 1. 정확한 키워드 매칭
         for keyword in keywords:
-            # 정확히 일치하는 키가 있는지 확인
             if keyword in self.cached_responses:
                 response = self.cached_responses[keyword]
-                # 다양한 응답 형식 중 랜덤하게 선택
                 response_formats = [
                     f"{keyword}란 {response}",
                     f"{keyword}는 {response}",
-                    f"{keyword}에 대해 설명드리면 {response}",
+                    f"{keyword}에 대해 설명드리면 {response}"
                 ]
                 return random.choice(response_formats)
-            
-            # 부분 일치하는 키 찾기
-            for cache_key in self.cached_responses.keys():
+        
+        # 2. 부분 매칭 (가장 긴 일치 키워드 찾기)
+        best_match = None
+        max_match_length = 0
+        
+        for keyword in keywords:
+            for cache_key in self.cached_responses:
                 if keyword in cache_key or cache_key in keyword:
-                    response = self.cached_responses[cache_key]
-                    response_formats = [
-                        f"{cache_key}란 {response}",
-                        f"{cache_key}는 {response}",
-                        f"{cache_key}에 대해 설명드리면 {response}",
-                    ]
-                    return random.choice(response_formats)
+                    match_length = len(keyword)
+                    if match_length > max_match_length:
+                        max_match_length = match_length
+                        best_match = (cache_key, self.cached_responses[cache_key])
+        
+        if best_match:
+            cache_key, response = best_match
+            response_formats = [
+                f"{cache_key}란 {response}",
+                f"{cache_key}는 {response}",
+                f"{cache_key}에 대해 설명드리면 {response}"
+            ]
+            return random.choice(response_formats)
         
         return None
 
     def create(self, request):
-        # 클라이언트로부터 메시지 받기
-        message = request.data.get('message')
+        message = request.data.get('message', '').strip()
         if not message:
             return Response({'error': '메시지가 필요합니다'}, status=400)
 
-        # 키워드 추출 및 캐시된 응답 확인
+        # 1. 정확한 메시지 매칭
+        if message in self.cached_responses:
+            response = self.cached_responses[message]
+            response_formats = [
+                f"{message}란 {response}",
+                f"{message}는 {response}",
+                f"{message}에 대해 설명드리면 {response}"
+            ]
+            formatted_response = random.choice(response_formats)
+            self._save_chat_message(request.user, message, formatted_response, True)
+            return Response({'response': formatted_response})
+
+        # 2. 키워드 기반 검색
         keywords = self.extract_keywords(message)
         cached_response = self.find_best_match(keywords)
         
         if cached_response:
-            ChatMessage.objects.create(
-                user=request.user,
-                message=message,
-                response=cached_response,
-                is_cached=True
-            )
+            self._save_chat_message(request.user, message, cached_response, True)
             return Response({'response': cached_response})
 
+        # 3. OpenAI API 호출
+        try:
+            response_text = self._call_openai_api(message)
+            self._save_chat_message(request.user, message, response_text, False)
+            return Response({'response': response_text})
+        except Exception as e:
+            logger.error(f"API 호출 중 오류 발생: {str(e)}")
+            return Response({'error': str(e)}, status=500)
+
+    def _save_chat_message(self, user, message, response, is_cached):
+        """채팅 메시지 저장"""
+        ChatMessage.objects.create(
+            user=user,
+            message=message,
+            response=response,
+            is_cached=is_cached
+        )
+
+    def _call_openai_api(self, message):
         # OpenAI API 키 확인
         if not settings.OPENAI_API_KEY:
             raise APIException("OpenAI API key is not configured")
@@ -107,28 +145,13 @@ class ChatbotViewSet(viewsets.ViewSet):
                     """},
                     {"role": "user", "content": message}
                 ],
-                temperature=0.1,  # 응답의 창의성 조절
-                max_tokens=500,   # 최대 토큰 수 제한
-                frequency_penalty=0.5  # 반복 표현 방지
+                temperature=0.1,
+                max_tokens=500,
+                frequency_penalty=0.5,
+                stream=True
             )
             
-            # API 응답 처리 및 저장
-            response_text = response.choices[0].message.content
-            used_model = response.model  # 사용된 모델 정보
-
-            # 모델 정보와 함께 로그 기록
-            logger.info(f"사용된 모델: {used_model}")
-
-            ChatMessage.objects.create(
-                user=request.user,
-                message=message,
-                response=response_text,
-                is_cached=False
-            )
-            
-            return Response({'response': response_text, 'model': used_model})
+            return response
             
         except Exception as e:
-            # 오류 로깅 및 에러 응답
-            logger.error(f"API 호출 중 오류 발생: {str(e)}")
-            return Response({'error': str(e)}, status=500)
+            raise e
