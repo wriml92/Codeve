@@ -177,4 +177,4 @@ function handleLogout(event) {
         chatbotWidget.remove();
     }
     document.getElementById('logout-form').submit();
-} 
+}

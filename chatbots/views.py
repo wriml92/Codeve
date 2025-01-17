@@ -7,19 +7,28 @@ from rest_framework.exceptions import APIException
 import logging
 import json
 import os
-import re
 import random
 
 # 로깅 설정
 logger = logging.getLogger(__name__)
 
+def load_cached_responses():
+    try:
+        # JSON 파일 경로 설정
+        json_path = os.path.join(os.path.dirname(__file__), 'responses.json')
+        
+        # JSON 파일 읽기
+        with open(json_path, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except FileNotFoundError:
+        # 파일이 없을 경우 빈 딕셔너리 반환
+        return {}
+
 class ChatbotViewSet(viewsets.ViewSet):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        # responses.json 파일 로드
-        json_path = os.path.join(os.path.dirname(__file__), 'responses.json')
-        with open(json_path, 'r', encoding='utf-8') as f:
-            self.cached_responses = json.load(f)
+        # load_cached_responses 함수 사용
+        self.cached_responses = load_cached_responses()
             
     def extract_keywords(self, message):
         # 불필요한 단어들 제거
