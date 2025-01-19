@@ -5,25 +5,26 @@
 
 {% block back_button %}
 <div class="flex items-start p-4">
-    <a href="{% url 'communities:posts-list' %}" class="px-4 py-2 bg-yellow-200 rounded-lg hover:bg-yellow-300">뒤로 가기</a>
+    <a href="{% url 'communities:posts-list' %}" class="px-4 py-2 bg-yellow-200 rounded-lg hover:bg-yellow-300">뒤로
+        가기</a>
 </div>
 {% endblock %}
 
 {% block content %}
 <div class="max-w-4xl mx-auto">
     <h1 class="text-2xl font-bold mb-8">{% if is_edit %}게시글 수정{% else %}게시글 작성{% endif %}</h1>
-    
+
     <form method="post" class="bg-white rounded-3xl p-8 shadow-sm">
         {% csrf_token %}
         <div class="mb-6">
             <label for="title" class="block text-gray-700 mb-2">제목</label>
             <input type="text" name="title" id="title" required
-                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-yellow-500">
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-yellow-500">
         </div>
         <div class="mb-6">
             <label for="content" class="block text-gray-700 mb-2">내용</label>
             <textarea name="content" id="content" rows="10" required
-                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-yellow-500"></textarea>
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-yellow-500"></textarea>
         </div>
         <div class="flex justify-end">
             <button type="submit" class="px-6 py-2 bg-yellow-400 rounded-lg hover:bg-yellow-500">
@@ -32,4 +33,4 @@
         </div>
     </form>
 </div>
-{% endblock %} 
+{% endblock %}

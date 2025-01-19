@@ -10,9 +10,12 @@
 {% block content %}
 <!-- Tab Navigation -->
 <div class="flex justify-center space-x-4 mb-8">
-    <a href="{% url 'courses:theory-lesson-detail' topic_id %}" class="px-6 py-2 bg-yellow-300 rounded-lg font-medium">이론</a>
-    <a href="{% url 'courses:practice-detail' topic_id %}" class="px-6 py-2 bg-yellow-200 rounded-lg hover:bg-yellow-300">실습</a>
-    <a href="{% url 'courses:assignment-detail' topic_id %}" class="px-6 py-2 bg-yellow-200 rounded-lg hover:bg-yellow-300">과제</a>
+    <a href="{% url 'courses:theory-lesson-detail' topic_id %}"
+        class="px-6 py-2 bg-yellow-300 rounded-lg font-medium">이론</a>
+    <a href="{% url 'courses:practice-detail' topic_id %}"
+        class="px-6 py-2 bg-yellow-200 rounded-lg hover:bg-yellow-300">실습</a>
+    <a href="{% url 'courses:assignment-detail' topic_id %}"
+        class="px-6 py-2 bg-yellow-200 rounded-lg hover:bg-yellow-300">과제</a>
     <a href="{% url 'courses:reflection' %}" class="px-6 py-2 bg-yellow-200 rounded-lg hover:bg-yellow-300">회고</a>
 </div>
 
@@ -24,10 +27,10 @@
             <h3 class="text-lg font-semibold mb-4">학습 목차</h3>
             <div class="space-y-2">
                 {% for topic in topics %}
-                    <a href="{% url 'courses:theory-lesson-detail' topic.id %}" 
-                       class="block px-4 py-2 rounded-lg {% if topic.id == topic_id %}bg-yellow-300{% else %}hover:bg-yellow-200{% endif %}">
-                        {{ topic.name }}
-                    </a>
+                <a href="{% url 'courses:theory-lesson-detail' topic.id %}"
+                    class="block px-4 py-2 rounded-lg {% if topic.id == topic_id %}bg-yellow-300{% else %}hover:bg-yellow-200{% endif %}">
+                    {{ topic.name }}
+                </a>
                 {% endfor %}
             </div>
         </div>
@@ -39,7 +42,7 @@
             <h1 class="text-xl font-bold mb-6">
                 <span class="text-red-500">[이론]</span> {{ topic_name }}
             </h1>
-            
+
             <!-- 이론 내용을 안전하게 표시 -->
             {{ content|safe }}
         </div>
@@ -47,7 +50,8 @@
         <!-- Navigation Buttons -->
         <div class="flex justify-between items-center mt-8">
             <button class="px-6 py-2 bg-yellow-300 rounded-lg hover:bg-yellow-400">이전</button>
-            <a href="{% url 'courses:practice-detail' topic_id %}" class="px-6 py-2 bg-yellow-300 rounded-lg hover:bg-yellow-400">다음</a>
+            <a href="{% url 'courses:practice-detail' topic_id %}"
+                class="px-6 py-2 bg-yellow-300 rounded-lg hover:bg-yellow-400">다음</a>
         </div>
     </div>
 </div>
@@ -56,9 +60,8 @@
 {% block extra_scripts %}
 <script src="{% static 'js/chatbot-widget.js' %}"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         new ChatbotWidget();
     });
 </script>
 {% endblock %}
-

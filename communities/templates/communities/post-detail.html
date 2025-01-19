@@ -5,34 +5,33 @@
 
 {% block back_button %}
 <div class="flex items-start p-4">
-    <a href="{% url 'communities:posts-list' %}" class="px-4 py-2 bg-yellow-200 rounded-lg hover:bg-yellow-300">뒤로 가기</a>
+    <a href="{% url 'communities:posts-list' %}" class="px-4 py-2 bg-yellow-200 rounded-lg hover:bg-yellow-300">뒤로
+        가기</a>
 </div>
 {% endblock %}
 
 {% block content %}
 <div class="max-w-4xl mx-auto">
     <h1 class="text-2xl font-bold mb-4">{{ post.title }}</h1>
-    
+
     {% if user == post.user %}
     <div class="flex justify-end space-x-2 mb-4">
-        <a href="{% url 'communities:post-edit' pk=post.pk %}" 
-           class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+        <a href="{% url 'communities:post-edit' pk=post.pk %}"
+            class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
             수정
         </a>
         <form action="{% url 'communities:post-delete' pk=post.pk %}" method="post" class="inline">
             {% csrf_token %}
-            <button type="submit" 
-                    class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
-                    onclick="return confirm('정말 삭제하시겠습니까?')">
+            <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                onclick="return confirm('정말 삭제하시겠습니까?')">
                 삭제
             </button>
         </form>
     </div>
     {% endif %}
-    
+
     <div class="bg-white rounded-3xl p-8 min-h-[600px] shadow-sm">
         {{ post.content }}
     </div>
 </div>
 {% endblock %}
-
