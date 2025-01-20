@@ -16,9 +16,11 @@ from .serializers import (UserSerializer, UserProfileSerializer, SocialAccountSe
                         PasswordChangeSerializer, PasswordResetRequestSerializer,
                         PasswordResetConfirmSerializer)
 from .models import User, SocialAccount, PasswordReset
+from chatbots.models import ChatMessage  # ChatMessage import 경로 수정
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views import View
+import logging
 
 class SignUpView(APIView):
     permission_classes = [AllowAny]
@@ -323,18 +325,41 @@ class MyPageView(APIView):
         nickname = request.POST.get('nickname')
         if nickname:
             user = request.user
-            user.username = nickname
-            user.save()
-            messages.success(request, '닉네임이 성공적으로 변경되었습니다.')
+            if user.username == nickname:
+                messages.warning(request, '현재 닉네임과 동일합니다.')
+            else:
+                user.username = nickname
+                user.save()
+                messages.success(request, '닉네임이 성공적으로 변경되었습니다.')
         return redirect('accounts:my_page')
 
 class DeleteAccountView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         try:
             user = request.user
+            
+            # 1. 소셜 계정 연동 정보 삭제
+            SocialAccount.objects.filter(user=user).delete()
+            
+            # 2. 채팅 메시지 삭제
+            ChatMessage.objects.filter(user=user).delete()
+            
+            # 3. 비밀번호 재설정 토큰 삭제
+            PasswordReset.objects.filter(user=user).delete()
+            
+            # 4. 사용자 계정 삭제 전에 로그아웃 처리
+            logout(request)
+            
+            # 5. 사용자 계정 삭제
             user.delete()
+            
             messages.success(request, '회원 탈퇴가 완료되었습니다.')
             return redirect('main')
+            
+        except ChatMessage.DoesNotExist:
+            # 채팅 메시지가 없는 경우 무시하고 계속 진행
+            pass
         except Exception as e:
+            print(f"회원 탈퇴 중 오류 발생: {str(e)}")  # 콘솔에 오류 출력
             messages.error(request, '회원 탈퇴 중 오류가 발생했습니다. 다시 시도해주세요.')
             return redirect('accounts:my_page')
