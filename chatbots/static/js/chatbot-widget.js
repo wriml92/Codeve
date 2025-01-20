@@ -64,7 +64,6 @@ class ChatbotWidget {
         try {
             this.displayMessage(message, 'user-message');
             
-            // 봇 메시지를 위한 컨테이너 미리 생성
             const botMessageDiv = document.createElement('div');
             botMessageDiv.className = 'bot-message';
             messagesContainer.appendChild(botMessageDiv);
@@ -82,27 +81,23 @@ class ChatbotWidget {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
 
-            const reader = response.body.getReader();
-            let accumulatedText = '';
-
-            while (true) {
-                const {done, value} = await reader.read();
-                if (done) break;
-                
-                // 새로운 텍스트 청크를 디코딩
-                const text = new TextDecoder().decode(value);
-                accumulatedText += text;
-                
-                // 봇 메시지 업데이트
-                botMessageDiv.textContent = accumulatedText;
-                this.scrollToBottom(messagesContainer);
+            const data = await response.json();
+            if (data.error) {
+                throw new Error(data.error);
             }
-
+            
+            botMessageDiv.textContent = data.response;
+            this.scrollToBottom(messagesContainer);
+            
             input.value = '';
-            this.saveChatHistory(accumulatedText, 'bot-message');
+            this.saveChatHistory(data.response, 'bot-message');
             
         } catch (error) {
             console.error('Error:', error);
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error-message';
+            errorDiv.textContent = '죄송합니다. 오류가 발생했습니다.';
+            messagesContainer.appendChild(errorDiv);
         }
     }
 
