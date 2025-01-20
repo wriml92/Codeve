@@ -14,19 +14,21 @@
 
     <!-- Navigation -->
     <nav class="flex justify-between items-center p-4 bg-[#F4D151] border-b border-yellow-200">
+        <!-- Left Navigation -->
         <div class="flex items-center space-x-8">
             <a href="{% url 'main' %}" class="font-bold text-lg px-4 py-2 bg-yellow-300 rounded-xl hover:bg-yellow-400">
                 Codeve
             </a>
-            <div class="flex space-x-6">
-                <div class="space-x-4">
-                    <a href="{% url 'courses:course-list' %}" class="text-gray-700 hover:text-gray-900">Python</a>
-                    <a href="{% url 'communities:posts-list' %}" class="text-gray-700 hover:text-gray-900">Archive</a>
-                </div>
+            <div class="space-x-4">
+                <a href="{% url 'courses:course-list' %}" class="text-gray-700 hover:text-gray-900">Python</a>
+                <a href="{% url 'communities:posts-list' %}" class="text-gray-700 hover:text-gray-900">Archive</a>
             </div>
         </div>
+
+        <!-- Right Navigation -->
         <div class="flex items-center space-x-2">
             {% if user.is_authenticated %}
+            <!-- User Info & Actions -->
             <span class="text-gray-700">{{ user.username }}님</span>
             <a href="{% url 'accounts:my_page' %}"
                 class="flex items-center space-x-2 bg-amber-200 px-6 py-2 rounded-r-full rounded-l-lg transform -skew-x-12 hover:bg-amber-300 transition-colors">
@@ -37,6 +39,7 @@
                         clip-rule="evenodd" />
                 </svg>
             </a>
+            <!-- Logout Form -->
             <form action="{% url 'accounts:logout' %}" method="post" class="inline" id="logout-form">
                 {% csrf_token %}
                 <button type="submit" onclick="handleLogout(event)"
@@ -45,6 +48,7 @@
                 </button>
             </form>
             {% else %}
+            <!-- Auth Links -->
             <a href="{% url 'accounts:login' %}"
                 class="bg-amber-300 px-6 py-2 rounded-r-full rounded-l-lg transform -skew-x-12 hover:bg-amber-400 transition-colors">
                 <span class="transform skew-x-12">로그인</span>
@@ -64,6 +68,7 @@
         {% block content %}{% endblock %}
     </main>
 
+    <!-- Messages -->
     {% if messages %}
     <div class="fixed bottom-4 right-4">
         {% for message in messages %}
@@ -80,9 +85,7 @@
     <script>
         function handleLogout(event) {
             event.preventDefault();
-            // 챗봇 대화 내역 삭제
             localStorage.clear();  // 모든 localStorage 데이터 삭제
-            // 폼 제출
             document.getElementById('logout-form').submit();
         }
     </script>

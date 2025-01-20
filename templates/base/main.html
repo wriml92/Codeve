@@ -8,9 +8,10 @@
 {% endblock %}
 
 {% block content %}
+<!-- Hero Section -->
 <div class="text-center mt-20">
+    <!-- Emoji Icons -->
     <div class="flex justify-center space-x-10 mb-8">
-        <!-- Icons -->
         <div class="w-20 h-20 text-7xl">👀</div>
         <div class="w-20 h-20 text-7xl">⌘</div>
         <div class="w-20 h-20 text-7xl">😆</div>
@@ -18,21 +19,24 @@
         <div class="w-20 h-20 text-7xl">👀</div>
     </div>
 
-    <h1 class="text-4xl font-bold mb-4">
-        파이썬을 시작하는 가장 똑똑한 방법
-    </h1>
+    <!-- Main Title -->
+    <div class="mb-12">
+        <h1 class="text-4xl font-bold mb-4">
+            파이썬을 시작하는 가장 똑똑한 방법
+        </h1>
+        <h2 class="text-2xl">
+            코드이브 시작하기
+        </h2>
+    </div>
 
-    <h2 class="text-2xl mb-12">
-        코드이브 시작하기
-    </h2>
-
+    <!-- CTA Button -->
     {% if not user.is_authenticated %}
     <a href="{% url 'accounts:signup' %}"
         class="inline-block bg-gray-800 text-white px-8 py-3 rounded-lg hover:bg-gray-700 transition-colors">
         가입하고 시작하기
     </a>
     {% else %}
-    <a href="{% url 'courses:theory-lesson' %}"
+    <a href="{% url 'courses:course-list' %}"
         class="inline-block bg-gray-800 text-white px-8 py-3 rounded-lg hover:bg-gray-700 transition-colors">
         학습 시작하기
     </a>
@@ -41,6 +45,7 @@
 {% endblock %}
 
 {% block extra_scripts %}
+<!-- Chatbot Widget -->
 <script src="{% static 'js/chatbot-widget.js' %}"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
