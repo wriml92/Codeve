@@ -8,10 +8,9 @@
 {% endblock %}
 
 {% block content %}
-<!-- Hero Section -->
 <div class="text-center mt-20">
-    <!-- Emoji Icons -->
     <div class="flex justify-center space-x-10 mb-8">
+        <!-- Icons -->
         <div class="w-20 h-20 text-7xl">👀</div>
         <div class="w-20 h-20 text-7xl">⌘</div>
         <div class="w-20 h-20 text-7xl">😆</div>
@@ -19,17 +18,14 @@
         <div class="w-20 h-20 text-7xl">👀</div>
     </div>
 
-    <!-- Main Title -->
-    <div class="space-y-4 mb-12">
-        <h1 class="text-4xl font-bold">
-            파이썬을 시작하는 가장 똑똑한 방법
-        </h1>
-        <h2 class="text-2xl">
-            코드이브 시작하기
-        </h2>
-    </div>
+    <h1 class="text-4xl font-bold mb-4">
+        파이썬을 시작하는 가장 똑똑한 방법
+    </h1>
 
-    <!-- CTA Button -->
+    <h2 class="text-2xl mb-12">
+        코드이브 시작하기
+    </h2>
+
     {% if not user.is_authenticated %}
     <a href="{% url 'accounts:signup' %}"
         class="inline-block bg-gray-800 text-white px-8 py-3 rounded-lg hover:bg-gray-700 transition-colors">

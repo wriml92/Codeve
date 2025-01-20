@@ -6,30 +6,39 @@
 {% block content %}
 <div class="max-w-3xl mx-auto space-y-4">
     {% if posts %}
-    {% for post in posts %}
-    <a href="{% url 'communities:post-detail' pk=post.pk %}" class="block group">
-        <div class="flex items-center justify-between bg-white rounded-2xl p-6 hover:shadow-md transition-shadow">
-            <div>
-                <h2 class="text-xl mb-2">{{ post.title }}</h2>
-                <p class="text-gray-600 text-sm">{{ post.created_at|date:"Y-m-d H:i" }}</p>
+        {% for post in posts %}
+        <a href="{% url 'communities:post-detail' pk=post.pk %}" class="block group">
+            <div class="flex items-center justify-between bg-white rounded-2xl p-6 hover:shadow-md transition-shadow">
+                <div>
+                    <h2 class="text-xl mb-2">{{ post.title }}</h2>
+                    <p class="text-gray-600 text-sm">{{ post.created_at|date:"Y-m-d H:i" }}</p>
+                </div>
+                <svg 
+                    class="w-6 h-6 text-gray-400 group-hover:text-gray-600 transition-colors"
+                    xmlns="http://www.w3.org/2000/svg" 
+                    fill="none" 
+                    viewBox="0 0 24 24" 
+                    stroke="currentColor"
+                >
+                    <path 
+                        stroke-linecap="round" 
+                        stroke-linejoin="round" 
+                        stroke-width="2" 
+                        d="M9 5l7 7-7 7"
+                    />
+                </svg>
             </div>
-            <svg class="w-6 h-6 text-gray-400 group-hover:text-gray-600 transition-colors"
-                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-            </svg>
-        </div>
-    </a>
-    {% endfor %}
+        </a>
+        {% endfor %}
     {% else %}
-    <div class="bg-white rounded-2xl p-8 text-center">
-        <p class="text-gray-600">아직 게시글이 없습니다.</p>
-    </div>
+        <div class="bg-white rounded-2xl p-8 text-center">
+            <p class="text-gray-600">아직 게시글이 없습니다.</p>
+        </div>
     {% endif %}
 </div>
 
 <div class="fixed bottom-8 right-8">
-    <a href="{% url 'communities:post-create' %}"
-        class="bg-yellow-300 w-14 h-14 rounded-full flex items-center justify-center hover:bg-yellow-400 shadow-lg">
+    <a href="{% url 'communities:post-create' %}" class="bg-yellow-300 w-14 h-14 rounded-full flex items-center justify-center hover:bg-yellow-400 shadow-lg">
         <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
         </svg>
