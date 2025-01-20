@@ -290,7 +290,6 @@ def course_list_view(request):
     progress_percentage = 0
     if request.user.is_authenticated:
         # 여기에서 사용자의 학습 진행률을 계산하는 로직을 추가할 수 있습니다.
-        # 예: completed_topics / total_topics * 100
         pass
     
     context = {
@@ -299,5 +298,5 @@ def course_list_view(request):
         'progress_percentage': progress_percentage
     }
     
-    return render(request, 'courses/course-list.html', context)
+    return render(request, 'roadmaps/course-list.html', context)
 
