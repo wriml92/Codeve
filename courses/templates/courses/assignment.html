@@ -9,9 +9,12 @@
 {% block content %}
 <!-- Tab Navigation -->
 <div class="flex justify-center space-x-4 mb-8">
-    <a href="{% url 'courses:theory-lesson-detail' topic_id %}" class="px-6 py-2 bg-yellow-200 rounded-lg hover:bg-yellow-300">이론</a>
-    <a href="{% url 'courses:practice-detail' topic_id %}" class="px-6 py-2 bg-yellow-200 rounded-lg hover:bg-yellow-300">실습</a>
-    <a href="{% url 'courses:assignment-detail' topic_id %}" class="px-6 py-2 bg-yellow-300 rounded-lg font-medium">과제</a>
+    <a href="{% url 'courses:theory-lesson-detail' topic_id %}"
+        class="px-6 py-2 bg-yellow-200 rounded-lg hover:bg-yellow-300">이론</a>
+    <a href="{% url 'courses:practice-detail' topic_id %}"
+        class="px-6 py-2 bg-yellow-200 rounded-lg hover:bg-yellow-300">실습</a>
+    <a href="{% url 'courses:assignment-detail' topic_id %}"
+        class="px-6 py-2 bg-yellow-300 rounded-lg font-medium">과제</a>
     <a href="{% url 'courses:reflection' %}" class="px-6 py-2 bg-yellow-200 rounded-lg hover:bg-yellow-300">회고</a>
 </div>
 
@@ -23,10 +26,10 @@
             <h3 class="text-lg font-semibold mb-4">학습 목차</h3>
             <div class="space-y-2">
                 {% for topic in topics %}
-                    <a href="{% url 'courses:assignment-detail' topic.id %}" 
-                       class="block px-4 py-2 rounded-lg {% if topic.id == topic_id %}bg-yellow-300{% else %}hover:bg-yellow-200{% endif %}">
-                        {{ topic.name }}
-                    </a>
+                <a href="{% url 'courses:assignment-detail' topic.id %}"
+                    class="block px-4 py-2 rounded-lg {% if topic.id == topic_id %}bg-yellow-300{% else %}hover:bg-yellow-200{% endif %}">
+                    {{ topic.name }}
+                </a>
                 {% endfor %}
             </div>
         </div>
@@ -38,7 +41,7 @@
             <h1 class="text-xl font-bold mb-6">
                 <span class="text-red-500">[과제]</span> {{ topic_name }}
             </h1>
-            
+
             <p class="mb-8 text-gray-800">이제 퀴즈를 풀어보겠습니다.</p>
 
             <!-- 각 퀴즈와 답안을 함께 표시 -->
@@ -47,7 +50,7 @@
                 <!-- 퀴즈 문제 -->
                 <div class="mb-8">
                     <h2 class="text-lg font-bold mb-4">
-                        퀴즈 {{ quiz.id }}: 
+                        퀴즈 {{ quiz.id }}:
                         {% if quiz.id == 1 %}개념 이해
                         {% elif quiz.id == 2 %}코드 분석
                         {% else %}코드 구현
@@ -62,30 +65,24 @@
                 <div class="pt-4 border-t border-yellow-200">
                     <h3 class="text-md font-bold mb-4">퀴즈 {{ quiz.id }} 답안</h3>
                     {% if quiz.id == 1 %}
-                        <!-- 객관식 답안 (퀴즈 1) -->
-                        <div class="space-y-3">
-                            {% for i in "1234"|make_list %}
-                            <div class="flex items-center space-x-3">
-                                <input type="radio" 
-                                       id="quiz1_answer{{ i }}" 
-                                       name="quiz1_answer" 
-                                       value="{{ i }}" 
-                                       class="w-4 h-4 text-yellow-400">
-                                <label for="quiz1_answer{{ i }}" class="text-gray-800">{{ i }}</label>
-                            </div>
-                            {% endfor %}
+                    <!-- 객관식 답안 (퀴즈 1) -->
+                    <div class="space-y-3">
+                        {% for i in "1234"|make_list %}
+                        <div class="flex items-center space-x-3">
+                            <input type="radio" id="quiz1_answer{{ i }}" name="quiz1_answer" value="{{ i }}"
+                                class="w-4 h-4 text-yellow-400">
+                            <label for="quiz1_answer{{ i }}" class="text-gray-800">{{ i }}</label>
                         </div>
+                        {% endfor %}
+                    </div>
                     {% elif quiz.type == 'code' %}
-                        <div class="bg-gray-900 rounded-lg p-4">
-                            <textarea 
-                                id="quiz{{ quiz.id }}_answer"
-                                class="w-full h-32 bg-gray-900 text-white font-mono text-sm p-2 focus:outline-none"
-                                placeholder="여기에 파이썬 코드를 작성하세요..."
-                            ></textarea>
-                        </div>
+                    <div class="bg-gray-900 rounded-lg p-4">
+                        <textarea id="quiz{{ quiz.id }}_answer"
+                            class="w-full h-32 bg-gray-900 text-white font-mono text-sm p-2 focus:outline-none"
+                            placeholder="여기에 파이썬 코드를 작성하세요..."></textarea>
+                    </div>
                     {% endif %}
-                    <button 
-                        onclick="submitQuiz({{ quiz.id }}, '{{ quiz.type }}')"
+                    <button onclick="submitQuiz({{ quiz.id }}, '{{ quiz.type }}')"
                         class="w-full mt-4 px-6 py-2 bg-yellow-300 rounded-lg hover:bg-yellow-400">
                         제출하기
                     </button>
@@ -96,8 +93,10 @@
 
         <!-- Navigation Buttons -->
         <div class="flex justify-between items-center mt-8">
-            <a href="{% url 'courses:practice-detail' topic_id %}" class="px-6 py-2 bg-yellow-300 rounded-lg hover:bg-yellow-400">이전</a>
-            <a href="{% url 'courses:reflection' %}" class="px-6 py-2 bg-yellow-300 rounded-lg hover:bg-yellow-400">다음</a>
+            <a href="{% url 'courses:practice-detail' topic_id %}"
+                class="px-6 py-2 bg-yellow-300 rounded-lg hover:bg-yellow-400">이전</a>
+            <a href="{% url 'courses:reflection' %}"
+                class="px-6 py-2 bg-yellow-300 rounded-lg hover:bg-yellow-400">다음</a>
         </div>
     </div>
 </div>
@@ -106,10 +105,8 @@
 {% block extra_scripts %}
 <script src="{% static 'js/chatbot-widget.js' %}"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         new ChatbotWidget();
     });
 </script>
 {% endblock %}
-
-

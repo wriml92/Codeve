@@ -276,3 +276,28 @@ def check_answer(request):
         'feedback': evaluation_result['feedback']
     })
 
+def course_list_view(request):
+    # course_list.json에서 토픽 목록 가져오기
+    course_list_path = Path(__file__).parent / 'agents' / 'course_list.json'
+    with open(course_list_path, 'r', encoding='utf-8') as f:
+        course_list = json.load(f)
+    
+    # Python 코스의 토픽 목록 가져오기
+    python_course = course_list['python']
+    topics = python_course['topics']
+    
+    # 사용자가 로그인한 경우 학습 진행률 계산
+    progress_percentage = 0
+    if request.user.is_authenticated:
+        # 여기에서 사용자의 학습 진행률을 계산하는 로직을 추가할 수 있습니다.
+        # 예: completed_topics / total_topics * 100
+        pass
+    
+    context = {
+        'course': python_course,
+        'topics': topics,
+        'progress_percentage': progress_percentage
+    }
+    
+    return render(request, 'courses/course-list.html', context)
+
