@@ -133,7 +133,7 @@ class ChatbotViewSet(viewsets.ViewSet):
             # OpenAI API 호출
             client = OpenAI(api_key=settings.OPENAI_API_KEY)
             response = client.chat.completions.create(
-                model="gpt-4o-mini", #gpt-3.5-turbo, gpt-4로도 변경가능
+                model="gpt-4o-mini", #오타가 있습니다
                 messages=[
                     # 시스템 프롬프트 설정
                     {"role": "system", "content": """
@@ -151,7 +151,14 @@ class ChatbotViewSet(viewsets.ViewSet):
                 stream=True
             )
             
-            return response
+            # 스트리밍 응답 처리
+            full_response = ""
+            for chunk in response:
+                if chunk.choices[0].delta.content is not None:
+                    full_response += chunk.choices[0].delta.content
+            
+            return full_response
             
         except Exception as e:
-            raise e
+            logger.error(f"OpenAI API 오류: {str(e)}")
+            raise APIException("챗봇 응답 생성 중 오류가 발생했습니다")
