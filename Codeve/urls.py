@@ -37,6 +37,7 @@ urlpatterns = [
     path('', include('social_django.urls', namespace='social')),
     path('api/communities/', include('communities.urls')), #커뮤니티 패스 추가
     path('', include('chatbots.urls')),  # chatbots의 URL 포함
+    path('api/roadmaps/', include('roadmaps.urls')),  # 이 줄 추가
     path('accounts/password/reset/', 
          auth_views.PasswordResetView.as_view(), 
          name='password_reset'),
