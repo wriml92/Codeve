@@ -17,7 +17,7 @@ def post_list_view(request):
 def post_create_view(request):
     """새로운 게시글을 생성하는 뷰"""
     if request.method == 'POST':
-        form = PostForm(request.POST)
+        form = PostForm(request.POST, request.FILES)
         if form.is_valid():
             post = form.save(commit=False)
             post.user = request.user
@@ -27,7 +27,7 @@ def post_create_view(request):
     else:
         form = PostForm()
     
-    return render(request, 'communities/post-create.html')
+    return render(request, 'communities/post-create.html', {'form': form})
 
 
 @login_required
@@ -47,11 +47,7 @@ def post_update_view(request, pk):
         return redirect('posts:post_detail', pk=pk)
 
     if request.method == 'POST':
-        form = PostForm(
-            data=request.POST,
-            files=request.FILES,
-            instance=post
-        )
+        form = PostForm(request.POST, request.FILES, instance=post)
         if form.is_valid():
             form.save()
             messages.success(request, '게시글이 성공적으로 수정되었습니다.')

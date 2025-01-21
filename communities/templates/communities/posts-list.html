@@ -57,6 +57,7 @@
     </div>
 </div>
 
+{% if user.is_staff %}
 <div class="fixed bottom-8 right-8">
     <a href="{% url 'communities:post-create' %}"
         class="bg-gradient-to-r from-amber-500 to-yellow-400 w-14 h-14 rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200 hover:from-amber-600 hover:to-yellow-500 group">
@@ -66,4 +67,5 @@
         </svg>
     </a>
 </div>
+{% endif %}
 {% endblock %}
