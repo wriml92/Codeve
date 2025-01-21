@@ -1,8 +1,10 @@
 from django.db import models
 from django.conf import settings
 
+
 class ChatMessage(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             on_delete=models.CASCADE)
     message = models.TextField()
     response = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
@@ -10,6 +12,7 @@ class ChatMessage(models.Model):
 
     class Meta:
         ordering = ['-created_at']
+
 
 class CachedResponse(models.Model):
     question_hash = models.CharField(max_length=64, unique=True)

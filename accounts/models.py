@@ -3,11 +3,13 @@ from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 
+
 class User(AbstractUser):
     email = models.EmailField(_('email address'), unique=True)
     google_id = models.CharField(max_length=255, null=True, blank=True)
     birth_date = models.DateField(null=True, blank=True)
-    profile_image = models.ImageField(upload_to='profile_images/', null=True, blank=True)
+    profile_image = models.ImageField(
+        upload_to='profile_images/', null=True, blank=True)
     is_email_verified = models.BooleanField(default=False)
     failed_login_attempts = models.IntegerField(default=0)
     last_login_attempt = models.DateTimeField(null=True, blank=True)
@@ -57,8 +59,10 @@ class User(AbstractUser):
                 return lock_duration.seconds < 1800  # 30분 잠금
         return False
 
+
 class SocialAccount(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='social_accounts')
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='social_accounts')
     provider = models.CharField(max_length=30)  # 예: Google
     social_id = models.CharField(max_length=255)  # OAuth에서 제공받는 유저 ID
     access_token = models.CharField(max_length=255, null=True, blank=True)
@@ -69,6 +73,7 @@ class SocialAccount(models.Model):
 
     class Meta:
         unique_together = ('provider', 'social_id')
+
 
 class PasswordReset(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

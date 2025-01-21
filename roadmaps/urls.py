@@ -8,4 +8,4 @@ router.register(r'roadmaps', RoadmapViewSet, basename='roadmap')
 urlpatterns = [
     path('', include(router.urls)),
     path('courses/', CourseListView.as_view(), name='course-list'),
-] 
+]

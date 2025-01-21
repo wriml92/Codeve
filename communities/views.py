@@ -26,7 +26,7 @@ def post_create_view(request):
             return redirect('communities:posts-list')
     else:
         form = PostForm()
-    
+
     return render(request, 'communities/post-create.html', {'form': form})
 
 
@@ -41,7 +41,7 @@ def post_detail_view(request, pk):
 def post_update_view(request, pk):
     """게시글 정보를 수정하는 뷰"""
     post = get_object_or_404(Post, pk=pk)
-    
+
     if post.user != request.user:
         messages.error(request, '수정 권한이 없습니다.')
         return redirect('posts:post_detail', pk=pk)
@@ -69,29 +69,29 @@ def post_update_view(request, pk):
 def post_delete_view(request, pk):
     """게시글을 삭제하는 뷰"""
     post = get_object_or_404(Post, pk=pk)
-    
+
     # 작성자만 삭제 가능
     if post.user != request.user:
         messages.error(request, '게시글 삭제 권한이 없습니다.')
         return redirect('communities:post-detail', pk=pk)
-    
+
     if request.method == 'POST':
         post.delete()
         messages.success(request, '게시글이 삭제되었습니다.')
         return redirect('communities:posts-list')
-    
+
     return redirect('communities:post-detail', pk=pk)
 
 
 @login_required
 def post_edit_view(request, pk):
     post = get_object_or_404(Post, pk=pk)
-    
+
     # 작성자만 수정 가능
     if post.user != request.user:
         messages.error(request, '게시글 수정 권한이 없습니다.')
         return redirect('communities:post-detail', pk=pk)
-    
+
     if request.method == 'POST':
         form = PostForm(request.POST, instance=post)
         if form.is_valid():
@@ -100,7 +100,7 @@ def post_edit_view(request, pk):
             return redirect('communities:post-detail', pk=pk)
     else:
         form = PostForm(instance=post)
-    
+
     return render(request, 'communities/post-create.html', {'form': form, 'is_edit': True})
 
 

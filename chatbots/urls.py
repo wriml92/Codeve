@@ -9,4 +9,4 @@ app_name = 'chatbots'
 
 urlpatterns = [
     path('api/', include(router.urls)),
-] 
+]

@@ -10,9 +10,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Roadmap, UserRoadmap, RoadmapStep, Course, UserCourse
 # from .agents.roadmap_agent import RoadmapAgent  # 이 줄을 주석 처리
 
+
 class RoadmapViewSet(viewsets.ViewSet):
     permission_classes = [IsAuthenticated]
-    
+
     def list(self, request):
         """사용자의 로드맵 목록 조회"""
         user_roadmaps = UserRoadmap.objects.filter(user=request.user)
@@ -33,9 +34,9 @@ class RoadmapViewSet(viewsets.ViewSet):
             user=request.user,
             roadmap=roadmap
         ).first()
-        
+
         steps = RoadmapStep.objects.filter(roadmap=roadmap)
-        
+
         data = {
             'id': roadmap.id,
             'title': roadmap.title,
@@ -61,7 +62,7 @@ class RoadmapViewSet(viewsets.ViewSet):
             # 사용자 데이터로 로드맵 생성
             # agent = RoadmapAgent(request.data)
             roadmap_data = await RoadmapAgent(request.data).generate_roadmap()
-            
+
             # 로드맵 저장
             roadmap = Roadmap.objects.create(
                 title=roadmap_data['title'],
@@ -69,7 +70,7 @@ class RoadmapViewSet(viewsets.ViewSet):
                 difficulty=roadmap_data['difficulty'],
                 estimated_hours=roadmap_data['estimated_hours']
             )
-            
+
             # 로드맵 단계 저장
             for i, step_data in enumerate(roadmap_data['steps'], 1):
                 RoadmapStep.objects.create(
@@ -79,18 +80,18 @@ class RoadmapViewSet(viewsets.ViewSet):
                     order=i,
                     estimated_hours=step_data['estimated_hours']
                 )
-            
+
             # 사용자-로드맵 연결
             UserRoadmap.objects.create(
                 user=request.user,
                 roadmap=roadmap
             )
-            
+
             return Response({
                 'message': '로드맵이 생성되었습니다.',
                 'roadmap_id': roadmap.id
             }, status=status.HTTP_201_CREATED)
-            
+
         except Exception as e:
             return Response({
                 'error': str(e)
@@ -105,18 +106,19 @@ class RoadmapViewSet(viewsets.ViewSet):
             user=request.user,
             roadmap=roadmap
         )
-        
+
         step_id = request.data.get('step_id')
         if step_id:
             step = get_object_or_404(RoadmapStep, pk=step_id)
             user_roadmap.current_step = step
             user_roadmap.progress = (step.order / roadmap.steps.count()) * 100
             user_roadmap.save()
-            
+
         return Response({
             'message': '진행 상태가 업데이트되었습니다.',
             'progress': user_roadmap.progress
         })
+
 
 class CourseListView(LoginRequiredMixin, ListView):
     model = Course
@@ -125,18 +127,18 @@ class CourseListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        
+
         # 사용자의 코스 진행 상황 조회
         user_courses = UserCourse.objects.filter(user=self.request.user)
         progress_dict = {uc.course_id: uc.progress for uc in user_courses}
-        
+
         # 각 코스에 대한 진행률 추가
         for course in context['courses']:
             course.progress = progress_dict.get(course.id, 0)
-            
+
             # topics JSON 데이터를 템플릿에서 사용할 수 있도록 변환
             if isinstance(course.topics, str):
                 import json
                 course.topics = json.loads(course.topics)
-                
+
         return context

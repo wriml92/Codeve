@@ -22,11 +22,14 @@ from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
 from accounts.forms import CustomPasswordResetForm
 
+
 def main_view(request):
     return render(request, 'base/main.html')
 
+
 def main2_view(request):
     return render(request, 'base/main2.html')
+
 
 urlpatterns = [
     path('', main_view, name='main'),
@@ -35,10 +38,10 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('api/courses/', include('courses.urls')),
     path('', include('social_django.urls', namespace='social')),
-    path('api/communities/', include('communities.urls')), #커뮤니티 패스 추가
+    path('api/communities/', include('communities.urls')),  # 커뮤니티 패스 추가
     path('', include('chatbots.urls')),  # chatbots의 URL 포함
     path('api/roadmaps/', include('roadmaps.urls')),  # 이 줄 추가
-    path('accounts/password/reset/', 
-         auth_views.PasswordResetView.as_view(), 
+    path('accounts/password/reset/',
+         auth_views.PasswordResetView.as_view(),
          name='password_reset'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -9,4 +9,3 @@ class ChatbotsConfig(AppConfig):
     def ready(self):
         if not settings.OPENAI_API_KEY:
             raise Exception("OPENAI_API_KEY is not set")
-
