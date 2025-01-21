@@ -93,7 +93,7 @@ def post_edit_view(request, pk):
         return redirect('communities:post-detail', pk=pk)
 
     if request.method == 'POST':
-        form = PostForm(request.POST, instance=post)
+        form = PostForm(request.POST, request.FILES, instance=post)
         if form.is_valid():
             form.save()
             messages.success(request, '게시글이 수정되었습니다.')
