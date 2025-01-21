@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from rest_framework import viewsets, status, generics
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -12,6 +12,8 @@ import json
 from typing import Dict, Any
 import openai
 from pathlib import Path
+from django.views.decorators.http import require_POST
+from django.contrib.auth.decorators import login_required
 
 class CourseViewSet(viewsets.ModelViewSet):
     queryset = Course.objects.all()
@@ -112,6 +114,40 @@ class UserCourseViewSet(viewsets.ModelViewSet):
         return Response({'error': '진행률이 제공되지 않았습니다.'}, 
             status=status.HTTP_400_BAD_REQUEST)
 
+@login_required
+@require_POST
+def complete_topic(request, topic_id):
+    try:
+        user_course = UserCourse.objects.get(user=request.user)
+    except UserCourse.DoesNotExist:
+        user_course = UserCourse.objects.create(
+            user=request.user,
+            progress=0,
+            completed_topics=''
+        )
+    
+    # 현재 완료된 토픽 목록 가져오기
+    completed_topics = set(user_course.completed_topics.split(',')) if user_course.completed_topics else set()
+    completed_topics.add(str(topic_id))
+    
+    # 중복 제거 및 정렬
+    completed_topics = sorted(list(filter(None, completed_topics)))
+    
+    # 진행률 계산 (전체 토픽 수는 임시로 10개로 가정)
+    total_topics = 10
+    progress = (len(completed_topics) / total_topics) * 100
+    
+    # 업데이트
+    user_course.completed_topics = ','.join(completed_topics)
+    user_course.progress = progress
+    user_course.save()
+    
+    return JsonResponse({
+        'status': 'success',
+        'message': '학습이 완료되었습니다.',
+        'progress': progress
+    })
+
 def theory_lesson_view(request, topic_id='input_output'):
     # 데이터 파일 경로
     data_dir = Path(__file__).parent / 'data' / 'theory'
@@ -144,8 +180,13 @@ def theory_lesson_view(request, topic_id='input_output'):
     # 현재 코스의 모든 토픽 가져오기 (예: python 코스)
     topics = course_list['python']['topics']
     
+    # 이전 토픽 찾기
+    current_index = next((i for i, topic in enumerate(topics) if topic['id'] == topic_id), -1)
+    prev_topic = topics[current_index - 1] if current_index > 0 else None
+    
     context.update({
-        'topics': topics  # 템플릿에 토픽 목록 전달
+        'topics': topics,  # 템플릿에 토픽 목록 전달
+        'prev_topic': prev_topic  # 이전 토픽 정보 전달
     })
     
     return render(request, 'courses/theory-lesson.html', context)
@@ -291,11 +332,26 @@ def course_list_view(request):
     python_course = course_list['python']
     topics = python_course['topics']
     
-    # 사용자가 로그인한 경우 학습 진행률 계산
-    progress_percentage = 0
+    # 사용자가 로그인한 경우 학습 진행률과 각 토픽의 학습 상태 계산
     if request.user.is_authenticated:
-        # 여기에서 사용자의 학습 진행률을 계산하는 로직을 추가할 수 있습니다.
-        pass
+        # UserCourse에서 사용자의 학습 기록 가져오기
+        user_course = UserCourse.objects.filter(user=request.user).first()
+        completed_topics = set()  # 완료된 토픽 ID 저장
+        
+        if user_course:
+            # 완료된 토픽 ID 목록 가져오기 (예: "1,2,3" -> {1,2,3})
+            completed_topics = set(map(str, user_course.completed_topics.split(','))) if user_course.completed_topics else set()
+            progress_percentage = user_course.progress
+        else:
+            progress_percentage = 0
+            
+        # 각 토픽에 학습 완료 상태 추가
+        for topic in topics:
+            topic['is_completed'] = topic['id'] in completed_topics
+    else:
+        progress_percentage = 0
+        for topic in topics:
+            topic['is_completed'] = False
     
     context = {
         'course': python_course,
@@ -304,4 +360,26 @@ def course_list_view(request):
     }
     
     return render(request, 'roadmaps/course-list.html', context)
+
+@login_required
+def resume_learning(request):
+    # 사용자의 마지막 학습 상태 확인
+    user_course = UserCourse.objects.filter(user=request.user).first()
+    
+    if not user_course:
+        # 학습 기록이 없으면 코스 목록 페이지로 이동
+        return redirect('courses:course-list')
+    
+    # completed_topics에서 마지막으로 완료한 토픽 ID 가져오기
+    completed_topics = user_course.completed_topics.split(',') if user_course.completed_topics else []
+    
+    if completed_topics:
+        # 마지막으로 완료한 토픽의 다음 토픽으로 이동
+        last_completed_topic = completed_topics[-1]
+        # 여기서는 토픽 ID가 순차적으로 증가한다고 가정
+        next_topic_id = str(int(last_completed_topic) + 1)
+        return redirect('courses:theory-lesson-detail', topic_id=next_topic_id)
+    else:
+        # 완료한 토픽이 없으면 첫 번째 토픽으로 이동
+        return redirect('courses:theory-lesson-detail', topic_id='variables')
 

@@ -49,8 +49,15 @@
 
         <!-- Navigation Buttons -->
         <div class="flex justify-between items-center mt-8">
-            <button class="px-6 py-2 bg-yellow-300 rounded-lg hover:bg-yellow-400">이전</button>
-            <a href="{% url 'courses:practice-detail' topic_id %}"
+            {% if prev_topic %}
+            <a href="{% url 'courses:theory-lesson-detail' prev_topic.id %}"
+                class="px-6 py-2 bg-yellow-300 rounded-lg hover:bg-yellow-400">이전</a>
+            {% else %}
+            <a href="{% url 'courses:course-list' %}"
+                class="px-6 py-2 bg-yellow-300 rounded-lg hover:bg-yellow-400">목록으로</a>
+            {% endif %}
+
+            <a href="{% url 'courses:practice-detail' topic_id %}" onclick="completeTopic(event, '{{ topic_id }}')"
                 class="px-6 py-2 bg-yellow-300 rounded-lg hover:bg-yellow-400">다음</a>
         </div>
     </div>
@@ -63,5 +70,47 @@
     document.addEventListener('DOMContentLoaded', function () {
         new ChatbotWidget();
     });
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    async function completeTopic(event, topicId) {
+        event.preventDefault();
+
+        try {
+            const response = await fetch(`/courses/complete-topic/${topicId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            const data = await response.json();
+
+            if (data.status === 'success') {
+                // 다음 페이지로 이동
+                window.location.href = "{% url 'courses:practice-detail' topic_id %}";
+            } else {
+                console.error('학습 완료 처리 실패:', data.message);
+            }
+        } catch (error) {
+            console.error('학습 완료 처리 중 오류 발생:', error);
+            // 오류가 발생하더라도 다음 페이지로 이동
+            window.location.href = "{% url 'courses:practice-detail' topic_id %}";
+        }
+    }
 </script>
 {% endblock %}

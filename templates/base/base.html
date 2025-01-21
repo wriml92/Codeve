@@ -13,28 +13,34 @@
     {% load static %}
 
     <!-- Navigation -->
-    <nav class="flex justify-between items-center p-4 bg-[#F4D151] border-b border-yellow-200">
+    <nav class="flex justify-between items-center p-4 bg-[#F4D151] border-b border-yellow-200 shadow-sm">
         <!-- Left Navigation -->
         <div class="flex items-center space-x-8">
-            <a href="{% url 'main' %}" class="font-bold text-lg px-4 py-2 bg-yellow-300 rounded-xl hover:bg-yellow-400">
+            <a href="{% url 'main' %}" 
+               class="font-bold text-lg px-6 py-2.5 bg-gradient-to-r from-yellow-400 to-amber-400 rounded-xl hover:from-yellow-500 hover:to-amber-500 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
                 Codeve
             </a>
-            <div class="space-x-4">
-                <a href="#" onclick="handlePythonClick(event)" class="text-gray-700 hover:text-gray-900">Python</a>
-                <a href="{% url 'communities:posts-list' %}" class="text-gray-700 hover:text-gray-900">Archive</a>
+            <div class="space-x-6">
+                <a href="#" onclick="handlePythonClick(event)" 
+                   class="text-gray-700 hover:text-gray-900 font-medium relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-gray-900 after:left-0 after:-bottom-1 after:transition-all after:duration-300 hover:after:w-full">
+                    Python
+                </a>
+                <a href="{% url 'communities:posts-list' %}" 
+                   class="text-gray-700 hover:text-gray-900 font-medium relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-gray-900 after:left-0 after:-bottom-1 after:transition-all after:duration-300 hover:after:w-full">
+                    Archive
+                </a>
             </div>
         </div>
 
         <!-- Right Navigation -->
-        <div class="flex items-center space-x-2">
+        <div class="flex items-center space-x-4">
             {% if user.is_authenticated %}
             <!-- User Info & Actions -->
-            <span class="text-gray-700">{{ user.username }}님</span>
+            <span class="text-gray-700 font-medium">{{ user.username }}님</span>
             <a href="{% url 'accounts:my_page' %}"
-                class="flex items-center space-x-2 bg-amber-200 px-6 py-2 rounded-r-full rounded-l-lg transform -skew-x-12 hover:bg-amber-300 transition-colors">
-                <span class="transform skew-x-12">마이페이지</span>
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transform skew-x-12" viewBox="0 0 20 20"
-                    fill="currentColor">
+                class="flex items-center space-x-2 bg-gradient-to-r from-amber-200 to-amber-300 px-6 py-2.5 rounded-lg hover:from-amber-300 hover:to-amber-400 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                <span>마이페이지</span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
                         clip-rule="evenodd" />
                 </svg>
@@ -43,19 +49,19 @@
             <form action="{% url 'accounts:logout' %}" method="post" class="inline" id="logout-form">
                 {% csrf_token %}
                 <button type="submit" onclick="handleLogout(event)"
-                    class="bg-amber-200 px-6 py-2 rounded-r-full rounded-l-lg transform -skew-x-12 hover:bg-amber-300 transition-colors">
-                    <span class="transform skew-x-12">로그아웃</span>
+                    class="bg-gradient-to-r from-amber-200 to-amber-300 px-6 py-2.5 rounded-lg hover:from-amber-300 hover:to-amber-400 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                    로그아웃
                 </button>
             </form>
             {% else %}
             <!-- Auth Links -->
             <a href="{% url 'accounts:login' %}"
-                class="bg-amber-300 px-6 py-2 rounded-r-full rounded-l-lg transform -skew-x-12 hover:bg-amber-400 transition-colors">
-                <span class="transform skew-x-12">로그인</span>
+                class="bg-gradient-to-r from-amber-300 to-amber-400 px-6 py-2.5 rounded-lg hover:from-amber-400 hover:to-amber-500 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                로그인
             </a>
             <a href="{% url 'accounts:signup' %}"
-                class="bg-amber-200 px-6 py-2 rounded-r-full rounded-l-lg transform -skew-x-12 hover:bg-amber-300 transition-colors">
-                <span class="transform skew-x-12">회원가입</span>
+                class="bg-gradient-to-r from-amber-200 to-amber-300 px-6 py-2.5 rounded-lg hover:from-amber-300 hover:to-amber-400 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                회원가입
             </a>
             {% endif %}
         </div>
@@ -89,15 +95,27 @@
             document.getElementById('logout-form').submit();
         }
 
+        function showMessage(message, isError = false) {
+            const messageContainer = document.createElement('div');
+            messageContainer.className = `fixed bottom-4 right-4 mb-2 p-4 rounded-lg shadow-lg ${isError ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`;
+            messageContainer.textContent = message;
+            document.body.appendChild(messageContainer);
+
+            // 3초 후 메시지 제거
+            setTimeout(() => {
+                messageContainer.remove();
+            }, 3000);
+        }
+
         function handlePythonClick(event) {
             event.preventDefault();
             {% if user.is_authenticated %}
                 window.location.href = "{% url 'courses:course-list' %}";
             {% else %}
-                // 현재 URL을 로컬 스토리지에 저장
-                localStorage.setItem('redirectAfterLogin', "{% url 'courses:course-list' %}");
-                // 로그인 페이지로 리다이렉트
-                window.location.href = "{% url 'accounts:login' %}";
+                showMessage('로그인이 필요한 서비스입니다.', true);
+                setTimeout(() => {
+                    window.location.href = "{% url 'accounts:login' %}";
+                }, 1500);
             {% endif %}
         }
     </script>

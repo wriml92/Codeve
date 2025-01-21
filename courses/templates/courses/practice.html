@@ -89,7 +89,8 @@
             <a href="{% url 'courses:theory-lesson-detail' topic_id %}"
                 class="px-6 py-2 bg-yellow-300 rounded-lg hover:bg-yellow-400">이전</a>
             <a href="{% url 'courses:assignment-detail' topic_id %}"
-                class="px-6 py-2 bg-yellow-300 rounded-lg hover:bg-yellow-400">다음</a>
+                class="px-6 py-2 bg-yellow-300 rounded-lg hover:bg-yellow-400"
+                onclick="completeTopic('{{ topic_id }}'); return true;">다음</a>
         </div>
     </div>
 </div>
@@ -101,5 +102,41 @@
     document.addEventListener('DOMContentLoaded', function () {
         new ChatbotWidget();
     });
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    function completeTopic(topicId) {
+        const csrftoken = getCookie('csrftoken');
+
+        fetch(`/courses/complete-topic/${topicId}/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrftoken,
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (!data.success) {
+                    console.error('Failed to complete topic:', data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error completing topic:', error);
+            });
+    }
 </script>
 {% endblock %}

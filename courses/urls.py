@@ -12,4 +12,6 @@ urlpatterns = [
     path('assignment/', views.assignment_view, name='assignment'),
     path('assignment/<str:topic_id>/', views.assignment_view, name='assignment-detail'),
     path('reflection/', views.reflection_view, name='reflection'),
+    path('complete-topic/<str:topic_id>/', views.complete_topic, name='complete-topic'),
+    path('resume-learning/', views.resume_learning, name='resume-learning'),
 ] 
