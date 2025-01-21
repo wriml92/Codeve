@@ -55,7 +55,7 @@
             </form>
             {% else %}
             <!-- Auth Links -->
-            <a href="{% url 'accounts:login' %}"
+            <a href="{% url 'accounts:login' %}?next={{ request.path }}"
                 class="bg-gradient-to-r from-amber-300 to-amber-400 px-6 py-2.5 rounded-lg hover:from-amber-400 hover:to-amber-500 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
                 로그인
             </a>
@@ -114,7 +114,7 @@
             {% else %}
             showMessage('로그인이 필요한 서비스입니다.', true);
             setTimeout(() => {
-                window.location.href = "{% url 'accounts:login' %}";
+                window.location.href = "{% url 'accounts:login' %}?next={% url 'courses:course-list' %}";
             }, 1500);
             {% endif %}
         }
