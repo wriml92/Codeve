@@ -123,7 +123,10 @@ class LoginView(APIView):
             
             login(request, user)
             user.reset_login_attempts()
-            return redirect('main')
+            messages.success(request, '로그인되었습니다.')
+            
+            # Python 코스 페이지로 리다이렉트
+            return redirect('courses:course-list')
         
         # API 요청 처리
         email = request.data.get('email')
