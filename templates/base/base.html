@@ -56,7 +56,7 @@
             {% else %}
             <!-- Auth Links -->
             <a href="{% url 'accounts:login' %}?next={{ request.path }}"
-                class="bg-gradient-to-r from-amber-300 to-amber-400 px-6 py-2.5 rounded-lg hover:from-amber-400 hover:to-amber-500 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                class="bg-gradient-to-r from-amber-200 to-amber-300 px-6 py-2.5 rounded-lg hover:from-amber-300 hover:to-amber-400 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
                 로그인
             </a>
             <a href="{% url 'accounts:signup' %}"
