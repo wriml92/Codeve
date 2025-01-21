@@ -210,26 +210,31 @@ def assignment_view(request, topic_id='input_output'):
         
         for i, part in enumerate(quiz_parts[1:], 1):
             quiz_content = part.strip()
-            quiz_type = 'code' if i in [2, 3] else 'text'
+            quiz_type = 'multiple_choice' if i == 1 else 'code'
             
             # 퀴즈 1의 경우 선택지 추출
             choices = []
             if i == 1:
                 # 문제 내용과 선택지 분리
                 content_lines = quiz_content.split('\n')
+                question_lines = []
+                in_choices = False
+                
                 for line in content_lines:
                     line = line.strip()
-                    # 숫자로 시작하는 선택지만 추출
-                    if line and line[0].isdigit() and '. ' in line:
-                        choices.append(line)
-            
-            # 선택지를 제외한 문제 내용만 저장
-            if i == 1:
-                # 선택지 이전의 문제 설명만 저장
-                question_lines = []
-                for line in content_lines:
-                    if line.strip() and not (line.strip()[0].isdigit() and '. ' in line):
+                    if line.startswith('<ol'):
+                        in_choices = True
+                        continue
+                    elif line.startswith('</ol'):
+                        in_choices = False
+                        continue
+                    elif in_choices and line.startswith('<li>'):
+                        # <li> 태그 제거하고 선택지 텍스트만 추출
+                        choice_text = line.replace('<li>', '').replace('</li>', '').strip()
+                        choices.append(choice_text)
+                    elif not in_choices and line:
                         question_lines.append(line)
+                
                 quiz_content = '\n'.join(question_lines)
             
             quizzes.append({

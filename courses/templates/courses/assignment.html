@@ -4,6 +4,21 @@
 
 {% block extra_head %}
 <link rel="stylesheet" href="{% static 'css/chatbot-widget.css' %}">
+<!-- CodeMirror CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/theme/monokai.min.css">
+<style>
+    .CodeMirror {
+        height: auto;
+        min-height: 100px;
+        border-radius: 0.5rem;
+        font-family: 'Fira Code', monospace;
+        background-color: #1a1a2e;
+    }
+    .code-editor-container {
+        margin: 1rem 0;
+    }
+</style>
 {% endblock %}
 
 {% block content %}
@@ -47,7 +62,6 @@
             <!-- 각 퀴즈와 답안을 함께 표시 -->
             {% for quiz in quizzes %}
             <div class="mb-12 bg-white rounded-2xl p-6 shadow-sm border border-yellow-200">
-                <!-- 퀴즈 문제 -->
                 <div class="mb-8">
                     <h2 class="text-lg font-bold mb-4">
                         퀴즈 {{ quiz.id }}:
@@ -65,27 +79,35 @@
                 <div class="pt-4 border-t border-yellow-200">
                     <h3 class="text-md font-bold mb-4">퀴즈 {{ quiz.id }} 답안</h3>
                     {% if quiz.id == 1 %}
-                    <!-- 객관식 답안 (퀴즈 1) -->
-                    <div class="space-y-3">
-                        {% for i in "1234"|make_list %}
-                        <div class="flex items-center space-x-3">
-                            <input type="radio" id="quiz1_answer{{ i }}" name="quiz1_answer" value="{{ i }}"
-                                class="w-4 h-4 text-yellow-400">
-                            <label for="quiz1_answer{{ i }}" class="text-gray-800">{{ i }}</label>
+                        <!-- 객관식 답안 (퀴즈 1) -->
+                        <div class="space-y-3">
+                            {% for choice in quiz.choices %}
+                            <div class="flex items-center space-x-3">
+                                <input type="radio" 
+                                       id="quiz1_option{{ forloop.counter }}" 
+                                       name="quiz1_answer" 
+                                       value="{{ forloop.counter }}"
+                                       class="w-4 h-4 text-yellow-400">
+                                <label for="quiz1_option{{ forloop.counter }}" 
+                                       class="text-gray-800">{{ choice }}</label>
+                            </div>
+                            {% endfor %}
                         </div>
-                        {% endfor %}
-                    </div>
-                    {% elif quiz.type == 'code' %}
-                    <div class="bg-gray-900 rounded-lg p-4">
-                        <textarea id="quiz{{ quiz.id }}_answer"
-                            class="w-full h-32 bg-gray-900 text-white font-mono text-sm p-2 focus:outline-none"
-                            placeholder="여기에 파이썬 코드를 작성하세요..."></textarea>
-                    </div>
+                    {% else %}
+                        <!-- 코드 에디터 (퀴즈 2, 3) -->
+                        <div class="code-editor-container">
+                            <div id="editor{{ quiz.id }}" class="code-editor"></div>
+                        </div>
                     {% endif %}
+
                     <button onclick="submitQuiz({{ quiz.id }}, '{{ quiz.type }}')"
-                        class="w-full mt-4 px-6 py-2 bg-yellow-300 rounded-lg hover:bg-yellow-400">
+                            class="w-full mt-4 px-6 py-2 bg-yellow-300 rounded-lg hover:bg-yellow-400">
                         제출하기
                     </button>
+
+                    <div id="result{{ quiz.id }}" class="mt-4 hidden">
+                        <div class="p-4 rounded-lg"></div>
+                    </div>
                 </div>
             </div>
             {% endfor %}
@@ -104,9 +126,88 @@
 
 {% block extra_scripts %}
 <script src="{% static 'js/chatbot-widget.js' %}"></script>
+<!-- CodeMirror JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/python/python.min.js"></script>
+
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        new ChatbotWidget();
+document.addEventListener('DOMContentLoaded', function() {
+    new ChatbotWidget();
+    
+    // 코드 에디터 초기화
+    const editors = {};
+    const initialCode = {
+        2: '# 코드를 분석해보세요\n',
+        3: '# 여기에 코드를 작성하세요\n'
+    };
+    
+    document.querySelectorAll('.code-editor').forEach(element => {
+        const quizId = element.id.replace('editor', '');
+        editors[quizId] = CodeMirror(element, {
+            mode: 'python',
+            theme: 'monokai',
+            lineNumbers: true,
+            indentUnit: 4,
+            lineWrapping: true,
+            value: initialCode[quizId] || '# 코드를 작성하세요\n'
+        });
     });
+
+    // 퀴즈 제출 함수
+    window.submitQuiz = async function(quizId, quizType) {
+        const resultDiv = document.getElementById(`result${quizId}`);
+        const resultContent = resultDiv.querySelector('div');
+        
+        try {
+            let answer;
+            if (quizId === 1) {
+                const selected = document.querySelector('input[name="quiz1_answer"]:checked');
+                answer = selected ? selected.value : null;
+            } else {
+                answer = editors[quizId].getValue();
+            }
+
+            const response = await fetch('/api/courses/submit-quiz/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({
+                    quiz_id: quizId,
+                    quiz_type: quizType,
+                    answer: answer
+                })
+            });
+
+            const result = await response.json();
+            resultDiv.classList.remove('hidden');
+            resultContent.className = `p-4 rounded-lg ${result.correct ? 'bg-green-100' : 'bg-red-100'}`;
+            resultContent.innerHTML = result.message;
+            
+        } catch (error) {
+            console.error('Error submitting quiz:', error);
+            resultDiv.classList.remove('hidden');
+            resultContent.className = 'p-4 rounded-lg bg-red-100';
+            resultContent.textContent = '제출 중 오류가 발생했습니다. 다시 시도해주세요.';
+        }
+    };
+
+    // CSRF 토큰 가져오기
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+});
 </script>
 {% endblock %}
