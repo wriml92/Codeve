@@ -1,6 +1,6 @@
 {
   "python": {
-    "name": "파이썬 기초",
+    "name": "Python 기초",
     "topics": [
       {
         "id": "input_output",
@@ -58,19 +58,16 @@
         "order": 11
       },
       {
-        "id": "files",
-        "name": "파일",
+        "id": "exceptions",
+        "name": "예외처리",
         "order": 12
       },
       {
-        "id": "exceptions",
-        "name": "예외처리",
+        "id": "files",
+        "name": "파일 입출력",
         "order": 13
       }
     ],
-    "description": "파이썬 프로그래밍 기초 과정",
-    "prerequisites": [],
-    "difficulty": "beginner",
-    "estimated_hours": 10
+    "description": "Python 프로그래밍의 기초를 배웁니다."
   }
 } 
