@@ -60,6 +60,11 @@
 
             <p class="mb-8 text-gray-800">이제 퀴즈를 풀어보겠습니다.</p>
 
+            <!-- 실제 콘텐츠 -->
+            <div>
+                {{ content|safe }}
+            </div>
+
             <!-- 각 퀴즈와 답안을 함께 표시 -->
             {% for quiz in quizzes %}
             <div class="mb-12 bg-white rounded-2xl p-6 shadow-sm border border-yellow-200">
