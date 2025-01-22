@@ -4,7 +4,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from django.shortcuts import get_object_or_404
-from .models import Course, Lesson, Quiz, PracticeExercise, UserCourse
+from .models import Course, Lesson, Quiz, PracticeExercise, UserCourse, TheoryContent
 from .serializers import (CourseSerializer, LessonSerializer, QuizSerializer,
                           PracticeExerciseSerializer, UserCourseSerializer)
 from django.http import JsonResponse
@@ -16,9 +16,13 @@ from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 from django.utils.safestring import mark_safe
 from .llm.theory_llm import TheoryLLM
-from asgiref.sync import sync_to_async
+from asgiref.sync import sync_to_async, async_to_sync
 from django.template.loader import render_to_string
 from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+from .agents.analysis_agent import AnalysisAgent
+from .llm.assignment_llm import AssignmentLLM
+from django.views.decorators.cache import cache_page
 
 
 # 공통으로 사용할 토픽 목록을 모듈 레벨에 정의
@@ -171,55 +175,40 @@ def load_topic_content(topic_id: str, content_type: str) -> dict:
         return None
 
 
+@cache_page(60 * 15)  # 15분 동안 캐시
+def topic_view(request, topic_id):
+    """토픽 뷰"""
+    context = {
+        'topics': TOPICS,
+        'topic_id': topic_id
+    }
+    return render(request, 'courses/topic.html', context)
+
+
 async def theory_lesson_view(request, topic_id=None):
     """이론 학습 뷰"""
     if topic_id is None:
         topic_id = TOPICS[0]['id']
         
     topic_name = next((t['name'] for t in TOPICS if t['id'] == topic_id), '')
-    content = await sync_to_async(load_topic_content)(topic_id, 'theory')
     
-    # 콘텐츠가 없으면 생성
-    if content is None:
+    # DB에서 내용 가져오기
+    try:
+        theory_content = await sync_to_async(TheoryContent.objects.get)(topic_id=topic_id)
+        content_html = theory_content.content
+    except TheoryContent.DoesNotExist:
+        # 없으면 생성
         theory_llm = TheoryLLM()
-        content_text = await theory_llm.generate(topic_id)
-        
-        # 디렉토리 생성 및 파일 저장을 동기 함수로 래핑
-        @sync_to_async
-        def save_content():
-            content_dir = theory_llm.data_dir / topic_id / 'current'
-            content_dir.mkdir(parents=True, exist_ok=True)
-            
-            content_file = content_dir / 'theory.json'
-            with open(content_file, 'w', encoding='utf-8') as f:
-                json.dump({'content': content_text}, f, ensure_ascii=False, indent=2)
-        
-        await save_content()
-        content = {'content': content_text}
-    
-    if content:
-        content_html = content['content']
-        if '```html' in content_html:
-            content_html = content_html.replace('```html\n', '').replace('\n```', '')
-        content_html = mark_safe(content_html)
-    else:
-        content_html = ''
+        content_html = await theory_llm.generate(topic_id)
     
     context = {
         'topics': TOPICS,
         'topic_id': topic_id,
         'topic_name': topic_name,
-        'content': content_html
+        'content': mark_safe(content_html)
     }
     
-    # 템플릿 렌더링을 동기 함수로 래핑
-    html = await sync_to_async(render_to_string)(
-        'courses/theory-lesson.html',
-        context,
-        request
-    )
-    
-    return HttpResponse(html)
+    return await sync_to_async(render)(request, 'courses/theory-lesson.html', context)
 
 
 def practice_view(request, topic_id=None):
@@ -313,25 +302,109 @@ def resume_learning(request):
         return redirect('courses:theory-detail', topic_id='variables')
 
 
-def assignment_view(request, topic_id=None):
+def load_assignment_data(topic_id: str) -> dict:
+    """토픽별 과제 데이터 로드"""
+    try:
+        base_dir = Path(__file__).parent
+        assignment_file = base_dir / 'data' / 'topics' / topic_id / 'content' / 'assignment.json'
+        
+        with open(assignment_file, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except FileNotFoundError:
+        # 파일이 없을 경우 기본 템플릿 반환
+        return {
+            "assignments": [
+                {
+                    "id": 1,
+                    "type": "concept",
+                    "content": "문제를 준비 중입니다.",
+                    "choices": ["준비 중", "준비 중", "준비 중", "준비 중"]
+                },
+                {
+                    "id": 2,
+                    "type": "analysis",
+                    "content": "문제를 준비 중입니다."
+                },
+                {
+                    "id": 3,
+                    "type": "implementation",
+                    "content": "문제를 준비 중입니다."
+                }
+            ]
+        }
+
+async def assignment_view(request, topic_id=None):
     """과제 뷰"""
     if topic_id is None:
         topic_id = TOPICS[0]['id']
         
     topic_name = next((t['name'] for t in TOPICS if t['id'] == topic_id), '')
-    content = load_topic_content(topic_id, 'assignment')
     
-    if content:
-        content_html = content['content']
-        content_html = mark_safe(content_html)  # HTML 안전하게 렌더링
-    else:
-        content_html = ''
+    try:
+        # assignment.json 파일 읽기
+        assignment_data = load_topic_content(topic_id, 'assignment')
+        
+        if assignment_data is None:  # 파일이 없거나 로드 실패
+            context = {
+                'topics': TOPICS,
+                'topic_id': topic_id,
+                'topic_name': topic_name,
+                'content': mark_safe('<div class="alert alert-warning">과제 내용을 준비 중입니다.</div>')
+            }
+        else:
+            context = {
+                'topics': TOPICS,
+                'topic_id': topic_id,
+                'topic_name': topic_name,
+                'content': mark_safe(assignment_data['content'])
+            }
+        
+        return await sync_to_async(render)(request, 'courses/assignment.html', context)
+        
+    except Exception as e:
+        print(f"Error loading assignment content: {str(e)}")
+        context = {
+            'topics': TOPICS,
+            'topic_id': topic_id,
+            'topic_name': topic_name,
+            'content': mark_safe('<div class="alert alert-danger">과제 내용을 불러오는데 실패했습니다.</div>')
+        }
+        return await sync_to_async(render)(request, 'courses/assignment.html', context)
+
+
+@csrf_exempt
+async def submit_assignment(request):
+    """과제 제출 처리"""
+    if request.method != 'POST':
+        return JsonResponse({'error': '잘못된 요청 방식입니다.'}, status=405)
     
-    context = {
-        'topics': TOPICS,
-        'topic_id': topic_id,
-        'topic_name': topic_name,
-        'content': content_html
-    }
+    try:
+        data = json.loads(request.body)
+        assignment_id = data.get('assignment_id')
+        assignment_type = data.get('assignment_type')
+        answer = data.get('answer')
+        topic_id = data.get('topic_id')
+        
+        if not all([assignment_id, assignment_type, answer, topic_id]):
+            return JsonResponse({'error': '필수 데이터가 누락되었습니다.'}, status=400)
+        
+        # 답안 분석
+        agent = AnalysisAgent()
+        result = await agent.analyze(assignment_type, answer, assignment_id, topic_id)
+        
+        return JsonResponse(result)
+        
+    except Exception as e:
+        return JsonResponse({'error': f'서버 오류가 발생했습니다: {str(e)}'}, status=500)
+
+
+def save_assignment_data(topic_id: str, data: Dict[str, Any]) -> None:
+    """과제 데이터 저장"""
+    base_dir = Path(__file__).parent
+    assignment_file = base_dir / 'data' / 'topics' / topic_id / 'content' / 'assignment.json'
     
-    return render(request, 'courses/assignment.html', context)
+    # 디렉토리가 없으면 생성
+    assignment_file.parent.mkdir(parents=True, exist_ok=True)
+    
+    with open(assignment_file, 'w', encoding='utf-8') as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
