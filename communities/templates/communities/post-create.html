@@ -6,11 +6,9 @@
 {% block back_button %}
 <div class="flex items-start p-4">
     <a href="{% url 'communities:posts-list' %}"
-        class="flex items-center px-6 py-2.5 bg-gradient-to-r from-amber-200 to-yellow-200 text-gray-700 font-medium rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 hover:from-amber-300 hover:to-yellow-300">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd"
-                d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
-                clip-rule="evenodd" />
+        class="group flex items-center px-6 py-2.5 bg-gradient-to-r from-amber-200 to-yellow-200 text-gray-700 font-medium rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 hover:from-amber-300 hover:to-yellow-300">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 group-hover:-translate-x-1 transition-transform duration-200" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
         </svg>
         아카이브로 가기
     </a>
@@ -19,36 +17,139 @@
 
 {% block content %}
 <div class="max-w-4xl mx-auto">
-    <h1 class="text-2xl font-bold mb-8">{% if is_edit %}게시글 수정{% else %}게시글 작성{% endif %}</h1>
+    <h1 class="text-3xl font-bold mb-8 text-center bg-gradient-to-r from-amber-600 to-amber-400 bg-clip-text text-transparent">
+        {% if is_edit %}게시글 수정{% else %}새로운 게시글 작성{% endif %}
+    </h1>
 
-    <form method="post" class="bg-white rounded-3xl p-8 shadow-sm" enctype="multipart/form-data">
+    <form method="post" class="bg-white rounded-3xl p-8 shadow-lg border border-amber-100/50" enctype="multipart/form-data">
         {% csrf_token %}
-        <div class="mb-6">
-            <label for="title" class="block text-gray-700 font-medium mb-2">제목</label>
-            <input type="text" name="title" id="title" required
+        
+        <!-- 제목 입력 -->
+        <div class="mb-8">
+            <label for="title" class="block text-gray-700 font-medium mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-amber-500" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h6a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd" />
+                </svg>
+                제목
+            </label>
+            <input type="text" name="title" id="title" required placeholder="제목을 입력해주세요"
                 class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-amber-400 transition-all duration-200 shadow-sm hover:shadow-md">
         </div>
-        <div class="mb-6">
-            <label for="content" class="block text-gray-700 font-medium mb-2">내용</label>
-            <textarea name="content" id="content" rows="10" required
-                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-yellow-500"></textarea>
+
+        <!-- 내용 입력 -->
+        <div class="mb-8">
+            <label for="content" class="block text-gray-700 font-medium mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-amber-500" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 0h8v12H6V4z" clip-rule="evenodd" />
+                </svg>
+                내용
+            </label>
+            <textarea name="content" id="content" rows="10" required placeholder="내용을 입력해주세요"
+                class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-amber-400 transition-all duration-200 shadow-sm hover:shadow-md resize-none"></textarea>
         </div>
-        <div class="mb-6">
-            <label for="image" class="block text-gray-700 mb-2">이미지</label>
-            <input type="file" name="image" id="image" accept="image/*"
-                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-yellow-500">
+
+        <!-- 이미지 업로드 -->
+        <div class="mb-8">
+            <label for="image" class="block text-gray-700 font-medium mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-amber-500" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd" />
+                </svg>
+                이미지
+            </label>
+            <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-xl hover:border-amber-400 transition-colors duration-200">
+                <div class="space-y-1 text-center">
+                    <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                        <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                    <div class="flex flex-col items-center space-y-2 text-sm">
+                        <div class="flex items-center space-x-2">
+                            <label for="image" class="relative cursor-pointer bg-gradient-to-r from-amber-500/10 to-yellow-500/10 px-4 py-2 rounded-lg font-medium text-amber-600 hover:text-amber-500 hover:from-amber-500/20 hover:to-yellow-500/20 transition-all duration-200 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-amber-500">
+                                <span class="flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                                    </svg>
+                                    파일 선택하기
+                                </span>
+                                <input type="file" name="image" id="image" accept="image/*" class="sr-only">
+                            </label>
+                            <span class="text-gray-500">또는</span>
+                            <span class="text-amber-600">여기에 드래그</span>
+                        </div>
+                        <p class="text-gray-500 text-xs">
+                            <span class="font-medium">권장:</span> 고화질 이미지 (PNG, JPG, GIF)
+                        </p>
+                        <p class="text-gray-400 text-xs">최대 파일 크기: 10MB</p>
+                    </div>
+                </div>
+            </div>
         </div>
+
+        <!-- 제출 버튼 -->
         <div class="flex justify-end">
             <button type="submit"
-                class="flex items-center px-8 py-3 bg-gradient-to-r from-amber-500 to-yellow-400 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 hover:from-amber-600 hover:to-yellow-500">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd"
-                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                        clip-rule="evenodd" />
+                class="group flex items-center px-8 py-3 bg-gradient-to-r from-amber-500 to-yellow-400 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 hover:from-amber-600 hover:to-yellow-500">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 group-hover:rotate-12 transition-transform duration-200" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                 </svg>
                 {% if is_edit %}수정 완료{% else %}작성 완료{% endif %}
             </button>
         </div>
     </form>
 </div>
+
+<!-- 이미지 미리보기 스크립트 -->
+{% block extra_scripts %}
+<script>
+    const imageInput = document.getElementById('image');
+    const uploadContainer = imageInput.closest('div');
+
+    // 드래그 앤 드롭 이벤트 처리
+    uploadContainer.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadContainer.classList.add('border-amber-400');
+    });
+
+    uploadContainer.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        uploadContainer.classList.remove('border-amber-400');
+    });
+
+    uploadContainer.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadContainer.classList.remove('border-amber-400');
+        const files = e.dataTransfer.files;
+        if (files.length) {
+            imageInput.files = files;
+            handleImagePreview(files[0]);
+        }
+    });
+
+    // 파일 선택 이벤트 처리
+    imageInput.addEventListener('change', (e) => {
+        if (e.target.files.length) {
+            handleImagePreview(e.target.files[0]);
+        }
+    });
+
+    function handleImagePreview(file) {
+        if (file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const preview = document.createElement('img');
+                preview.src = e.target.result;
+                preview.className = 'mt-2 rounded-lg max-h-48 mx-auto';
+                
+                // 기존 미리보기 제거
+                const existingPreview = uploadContainer.querySelector('img');
+                if (existingPreview) {
+                    existingPreview.remove();
+                }
+                
+                uploadContainer.appendChild(preview);
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+</script>
+{% endblock %}
 {% endblock %}
