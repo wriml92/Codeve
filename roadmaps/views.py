@@ -2,143 +2,75 @@ from django.shortcuts import render
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
 from django.views.generic import ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from .models import Roadmap, UserRoadmap, RoadmapStep, Course, UserCourse
+from .models import Course, UserCourse
+from .serializers import CourseSerializer, UserCourseSerializer
 # from .agents.roadmap_agent import RoadmapAgent  # 이 줄을 주석 처리
 
 
-class RoadmapViewSet(viewsets.ViewSet):
+class CourseViewSet(viewsets.ModelViewSet):
+    queryset = Course.objects.all()
+    serializer_class = CourseSerializer
     permission_classes = [IsAuthenticated]
 
-    def list(self, request):
-        """사용자의 로드맵 목록 조회"""
-        user_roadmaps = UserRoadmap.objects.filter(user=request.user)
-        data = [{
-            'id': ur.roadmap.id,
-            'title': ur.roadmap.title,
-            'description': ur.roadmap.description,
-            'progress': ur.progress,
-            'current_step': ur.current_step.title if ur.current_step else None,
-            'started_at': ur.started_at
-        } for ur in user_roadmaps]
-        return Response(data)
-
-    def retrieve(self, request, pk=None):
-        """특정 로드맵 상세 조회"""
-        roadmap = get_object_or_404(Roadmap, pk=pk)
-        user_roadmap = UserRoadmap.objects.filter(
-            user=request.user,
-            roadmap=roadmap
-        ).first()
-
-        steps = RoadmapStep.objects.filter(roadmap=roadmap)
-
-        data = {
-            'id': roadmap.id,
-            'title': roadmap.title,
-            'description': roadmap.description,
-            'difficulty': roadmap.difficulty,
-            'estimated_hours': roadmap.estimated_hours,
-            'progress': user_roadmap.progress if user_roadmap else 0,
-            'steps': [{
-                'id': step.id,
-                'title': step.title,
-                'description': step.description,
-                'order': step.order,
-                'estimated_hours': step.estimated_hours,
-                'is_current': user_roadmap.current_step == step if user_roadmap else False
-            } for step in steps]
-        }
-        return Response(data)
-
-    @action(detail=False, methods=['post'])
-    async def generate(self, request):
-        """맞춤형 로드맵 생성"""
-        try:
-            # 사용자 데이터로 로드맵 생성
-            # agent = RoadmapAgent(request.data)
-            roadmap_data = await RoadmapAgent(request.data).generate_roadmap()
-
-            # 로드맵 저장
-            roadmap = Roadmap.objects.create(
-                title=roadmap_data['title'],
-                description=roadmap_data['description'],
-                difficulty=roadmap_data['difficulty'],
-                estimated_hours=roadmap_data['estimated_hours']
-            )
-
-            # 로드맵 단계 저장
-            for i, step_data in enumerate(roadmap_data['steps'], 1):
-                RoadmapStep.objects.create(
-                    roadmap=roadmap,
-                    title=step_data['title'],
-                    description=step_data['description'],
-                    order=i,
-                    estimated_hours=step_data['estimated_hours']
-                )
-
-            # 사용자-로드맵 연결
-            UserRoadmap.objects.create(
-                user=request.user,
-                roadmap=roadmap
-            )
-
-            return Response({
-                'message': '로드맵이 생성되었습니다.',
-                'roadmap_id': roadmap.id
-            }, status=status.HTTP_201_CREATED)
-
-        except Exception as e:
-            return Response({
-                'error': str(e)
-            }, status=status.HTTP_400_BAD_REQUEST)
+    @action(detail=True, methods=['post'])
+    def enroll(self, request, pk=None):
+        course = self.get_object()
+        user = request.user
+        
+        if UserCourse.objects.filter(user=user, course=course).exists():
+            return Response({"detail": "이미 등록된 코스입니다."}, 
+                          status=status.HTTP_400_BAD_REQUEST)
+            
+        user_course = UserCourse.objects.create(
+            user=user,
+            course=course,
+            status='enrolled'
+        )
+        
+        serializer = UserCourseSerializer(user_course)
+        return Response(serializer.data)
 
     @action(detail=True, methods=['post'])
-    def progress(self, request, pk=None):
-        """로드맵 진행 상태 업데이트"""
-        roadmap = get_object_or_404(Roadmap, pk=pk)
-        user_roadmap = get_object_or_404(
-            UserRoadmap,
-            user=request.user,
-            roadmap=roadmap
-        )
-
-        step_id = request.data.get('step_id')
-        if step_id:
-            step = get_object_or_404(RoadmapStep, pk=step_id)
-            user_roadmap.current_step = step
-            user_roadmap.progress = (step.order / roadmap.steps.count()) * 100
-            user_roadmap.save()
-
+    def complete_topic(self, request, pk=None):
+        course = self.get_object()
+        user_course = get_object_or_404(UserCourse, user=request.user, course=course)
+        topic_id = request.data.get('topic_id')
+        
+        if topic_id:
+            completed_topics = user_course.get_completed_topics_list()
+            if topic_id not in completed_topics:
+                completed_topics.append(topic_id)
+                user_course.completed_topics = ','.join(map(str, completed_topics))
+                user_course.update_progress()
+                
         return Response({
-            'message': '진행 상태가 업데이트되었습니다.',
-            'progress': user_roadmap.progress
+            'progress': user_course.progress,
+            'completed_topics': user_course.get_completed_topics_list()
         })
 
 
-class CourseListView(LoginRequiredMixin, ListView):
-    model = Course
-    template_name = 'roadmaps/course-list.html'
-    context_object_name = 'courses'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        # 사용자의 코스 진행 상황 조회
-        user_courses = UserCourse.objects.filter(user=self.request.user)
-        progress_dict = {uc.course_id: uc.progress for uc in user_courses}
-
-        # 각 코스에 대한 진행률 추가
-        for course in context['courses']:
-            course.progress = progress_dict.get(course.id, 0)
-
-            # topics JSON 데이터를 템플릿에서 사용할 수 있도록 변환
-            if isinstance(course.topics, str):
-                import json
-                course.topics = json.loads(course.topics)
-
-        return context
+class CourseListView(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request):
+        courses = Course.objects.filter(is_active=True)
+        user_courses = UserCourse.objects.filter(user=request.user)
+        
+        # 진행률 정보 추가
+        for course in courses:
+            user_course = user_courses.filter(course=course).first()
+            course.user_progress = user_course.progress if user_course else 0
+            course.is_enrolled = bool(user_course)
+        
+        context = {
+            'courses': courses,
+            'user_courses': user_courses,
+        }
+        
+        return render(request, 'roadmaps/course-list.html', context)
