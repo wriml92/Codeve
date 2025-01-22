@@ -36,7 +36,7 @@ urlpatterns = [
     path('practice/', main2_view, name='main2'),
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),
-    path('api/courses/', include('courses.urls')),
+    path('courses/', include('courses.urls')),  # courses 앱의 URL 패턴 포함
     path('', include('social_django.urls', namespace='social')),
     path('api/communities/', include('communities.urls')),  # 커뮤니티 패스 추가
     path('', include('chatbots.urls')),  # chatbots의 URL 포함

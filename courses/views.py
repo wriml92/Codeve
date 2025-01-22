@@ -16,6 +16,23 @@ from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 
 
+# 공통으로 사용할 토픽 목록을 모듈 레벨에 정의
+TOPICS = [
+    {'id': 'input_output', 'name': '입출력'},
+    {'id': 'variables', 'name': '변수'},
+    {'id': 'strings', 'name': '문자열'},
+    {'id': 'lists', 'name': '리스트'},
+    {'id': 'tuples', 'name': '튜플'},
+    {'id': 'dictionaries', 'name': '딕셔너리'},
+    {'id': 'conditionals', 'name': '조건문'},
+    {'id': 'loops', 'name': '반복문'},
+    {'id': 'functions', 'name': '함수'},
+    {'id': 'classes', 'name': '클래스'},
+    {'id': 'modules', 'name': '모듈'},
+    {'id': 'exceptions', 'name': '예외처리'},
+    {'id': 'files', 'name': '파일 입출력'}
+]
+
 class CourseViewSet(viewsets.ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
@@ -56,27 +73,6 @@ class QuizViewSet(viewsets.ModelViewSet):
     queryset = Quiz.objects.all()
     serializer_class = QuizSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
-
-    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
-    def submit_answer(self, request, pk=None):
-        quiz = self.get_object()
-        answer = request.data.get('answer')
-        code_input = request.data.get('code_input')
-
-        # LLM API 호출하여 코드 실행 및 채점
-        evaluation_result = evaluate_code_with_llm(code_input)
-
-        if answer == quiz.correct_answer:
-            return JsonResponse({
-                'result': '정답입니다!',
-                'feedback': evaluation_result['feedback'],
-                'is_correct': True
-            })
-        return JsonResponse({
-            'result': '틀렸습니다. 다시 시도해보세요.',
-            'feedback': evaluation_result['feedback'],
-            'is_correct': False
-        })
 
 
 class PracticeExerciseViewSet(viewsets.ModelViewSet):
@@ -133,16 +129,14 @@ def complete_topic(request, topic_id):
         )
 
     # 현재 완료된 토픽 목록 가져오기
-    completed_topics = set(user_course.completed_topics.split(
-        ',')) if user_course.completed_topics else set()
+    completed_topics = set(user_course.completed_topics.split(',')) if user_course.completed_topics else set()
     completed_topics.add(str(topic_id))
 
     # 중복 제거 및 정렬
     completed_topics = sorted(list(filter(None, completed_topics)))
 
-    # 진행률 계산 (전체 토픽 수는 임시로 10개로 가정)
-    total_topics = 10
-    progress = (len(completed_topics) / total_topics) * 100
+    # 진행률 계산 (TOPICS 리스트의 길이 사용)
+    progress = (len(completed_topics) / len(TOPICS)) * 100
 
     # 업데이트
     user_course.completed_topics = ','.join(completed_topics)
@@ -156,226 +150,98 @@ def complete_topic(request, topic_id):
     })
 
 
-def theory_lesson_view(request, topic_id='input_output'):
-    # 데이터 파일 경로
-    data_dir = Path(__file__).parent / 'data' / 'theory'
-    file_path = data_dir / f"{topic_id}.json"
-
+def load_topic_content(topic_id: str, content_type: str) -> dict:
+    """토픽의 현재 버전 콘텐츠 로드"""
     try:
-        with open(file_path, 'r', encoding='utf-8') as f:
-            theory_data = json.load(f)
+        base_dir = Path(__file__).parent
+        current_file = base_dir / 'data' / 'topics' / topic_id / 'current' / f'{content_type}.json'
+        
+        if current_file.exists():
+            with open(current_file, 'r', encoding='utf-8') as f:
+                return json.load(f)
+        return None
+    except Exception as e:
+        print(f"콘텐츠 로드 중 오류 발생: {str(e)}")
+        return None
 
-        # HTML 콘텐츠에서 불필요한 백틱과 html 태그 제거
-        content = theory_data['content'].replace(
-            '```html\n', '').replace('\n```', '')
 
-        context = {
-            'topic_name': theory_data['topic_name'],
-            'content': content,
-            'topic_id': topic_id
-        }
-    except FileNotFoundError:
-        context = {
-            'topic_name': '토픽을 찾을 수 없습니다',
-            'content': '<p class="text-red-500">해당 토픽의 내용이 없습니다.</p>',
-            'topic_id': topic_id
-        }
-
-    # course_list.json에서 토픽 목록 가져오기
-    course_list_path = Path(__file__).parent / 'agents' / 'course_list.json'
-    with open(course_list_path, 'r', encoding='utf-8') as f:
-        course_list = json.load(f)
-
-    # 현재 코스의 모든 토픽 가져오기 (예: python 코스)
-    topics = course_list['python']['topics']
-
-    # 이전 토픽 찾기
-    current_index = next((i for i, topic in enumerate(
-        topics) if topic['id'] == topic_id), -1)
-    prev_topic = topics[current_index - 1] if current_index > 0 else None
-
-    context.update({
-        'topics': topics,  # 템플릿에 토픽 목록 전달
-        'prev_topic': prev_topic  # 이전 토픽 정보 전달
-    })
-
+def theory_lesson_view(request, topic_id=None):
+    """이론 학습 뷰"""
+    if topic_id is None:
+        topic_id = TOPICS[0]['id']
+        
+    topic_name = next((t['name'] for t in TOPICS if t['id'] == topic_id), '')
+    content = load_topic_content(topic_id, 'theory')
+    
+    if content and '```html' in content['content']:
+        content['content'] = content['content'].replace('```html\n', '').replace('\n```', '')
+    
+    context = {
+        'topics': TOPICS,
+        'topic_id': topic_id,
+        'topic_name': topic_name,
+        'content': content['content'] if content else ''
+    }
+    
     return render(request, 'courses/theory-lesson.html', context)
 
 
-def practice_view(request, topic_id='input_output'):
-    # 데이터 파일 경로
-    data_dir = Path(__file__).parent / 'data' / 'practice'
-    file_path = data_dir / f"{topic_id}.json"
-
-    try:
-        with open(file_path, 'r', encoding='utf-8') as f:
-            practice_data = json.load(f)
-
-        # 실습 내용만 추출
-        content = practice_data.get('content', '')
-        if '## 출력' in content:
-            # 출력 부분만 추출하고 HTML 태그 제거
-            content = content.split('## 출력')[1].split(
-                '```html')[1].split('```')[0]
-
-        context = {
-            'topic_name': practice_data['topic_name'],
-            'content': content,
-            'topic_id': topic_id
-        }
-    except FileNotFoundError:
-        context = {
-            'topic_name': '토픽을 찾을 수 없습니다',
-            'content': '<p class="text-red-500">해당 토픽의 실습 내용이 없습니다.</p>',
-            'topic_id': topic_id
-        }
-
-    # course_list.json에서 토픽 목록 가져오기
-    course_list_path = Path(__file__).parent / 'agents' / 'course_list.json'
-    with open(course_list_path, 'r', encoding='utf-8') as f:
-        course_list = json.load(f)
-
-    # 현재 코스의 모든 토픽 가져오기 (예: python 코스)
-    topics = course_list['python']['topics']
-
-    context.update({
-        'topics': topics  # 템플릿에 토픽 목록 전달
-    })
-
+def practice_view(request, topic_id=None):
+    """실습 뷰"""
+    if topic_id is None:
+        topic_id = TOPICS[0]['id']
+        
+    topic_name = next((t['name'] for t in TOPICS if t['id'] == topic_id), '')
+    content = load_topic_content(topic_id, 'practice')
+    
+    context = {
+        'topics': TOPICS,
+        'topic_id': topic_id,
+        'topic_name': topic_name,
+        'content': content['content'] if content else ''
+    }
+    
     return render(request, 'courses/practice.html', context)
-
-
-def assignment_view(request, topic_id='input_output'):
-    # 데이터 파일 경로
-    data_dir = Path(__file__).parent / 'data' / 'assignment'
-    file_path = data_dir / f"{topic_id}.json"
-
-    try:
-        with open(file_path, 'r', encoding='utf-8') as f:
-            assignment_data = json.load(f)
-
-        content = assignment_data['content']
-        if '## 출력' in content:
-            content = content.split('## 출력')[1].split(
-                '```html')[1].split('```')[0].strip()
-
-        # 각 퀴즈 분리
-        quizzes = []
-        quiz_parts = content.split('퀴즈')
-
-        for i, part in enumerate(quiz_parts[1:], 1):
-            quiz_content = part.strip()
-            quiz_type = 'multiple_choice' if i == 1 else 'code'
-
-            # 퀴즈 1의 경우 선택지 추출
-            choices = []
-            if i == 1:
-                # 문제 내용과 선택지 분리
-                content_lines = quiz_content.split('\n')
-                question_lines = []
-                in_choices = False
-
-                for line in content_lines:
-                    line = line.strip()
-                    if line.startswith('<ol'):
-                        in_choices = True
-                        continue
-                    elif line.startswith('</ol'):
-                        in_choices = False
-                        continue
-                    elif in_choices and line.startswith('<li>'):
-                        # <li> 태그 제거하고 선택지 텍스트만 추출
-                        choice_text = line.replace(
-                            '<li>', '').replace('</li>', '').strip()
-                        choices.append(choice_text)
-                    elif not in_choices and line:
-                        question_lines.append(line)
-
-                quiz_content = '\n'.join(question_lines)
-
-            quizzes.append({
-                'id': i,
-                'content': quiz_content,
-                'type': quiz_type,
-                'choices': choices if i == 1 else []
-            })
-
-        context = {
-            'topic_name': assignment_data['topic_name'],
-            'quizzes': quizzes,
-            'topic_id': topic_id
-        }
-    except FileNotFoundError:
-        context = {
-            'topic_name': '토픽을 찾을 수 없습니다',
-            'quizzes': [],
-            'topic_id': topic_id
-        }
-
-    # course_list.json에서 토픽 목록 가져오기
-    course_list_path = Path(__file__).parent / 'agents' / 'course_list.json'
-    with open(course_list_path, 'r', encoding='utf-8') as f:
-        course_list = json.load(f)
-
-    topics = course_list['python']['topics']
-    context.update({'topics': topics})
-
-    return render(request, 'courses/assignment.html', context)
 
 
 def reflection_view(request):
     return render(request, 'courses/reflection.html')
 
 
-def check_answer(request):
-    data = json.loads(request.body)
-    question_id = data.get('question_id')
-    user_answer = data.get('answer')
-
-    # 여기서 LLM API를 호출하여 답안을 평가
-    evaluation_result = evaluate_answer(question_id, user_answer)
-
-    return JsonResponse({
-        'correct': evaluation_result['is_correct'],
-        'feedback': evaluation_result['feedback']
-    })
-
-
 def course_list_view(request):
-    # course_list.json에서 토픽 목록 가져오기
-    course_list_path = Path(__file__).parent / 'agents' / 'course_list.json'
+    """코스 목록 뷰"""
+    # course_list.json에서 코스 정보 가져오기
+    course_list_path = Path(__file__).parent / 'data' / 'course_list.json'
     with open(course_list_path, 'r', encoding='utf-8') as f:
         course_list = json.load(f)
 
-    # Python 코스의 토픽 목록 가져오기
+    # Python 코스 정보에 정의된 토픽 목록 사용
     python_course = course_list['python']
-    topics = python_course['topics']
+    python_course['topics'] = TOPICS  # 정의된 토픽 목록으로 교체
 
-    # 사용자가 로그인한 경우 학습 진행률과 각 토픽의 학습 상태 계산
+    # 사용자가 로그인한 경우 학습 진행률 계산
+    progress_percentage = 0
     if request.user.is_authenticated:
-        # UserCourse에서 사용자의 학습 기록 가져오기
-        user_course = UserCourse.objects.filter(user=request.user).first()
-        completed_topics = set()  # 완료된 토픽 ID 저장
-
-        if user_course:
-            # 완료된 토픽 ID 목록 가져오기 (예: "1,2,3" -> {1,2,3})
-            completed_topics = set(map(str, user_course.completed_topics.split(
-                ','))) if user_course.completed_topics else set()
-            progress_percentage = user_course.progress
-        else:
-            progress_percentage = 0
-
-        # 각 토픽에 학습 완료 상태 추가
-        for topic in topics:
-            topic['is_completed'] = topic['id'] in completed_topics
+        try:
+            user_course = UserCourse.objects.get(user=request.user)
+            completed_topics = set(user_course.completed_topics.split(',')) if user_course.completed_topics else set()
+            progress_percentage = (len(completed_topics) / len(TOPICS)) * 100
+            
+            # 각 토픽의 완료 상태 설정
+            for topic in TOPICS:
+                topic['is_completed'] = topic['id'] in completed_topics
+        except UserCourse.DoesNotExist:
+            # 학습 기록이 없는 경우
+            for topic in TOPICS:
+                topic['is_completed'] = False
     else:
-        progress_percentage = 0
-        for topic in topics:
+        # 비로그인 사용자
+        for topic in TOPICS:
             topic['is_completed'] = False
 
     context = {
         'course': python_course,
-        'topics': topics,
+        'topics': TOPICS,
         'progress_percentage': progress_percentage
     }
 
@@ -392,15 +258,37 @@ def resume_learning(request):
         return redirect('courses:course-list')
 
     # completed_topics에서 마지막으로 완료한 토픽 ID 가져오기
-    completed_topics = user_course.completed_topics.split(
-        ',') if user_course.completed_topics else []
+    completed_topics = user_course.completed_topics.split(',') if user_course.completed_topics else []
 
     if completed_topics:
         # 마지막으로 완료한 토픽의 다음 토픽으로 이동
         last_completed_topic = completed_topics[-1]
         # 여기서는 토픽 ID가 순차적으로 증가한다고 가정
         next_topic_id = str(int(last_completed_topic) + 1)
-        return redirect('courses:theory-lesson-detail', topic_id=next_topic_id)
+        return redirect('courses:theory-detail', topic_id=next_topic_id)
     else:
         # 완료한 토픽이 없으면 첫 번째 토픽으로 이동
-        return redirect('courses:theory-lesson-detail', topic_id='variables')
+        return redirect('courses:theory-detail', topic_id='variables')
+
+
+def assignment_view(request, topic_id=None):
+    """과제 뷰"""
+    if topic_id is None:
+        topic_id = TOPICS[0]['id']
+        
+    topic_name = next((t['name'] for t in TOPICS if t['id'] == topic_id), '')
+    
+    # 콘텐츠 로드
+    assignment_content = load_topic_content(topic_id, 'assignment')
+    print("Assignment content loaded:", assignment_content is not None)  # 디버그 출력
+    print("Topic ID:", topic_id)  # 디버그 출력
+    print("Topic name:", topic_name)  # 디버그 출력
+    
+    context = {
+        'topics': TOPICS,
+        'topic_id': topic_id,
+        'topic_name': topic_name,
+        'content': assignment_content['content'] if assignment_content else ''
+    }
+    
+    return render(request, 'courses/assignment.html', context)
