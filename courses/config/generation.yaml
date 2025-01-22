@@ -1,0 +1,10 @@
+generation:
+  batch_size: 5  # 동시 생성 토픽 수
+  delay: 2       # 생성 간 대기 시간
+  retries: 3     # 실패시 재시도 횟수
+
+validation:
+  required_sections: 
+    - theory: ["개념 소개", "비유", "핵심 포인트"]
+    - practice: ["실습 환경", "예제", "실행 방법"]
+    - assignment: ["문제", "채점 기준", "피드백"] 
