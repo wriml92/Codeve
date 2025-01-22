@@ -14,6 +14,11 @@ import openai
 from pathlib import Path
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
+from django.utils.safestring import mark_safe
+from .llm.theory_llm import TheoryLLM
+from asgiref.sync import sync_to_async
+from django.template.loader import render_to_string
+from django.http import HttpResponse
 
 
 # 공통으로 사용할 토픽 목록을 모듈 레벨에 정의
@@ -153,8 +158,9 @@ def complete_topic(request, topic_id):
 def load_topic_content(topic_id: str, content_type: str) -> dict:
     """토픽의 현재 버전 콘텐츠 로드"""
     try:
-        base_dir = Path(__file__).parent
-        current_file = base_dir / 'data' / 'topics' / topic_id / 'current' / f'{content_type}.json'
+        theory_llm = TheoryLLM()
+        # content 디렉토리에서 파일을 찾도록 수정
+        current_file = theory_llm.data_dir / topic_id / 'content' / f'{content_type}.json'
         
         if current_file.exists():
             with open(current_file, 'r', encoding='utf-8') as f:
@@ -165,25 +171,55 @@ def load_topic_content(topic_id: str, content_type: str) -> dict:
         return None
 
 
-def theory_lesson_view(request, topic_id=None):
+async def theory_lesson_view(request, topic_id=None):
     """이론 학습 뷰"""
     if topic_id is None:
         topic_id = TOPICS[0]['id']
         
     topic_name = next((t['name'] for t in TOPICS if t['id'] == topic_id), '')
-    content = load_topic_content(topic_id, 'theory')
+    content = await sync_to_async(load_topic_content)(topic_id, 'theory')
     
-    if content and '```html' in content['content']:
-        content['content'] = content['content'].replace('```html\n', '').replace('\n```', '')
+    # 콘텐츠가 없으면 생성
+    if content is None:
+        theory_llm = TheoryLLM()
+        content_text = await theory_llm.generate(topic_id)
+        
+        # 디렉토리 생성 및 파일 저장을 동기 함수로 래핑
+        @sync_to_async
+        def save_content():
+            content_dir = theory_llm.data_dir / topic_id / 'current'
+            content_dir.mkdir(parents=True, exist_ok=True)
+            
+            content_file = content_dir / 'theory.json'
+            with open(content_file, 'w', encoding='utf-8') as f:
+                json.dump({'content': content_text}, f, ensure_ascii=False, indent=2)
+        
+        await save_content()
+        content = {'content': content_text}
+    
+    if content:
+        content_html = content['content']
+        if '```html' in content_html:
+            content_html = content_html.replace('```html\n', '').replace('\n```', '')
+        content_html = mark_safe(content_html)
+    else:
+        content_html = ''
     
     context = {
         'topics': TOPICS,
         'topic_id': topic_id,
         'topic_name': topic_name,
-        'content': content['content'] if content else ''
+        'content': content_html
     }
     
-    return render(request, 'courses/theory-lesson.html', context)
+    # 템플릿 렌더링을 동기 함수로 래핑
+    html = await sync_to_async(render_to_string)(
+        'courses/theory-lesson.html',
+        context,
+        request
+    )
+    
+    return HttpResponse(html)
 
 
 def practice_view(request, topic_id=None):
@@ -194,11 +230,17 @@ def practice_view(request, topic_id=None):
     topic_name = next((t['name'] for t in TOPICS if t['id'] == topic_id), '')
     content = load_topic_content(topic_id, 'practice')
     
+    if content:
+        content_html = content['content']
+        content_html = mark_safe(content_html)  # HTML 안전하게 렌더링
+    else:
+        content_html = ''
+    
     context = {
         'topics': TOPICS,
         'topic_id': topic_id,
         'topic_name': topic_name,
-        'content': content['content'] if content else ''
+        'content': content_html
     }
     
     return render(request, 'courses/practice.html', context)
@@ -277,18 +319,19 @@ def assignment_view(request, topic_id=None):
         topic_id = TOPICS[0]['id']
         
     topic_name = next((t['name'] for t in TOPICS if t['id'] == topic_id), '')
+    content = load_topic_content(topic_id, 'assignment')
     
-    # 콘텐츠 로드
-    assignment_content = load_topic_content(topic_id, 'assignment')
-    print("Assignment content loaded:", assignment_content is not None)  # 디버그 출력
-    print("Topic ID:", topic_id)  # 디버그 출력
-    print("Topic name:", topic_name)  # 디버그 출력
+    if content:
+        content_html = content['content']
+        content_html = mark_safe(content_html)  # HTML 안전하게 렌더링
+    else:
+        content_html = ''
     
     context = {
         'topics': TOPICS,
         'topic_id': topic_id,
         'topic_name': topic_name,
-        'content': assignment_content['content'] if assignment_content else ''
+        'content': content_html
     }
     
     return render(request, 'courses/assignment.html', context)
