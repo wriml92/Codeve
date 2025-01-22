@@ -22,6 +22,10 @@ class ChatbotWidget {
                 <button id="chat-toggle-btn">🤖</button>
             </div>
             <div class="chat-container" style="display: none;">
+                <div class="chat-header">
+                    <div class="title">코드이브 챗봇</div>
+                    <button class="close-btn">∨</button>
+                </div>
                 <div class="chat-messages"></div>
                 <div class="chat-input">
                     <input type="text" placeholder="메시지를 입력하세요...">
@@ -36,22 +40,30 @@ class ChatbotWidget {
 
     bindEvents() {
         const toggleBtn = document.getElementById('chat-toggle-btn');
+        const toggleContainer = document.querySelector('.chat-toggle');
         const container = document.querySelector('.chat-container');
+        const closeBtn = document.querySelector('.chat-header .close-btn');
         const sendBtn = document.querySelector('.chat-input button');
         const input = document.querySelector('.chat-input input');
 
         toggleBtn.addEventListener('click', () => {
             this.isOpen = !this.isOpen;
             if (this.isOpen) {
+                toggleContainer.style.display = 'none';
                 container.style.display = 'flex';
                 if (!this.hasInitialMessage) {
-                    this.displayMessage('코드이브입니다! 무엇이든 물어보세요 😊', 'bot-message welcome-message');
+                    this.showChatNotification('코드이브입니다! 무엇이든 물어보세요 😊', 'welcome');
                     this.hasInitialMessage = true;
                 }
                 this.scrollToBottom(document.querySelector('.chat-messages'));
-            } else {
-                container.style.display = 'none';
+                input.focus();
             }
+        });
+
+        closeBtn.addEventListener('click', () => {
+            this.isOpen = false;
+            toggleContainer.style.display = 'block';
+            container.style.display = 'none';
         });
 
         sendBtn.addEventListener('click', () => this.sendMessage(input.value));
@@ -186,6 +198,33 @@ class ChatbotWidget {
     static clearOnLogout() {
         localStorage.removeItem('chatHistory');
         console.log('Chat history cleared on logout');
+    }
+
+    showChatNotification(message, type = '') {
+        const container = document.querySelector('.chat-container');
+        const existingNotification = container.querySelector('.chat-notification');
+        if (existingNotification) {
+            existingNotification.remove();
+        }
+
+        const notification = document.createElement('div');
+        notification.className = `chat-notification ${type}`;
+        notification.innerHTML = `
+            ${message}
+            <button class="close-notification">&times;</button>
+        `;
+
+        container.appendChild(notification);
+
+        const closeBtn = notification.querySelector('.close-notification');
+        closeBtn.addEventListener('click', () => notification.remove());
+
+        // 3초 후 자동으로 알림 닫기
+        setTimeout(() => {
+            if (notification.parentElement) {
+                notification.remove();
+            }
+        }, 3000);
     }
 }
 
