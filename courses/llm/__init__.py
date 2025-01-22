@@ -265,3 +265,15 @@ class ContentGenerator:
     def get_content_types() -> List[str]:
         """사용 가능한 콘텐츠 타입 목록 반환"""
         return ['theory', 'practice', 'assignment']
+
+    def get_content_path(self, topic_id: str, content_type: str) -> Path:
+        """콘텐츠 파일 경로 반환"""
+        topic_dir = self.data_dir / topic_id
+        
+        # version.json 읽기
+        with open(topic_dir / 'version.json', 'r', encoding='utf-8') as f:
+            version_info = json.load(f)
+        
+        # 현재 버전의 파일 경로 반환
+        content_path = version_info['content'][content_type]['path']
+        return topic_dir / content_path

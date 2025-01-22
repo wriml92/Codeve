@@ -1,0 +1,18 @@
+{
+  "current_version": "v1",
+  "updated_at": "2025-01-22T10:58:14.454618",
+  "content": {
+    "theory": {
+      "version": "v1",
+      "path": "content/theory.json"
+    },
+    "practice": {
+      "version": "v1",
+      "path": "content/practice.json"
+    },
+    "assignment": {
+      "version": "v1",
+      "path": "content/assignment.json"
+    }
+  }
+}
