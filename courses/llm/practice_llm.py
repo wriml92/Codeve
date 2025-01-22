@@ -23,61 +23,35 @@ class PracticeLLM(BaseLLM):
         else:
             theory_content = ""
 
+        # 토픽별 실습 파일명 생성
+        file_name = f"{topic_id}_practice.py"
+        
         # 실습 내용 생성을 위한 입력 구성
         input_data = {
             "theory_content": theory_content,
-            "topic": topic_id
+            "topic": topic_id,
+            "practice_info": {
+                "file_name": file_name,
+                "setup_steps": [
+                    f"1. VSCode에서 새 파일을 만들고 '{file_name}'으로 저장하세요.",
+                    "2. 아래 예제 코드를 파일에 복사하세요.",
+                    "3. 터미널에서 'python {file_name}' 명령으로 실행하세요."
+                ]
+            }
         }
 
         # 실습 내용 생성
         messages = [{
             "role": "system",
             "content": """당신은 Python 실습 튜터입니다. 
-이론 내용을 참조하여 VSCode에서 실습할 수 있는 내용을 HTML 형식으로 생성해주세요.
+모든 실습은 VSCode 환경에서 진행됩니다. 이론 내용을 참조하여 학생들이 VSCode에서 직접 실습할 수 있는 내용을 생성해주세요.
 
-반드시 다음 HTML 구조를 사용하여 응답해야 합니다:
+실습 환경:
+- IDE: Visual Studio Code (VSCode)
+- 실행 방법: 터미널에서 'python 파일명.py' 명령어 사용
+- 파일 확장자: .py
 
-<div class="space-y-8">
-    <!-- 실습 설명 -->
-    <section class="bg-white rounded-lg shadow-sm p-6">
-        <h2 class="text-lg font-semibold text-gray-800 mb-4">실습 설명</h2>
-        <div class="prose max-w-none text-gray-600">
-            {이론 내용에서 설명한 개념을 실습으로 풀어서 설명}
-        </div>
-    </section>
-
-    <!-- 예제 코드 -->
-    <section class="bg-white rounded-lg shadow-sm p-6">
-        <h2 class="text-lg font-semibold text-gray-800 mb-4">예제 코드</h2>
-        <div class="bg-gray-900 rounded-lg p-4">
-            <pre class="text-white font-mono text-sm overflow-x-auto">
-{이론에서 제시된 예제 코드를 포함한 실행 가능한 코드}
-            </pre>
-        </div>
-        <div class="mt-4 text-sm text-gray-500">
-            <p>* 코드를 복사하여 VSCode에 붙여넣기 할 수 있습니다.</p>
-        </div>
-    </section>
-
-    <!-- 실행 방법 -->
-    <section class="bg-white rounded-lg shadow-sm p-6">
-        <h2 class="text-lg font-semibold text-gray-800 mb-4">실행 방법</h2>
-        <ol class="list-decimal list-inside space-y-3 text-gray-600">
-            <li class="pl-2">VSCode에서 새 파일 만들기</li>
-            <li class="pl-2">위의 예제 코드를 입력하기</li>
-            <li class="pl-2">파일을 .py 확장자로 저장하기</li>
-            <li class="pl-2">코드 실행 후 결과 확인하기</li>
-        </ol>
-    </section>
-
-    <!-- 주의사항 -->
-    <section class="bg-white rounded-lg shadow-sm p-6">
-        <h2 class="text-lg font-semibold text-gray-800 mb-4">주의사항</h2>
-        <ul class="list-disc list-inside space-y-3 text-gray-600">
-            {이론 내용에서 언급된 주의사항 및 실행 시 유의점}
-        </ul>
-    </section>
-</div>"""
+{self.prompt_template}"""
         }, {
             "role": "user",
             "content": f"""# 입력 데이터

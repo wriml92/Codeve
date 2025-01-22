@@ -23,7 +23,7 @@ class TheoryLLM(BaseLLM):
         }]
         
         response = await self.llm.agenerate([messages])
-        return response.generations[0][0].text
+        return self._format_response(response.generations[0][0].text)
         
     async def analyze(self, content: str) -> Dict[str, Any]:
         """이론 내용 분석"""
@@ -47,6 +47,12 @@ class TheoryLLM(BaseLLM):
         """핵심 개념 추출"""
         # 핵심 개념 추출 로직 구현
         pass
+
+    def _format_response(self, content: str) -> str:
+        """HTML 형식으로 응답 포맷팅"""
+        return f"""<div class="space-y-8">
+            {content}
+        </div>"""
 
 # theory_llm.py의 프롬프트 템플릿 예시
 THEORY_TEMPLATE = """

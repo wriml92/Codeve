@@ -4,6 +4,7 @@ import json
 from datetime import datetime
 import yaml  # config 파일 로드를 위해 추가
 import asyncio
+import shutil
 
 # LLM 클래스들 import
 from .theory_llm import TheoryLLM
@@ -60,18 +61,41 @@ class ContentGenerator:
         """단일 토픽 콘텐츠 생성"""
         try:
             topic_dir = self.data_dir / topic_id
-            current_dir = topic_dir / 'current'
-            current_dir.mkdir(parents=True, exist_ok=True)
-
+            content_dir = topic_dir / 'content'
+            versions_dir = topic_dir / 'versions'
+            
+            # 디렉토리 구조 생성
+            content_dir.mkdir(parents=True, exist_ok=True)
+            versions_dir.mkdir(exist_ok=True)
+            
             if content_type in ['all', 'theory']:
-                await self.generate_theory(topic_id)
+                # 이론 내용 생성
+                theory_content = await self.theory_llm.generate(topic_id)
+                
+                # content 디렉토리에 저장
+                theory_file = content_dir / 'theory.json'
+                with open(theory_file, 'w', encoding='utf-8') as f:
+                    json.dump({
+                        'content': theory_content,  # HTML 콘텐츠
+                        'metadata': {
+                            'created_at': datetime.now().isoformat(),
+                            'version': 1
+                        }
+                    }, f, indent=2, ensure_ascii=False)
+                
+                # versions에 백업
+                v1_dir = versions_dir / 'v1'
+                v1_dir.mkdir(exist_ok=True)
+                shutil.copy2(theory_file, v1_dir / 'theory.json')
+                
+                print(f"✅ {topic_id} theory 내용 생성 완료")
             
             if content_type in ['all', 'practice']:
                 # practice 내용 생성
                 practice_content = await self.practice_llm.generate(topic_id)
                 
-                # practice.json 파일 저장
-                practice_file = current_dir / 'practice.json'
+                # content 디렉토리에 저장
+                practice_file = content_dir / 'practice.json'
                 with open(practice_file, 'w', encoding='utf-8') as f:
                     json.dump({
                         'content': practice_content,
@@ -80,62 +104,61 @@ class ContentGenerator:
                             'version': 1
                         }
                     }, f, indent=2, ensure_ascii=False)
+                
+                # versions에 백업
+                v1_dir = versions_dir / 'v1'
+                v1_dir.mkdir(exist_ok=True)
+                shutil.copy2(practice_file, v1_dir / 'practice.json')
+                
                 print(f"✅ {topic_id} practice 내용 생성 완료")
             
             if content_type in ['all', 'assignment']:
-                self.initialize_templates(topic_id)
-                await self.assignment_llm.generate(topic_id)
+                # assignment 내용 생성
+                assignment_content = await self.assignment_llm.generate(topic_id)
+                
+                # content 디렉토리에 저장
+                assignment_file = content_dir / 'assignment.json'
+                with open(assignment_file, 'w', encoding='utf-8') as f:
+                    json.dump({
+                        'content': assignment_content,
+                        'metadata': {
+                            'created_at': datetime.now().isoformat(),
+                            'version': 1
+                        }
+                    }, f, indent=2, ensure_ascii=False)
+                
+                # versions에 백업
+                v1_dir = versions_dir / 'v1'
+                v1_dir.mkdir(exist_ok=True)
+                shutil.copy2(assignment_file, v1_dir / 'assignment.json')
+                
+                print(f"✅ {topic_id} assignment 내용 생성 완료")
+            
+            # version.json 생성/업데이트
+            version_info = {
+                "current_version": "v1",
+                "updated_at": datetime.now().isoformat(),
+                "content": {
+                    "theory": {
+                        "version": "v1",
+                        "path": "content/theory.json"
+                    },
+                    "practice": {
+                        "version": "v1",
+                        "path": "content/practice.json"
+                    },
+                    "assignment": {
+                        "version": "v1",
+                        "path": "content/assignment.json"
+                    }
+                }
+            }
+            
+            with open(topic_dir / 'version.json', 'w', encoding='utf-8') as f:
+                json.dump(version_info, f, ensure_ascii=False, indent=2)
 
         except Exception as e:
             print(f"❌ {topic_id} 생성 중 오류 발생: {str(e)}")
-            raise
-
-    async def generate_theory(self, topic_id: str):
-        """이론 내용 생성"""
-        try:
-            # 1. 디렉토리 구조 생성
-            topic_dir = self.data_dir / topic_id
-            versions_dir = topic_dir / 'versions'
-            versions_dir.mkdir(parents=True, exist_ok=True)
-            
-            # 2. 새 버전 디렉토리 생성
-            new_version = self._get_next_version(versions_dir)
-            version_dir = versions_dir / f'v{new_version}'
-            version_dir.mkdir(parents=True, exist_ok=True)
-
-            # 3. 새 내용 생성
-            theory_content = await self.theory_llm.generate(topic_id)
-            
-            # 4. 품질 평가
-            quality_score = self._evaluate_content(theory_content, topic_id)
-            
-            # 5. 저장
-            theory_file = version_dir / 'theory.json'
-            with open(theory_file, 'w', encoding='utf-8') as f:
-                json.dump({
-                    'content': theory_content,
-                    'metadata': {
-                        'version': new_version,
-                        'created_at': datetime.now().isoformat(),
-                        'quality_score': quality_score
-                    }
-                }, f, indent=2, ensure_ascii=False)
-            
-            # 6. current 디렉토리 생성 및 심볼릭 링크 설정
-            current_dir = topic_dir / 'current'
-            current_dir.mkdir(exist_ok=True)
-            
-            current_file = current_dir / 'theory.json'
-            if current_file.exists():
-                current_file.unlink()
-            current_file.symlink_to(theory_file)
-            
-            return f"새로운 버전(v{new_version})이 생성되었습니다. (품질 점수: {quality_score})"
-            
-        except Exception as e:
-            print(f"이론 생성 중 오류 발생: {str(e)}")
-            import traceback
-            print(traceback.format_exc())
             raise
 
     def _evaluate_content(self, content: str, topic_id: str) -> float:
@@ -180,36 +203,6 @@ class ContentGenerator:
             import traceback
             print(traceback.format_exc())  # 상세한 오류 정보 출력
             return 0.0
-
-    def _get_next_version(self, versions_dir: Path) -> int:
-        """다음 버전 번호 가져오기"""
-        versions = [int(f.name.split('v')[1]) for f in versions_dir.glob('v*') if f.is_dir()]
-        return max(versions, default=0) + 1
-
-    def _get_current_score(self, topic_id: str) -> float:
-        """현재 버전의 품질 점수 가져오기"""
-        topic_dir = self.data_dir / topic_id
-        versions_dir = topic_dir / 'versions'
-        if versions_dir.is_dir():
-            versions = [f for f in versions_dir.glob('v*') if f.is_dir()]
-            if versions:
-                latest_version_dir = max(versions, key=lambda f: int(f.name.split('v')[1]))
-                with open(latest_version_dir / 'theory.json', 'r', encoding='utf-8') as f:
-                    metadata = json.load(f)
-                    return metadata['metadata']['quality_score']
-        return 0.0
-
-    def _update_current_version(self, topic_id: str, new_version: int):
-        """current 심볼릭 링크 업데이트"""
-        topic_dir = self.data_dir / topic_id
-        current_link = topic_dir / 'current'
-        current_link.unlink(missing_ok=True)
-        current_link.symlink_to(f'v{new_version}')
-
-    def initialize_templates(self, topic_id: str):
-        """템플릿 확인/생성"""
-        # 템플릿 확인/생성 로직을 구현해야 합니다.
-        pass
 
     async def generate_all(self, content_type: str = 'all', force: bool = False):
         """모든 토픽의 콘텐츠 생성"""
