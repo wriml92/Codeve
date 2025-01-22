@@ -219,12 +219,12 @@ class ChatbotWidget {
         const closeBtn = notification.querySelector('.close-notification');
         closeBtn.addEventListener('click', () => notification.remove());
 
-        // 3초 후 자동으로 알림 닫기
+        // 20초 후 자동으로 알림 닫기
         setTimeout(() => {
             if (notification.parentElement) {
                 notification.remove();
             }
-        }, 3000);
+        }, 20000);
     }
 }
 
