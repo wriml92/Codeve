@@ -8,46 +8,45 @@
 
 ## 출력 형식
 
-```html
-<!-- 1. 개념 소개 섹션 -->
-<section class="mb-8">
-    <h2 class="text-lg font-semibold text-black-600 mb-3">개념 소개</h2>
-    <p class="text-gray-800 leading-relaxed">
-        {초보자의 눈높이에 맞춘 개념 설명}
-        {필요한 경우 단계별로 나누어 설명}
-    </p>
-</section>
+<div class="space-y-8">
+    <!-- 1. 개념 소개 섹션 -->
+    <section class="mb-8">
+        <h2 class="text-lg font-semibold text-black-600 mb-3">개념 소개</h2>
+        <p class="text-gray-800 leading-relaxed">
+            {초보자의 눈높이에 맞춘 개념 설명}
+            {필요한 경우 단계별로 나누어 설명}
+        </p>
+    </section>
 
-<!-- 2. 실생활 비유 섹션 -->
-<section class="mb-8">
-    <h2 class="text-lg font-semibold text-black-600 mb-3">비유</h2>
-    <p class="text-gray-800 leading-relaxed">
-        {실생활에서 찾을 수 있는 주요 비유}
-        {실생활에서 찾을 수 있는 대체 비유}
-    </p>
-    <div class="bg-gray-900 rounded-lg p-4 mt-4">
-        <pre class="text-white font-mono text-sm">{비유를 python 코드로 구현한 예시}</pre>
-        <p class="text-green-400 mt-2"># 출력 결과: {코드 실행 결과}</p>
-    </div>
-</section>
+    <!-- 2. 실생활 비유 섹션 -->
+    <section class="mb-8">
+        <h2 class="text-lg font-semibold text-black-600 mb-3">비유</h2>
+        <p class="text-gray-800 leading-relaxed">
+            {실생활에서 찾을 수 있는 주요 비유}
+            {실생활에서 찾을 수 있는 대체 비유}
+        </p>
+        <div class="bg-gray-900 rounded-lg p-4 mt-4">
+            <pre class="text-white font-mono text-sm">{비유를 python 코드로 구현한 예시}</pre>
+            <p class="text-green-400 mt-2"># 출력 결과: {코드 실행 결과}</p>
+        </div>
+    </section>
 
-<!-- 3. 핵심 포인트 섹션 -->
-<section class="mb-8">
-    <h2 class="text-lg font-semibold text-black-600 mb-3">핵심 포인트</h2>
-    <ul class="list-disc list-inside space-y-2 text-gray-800">
-        {핵심 규칙들을 리스트로 작성해주세요. 각 규칙은 python 예시와 함께 제공해주세요.}
-    </ul>
-</section>
+    <!-- 3. 핵심 포인트 섹션 -->
+    <section class="mb-8">
+        <h2 class="text-lg font-semibold text-black-600 mb-3">핵심 포인트</h2>
+        <ul class="list-disc list-inside space-y-2 text-gray-800">
+            {핵심 규칙들을 리스트로 작성해주세요. 각 규칙은 python 예시와 함께 제공해주세요.}
+        </ul>
+    </section>
 
-<!-- 4. 주의사항 섹션 -->
-<section class="mb-8">
-    <h2 class="text-lg font-semibold mb-3">주의사항</h2>
-    <ul class="list-decimal list-inside space-y-2 text-gray-800">
-        {주의해야 할 점들을 리스트로 작성해주세요. 만약 python 예시로 표현할 수 있다면 함께 제공해주세요.}
-    </ul>
-</section>
-```
-
+    <!-- 4. 주의사항 섹션 -->
+    <section class="mb-8">
+        <h2 class="text-lg font-semibold mb-3">주의사항</h2>
+        <ul class="list-decimal list-inside space-y-2 text-gray-800">
+            {주의해야 할 점들을 리스트로 작성해주세요. 만약 python 예시로 표현할 수 있다면 함께 제공해주세요.}
+        </ul>
+    </section>
+</div>
 
 ## 작성 규칙
 
