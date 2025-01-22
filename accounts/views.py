@@ -109,6 +109,7 @@ class LoginView(APIView):
         if not request.content_type == 'application/json':
             email = request.POST.get('email')
             password = request.POST.get('password')
+            next_url = request.POST.get('next') or request.GET.get('next')
 
             if not email or not password:
                 messages.error(request, '이메일과 비밀번호를 모두 입력해주세요.')
@@ -127,7 +128,10 @@ class LoginView(APIView):
             user.reset_login_attempts()
             messages.success(request, '로그인되었습니다.')
 
-            # Python 코스 페이지로 리다이렉트
+            # next 파라미터가 있으면 해당 URL로 리다이렉트
+            if next_url:
+                return redirect(next_url)
+            # 기본적으로 Python 코스 페이지로 리다이렉트
             return redirect('courses:course-list')
 
         # API 요청 처리

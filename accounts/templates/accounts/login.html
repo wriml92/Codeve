@@ -2,18 +2,7 @@
 
 {% block title %}Codeve - 로그인{% endblock %}
 
-{% block back_button %}
-<div class="flex items-start p-4">
-    <a href="javascript:history.back()"
-        class="flex items-center px-6 py-2.5 bg-gradient-to-r from-amber-200 to-yellow-200 text-gray-700 font-medium rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 hover:from-amber-300 hover:to-yellow-300">
-        <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-            stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-        </svg>
-        뒤로 가기
-    </a>
-</div>
-{% endblock %}
+
 
 {% block main_class %}max-w-md{% endblock %}
 
@@ -37,6 +26,7 @@
 <!-- Login Form -->
 <form method="post" class="space-y-6" action="{% url 'accounts:login' %}">
     {% csrf_token %}
+    <input type="hidden" name="next" value="{{ request.GET.next }}">
 
     <div class="space-y-4">
         <!-- Email Field -->
