@@ -13,8 +13,8 @@ router.register(r'user-courses', views.UserCourseViewSet, basename='user-course'
 app_name = 'courses'
 
 urlpatterns = [
-    # API URLs
-    path('api/', include(router.urls)),
+    # API URLs - 'api/' 경로로 시작
+    path('api/v1/', include(router.urls)),
     
     # Web URLs
     path('', views.course_list_view, name='course-list'),

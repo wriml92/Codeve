@@ -19,6 +19,22 @@
     .code-editor-container {
         margin: 1rem 0;
     }
+
+    .code-editor-container {
+        border: 1px solid #e5e7eb;
+        border-radius: 0.5rem;
+        overflow: hidden;
+    }
+    .CodeMirror {
+        height: auto;
+        min-height: 100px;
+        font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+        font-size: 14px;
+        line-height: 1.5;
+    }
+    .CodeMirror-scroll {
+        min-height: 100px;
+    }
 </style>
 {% endblock %}
 
@@ -90,7 +106,7 @@
                 <span class="text-red-500">[과제]</span> {{ topic_name }}
             </h1>
 
-            <p class="mb-8 text-gray-800">이제 퀴즈를 풀어보겠습니다.</p>
+            <p class="mb-8 text-gray-800">이제 과제를 풀어보겠습니다.</p>
 
             <!-- 실제 콘텐츠 -->
             <div>
@@ -98,43 +114,47 @@
             </div>
 
             <!-- 각 퀴즈와 답안을 함께 표시 -->
-            {% for quiz in quizzes %}
+            {% for assignment in assignments %}
             <div class="mb-12 bg-white rounded-2xl p-6 shadow-sm border border-yellow-200">
                 <div class="mb-8">
                     <h2 class="text-lg font-bold mb-4">
-                        퀴즈 {{ quiz.id }}:
-                        {% if quiz.id == 1 %}개념 이해
-                        {% elif quiz.id == 2 %}코드 분석
-                        {% else %}코드 구현
+                        과제 {{ assignment.id }}:
+                        {% if assignment.type == 'concept' %}기본 개념
+                        {% elif assignment.type == 'theory_concept' %}이론 개념
+                        {% elif assignment.type == 'metaphor' %}비유 이해
+                        {% elif assignment.type == 'implementation_basic' %}기본 구현
+                        {% elif assignment.type == 'implementation_advanced' %}심화 구현
                         {% endif %}
                     </h2>
                     <div class="text-gray-800">
-                        {{ quiz.content|safe }}
+                        {{ assignment.content|safe }}
                     </div>
                 </div>
 
-                <!-- 퀴즈 답안 -->
+                <!-- 과제 답안 -->
                 <div class="pt-4 border-t border-yellow-200">
-                    <h3 class="text-md font-bold mb-4">퀴즈 {{ quiz.id }} 답안</h3>
-                    {% if quiz.id == 1 %}
-                    <!-- 객관식 답안 (퀴즈 1) -->
+                    <h3 class="text-md font-bold mb-4">과제 {{ assignment.id }} 답안</h3>
+                    {% if assignment.type == 'concept' or assignment.type == 'theory_concept' or assignment.type == 'metaphor' %}
+                    <!-- 객관식 답안 (라디오 버튼) -->
                     <div class="space-y-3">
-                        {% for choice in quiz.choices %}
+                        {% for choice in assignment.choices %}
                         <div class="flex items-center space-x-3">
-                            <input type="radio" id="quiz1_option{{ forloop.counter }}" name="quiz1_answer"
-                                value="{{ forloop.counter }}" class="w-4 h-4 text-yellow-400">
-                            <label for="quiz1_option{{ forloop.counter }}" class="text-gray-800">{{ choice }}</label>
+                            <input type="radio" id="assignment{{ assignment.id }}_option{{ forloop.counter }}" 
+                                   name="assignment{{ assignment.id }}_answer"
+                                   value="{{ forloop.counter }}" class="w-4 h-4 text-yellow-400">
+                            <label for="assignment{{ assignment.id }}_option{{ forloop.counter }}" 
+                                   class="text-gray-800">{{ choice }}</label>
                         </div>
                         {% endfor %}
                     </div>
                     {% else %}
-                    <!-- 코드 에디터 (퀴즈 2, 3) -->
+                    <!-- 코드 에디터 (구현 문제) -->
                     <div class="code-editor-container">
-                        <div id="editor{{ quiz.id }}" class="code-editor"></div>
+                        <div id="editor{{ assignment.id }}" class="code-editor"></div>
                     </div>
                     {% endif %}
 
-                    <button onclick="submitQuiz({{ quiz.id }}, '{{ quiz.type }}')"
+                    <button onclick="submitAssignment({{ assignment.id }}, '{{ assignment.type }}')"
                         class="w-full mt-4 px-6 py-3 bg-gradient-to-r from-amber-500 to-yellow-400 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 hover:from-amber-600 hover:to-yellow-500 flex items-center justify-center">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
@@ -142,7 +162,7 @@
                         제출하기
                     </button>
 
-                    <div id="result{{ quiz.id }}" class="mt-4 hidden">
+                    <div id="result{{ assignment.id }}" class="mt-4 hidden">
                         <div class="p-4 rounded-lg"></div>
                     </div>
                 </div>
@@ -189,41 +209,48 @@
         };
 
         document.querySelectorAll('.code-editor').forEach(element => {
-            const quizId = element.id.replace('editor', '');
-            editors[quizId] = CodeMirror(element, {
+            const assignmentId = element.id.replace('editor', '');
+            editors[assignmentId] = CodeMirror(element, {
                 mode: 'python',
                 theme: 'monokai',
                 lineNumbers: true,
                 indentUnit: 4,
                 lineWrapping: true,
-                value: initialCode[quizId] || '# 코드를 작성하세요\n'
+                value: initialCode[assignmentId] || '# 코드를 작성하세요\n'
             });
         });
 
-        // 퀴즈 제출 함수
-        window.submitQuiz = async function (quizId, quizType) {
-            const resultDiv = document.getElementById(`result${quizId}`);
+        // 과제 제출 함수
+        window.submitAssignment = async function (assignmentId, assignmentType) {
+            const resultDiv = document.getElementById(`result${assignmentId}`);
             const resultContent = resultDiv.querySelector('div');
 
             try {
                 let answer;
-                if (quizId === 1) {
-                    const selected = document.querySelector('input[name="quiz1_answer"]:checked');
+                if (['concept', 'theory_concept', 'metaphor'].includes(assignmentType)) {
+                    const selected = document.querySelector(`input[name="assignment${assignmentId}_answer"]:checked`);
                     answer = selected ? selected.value : null;
+                    if (!answer) {
+                        throw new Error('답을 선택해주세요.');
+                    }
                 } else {
-                    answer = editors[quizId].getValue();
+                    answer = editors[assignmentId].getValue();
+                    if (!answer.trim()) {
+                        throw new Error('답을 입력해주세요.');
+                    }
                 }
 
-                const response = await fetch('/api/courses/submit-quiz/', {
+                const response = await fetch('/courses/api/v1/submit-assignment/', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'X-CSRFToken': getCookie('csrftoken')
                     },
                     body: JSON.stringify({
-                        quiz_id: quizId,
-                        quiz_type: quizType,
-                        answer: answer
+                        assignment_id: assignmentId,
+                        assignment_type: assignmentType,
+                        answer: answer,
+                        topic_id: '{{ topic_id }}'
                     })
                 });
 
@@ -232,11 +259,20 @@
                 resultContent.className = `p-4 rounded-lg ${result.correct ? 'bg-green-100' : 'bg-red-100'}`;
                 resultContent.innerHTML = result.message;
 
+                if (result.test_results) {
+                    const testResults = result.test_results.map(r => 
+                        `<div class="${r.passed ? 'text-green-600' : 'text-red-600'}">
+                            ${r.case}: ${r.passed ? '통과' : '실패'}
+                        </div>`
+                    ).join('');
+                    resultContent.innerHTML += `<div class="mt-2">${testResults}</div>`;
+                }
+
             } catch (error) {
-                console.error('Error submitting quiz:', error);
+                console.error('Error submitting assignment:', error);
                 resultDiv.classList.remove('hidden');
                 resultContent.className = 'p-4 rounded-lg bg-red-100';
-                resultContent.textContent = '제출 중 오류가 발생했습니다. 다시 시도해주세요.';
+                resultContent.textContent = error.message || '제출 중 오류가 발생했습니다. 다시 시도해주세요.';
             }
         };
 

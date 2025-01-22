@@ -1,3 +1,10 @@
+import os
+import django
+
+# Django 설정 초기화
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Codeve.settings')
+django.setup()
+
 import click
 from pathlib import Path
 import asyncio

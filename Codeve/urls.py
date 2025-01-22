@@ -36,11 +36,11 @@ urlpatterns = [
     path('practice/', main2_view, name='main2'),
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),
-    path('courses/', include('courses.urls')),  # courses 앱의 URL 패턴 포함
+    path('courses/', include('courses.urls')),
     path('', include('social_django.urls', namespace='social')),
-    path('api/communities/', include('communities.urls')),  # 커뮤니티 패스 추가
-    path('', include('chatbots.urls')),  # chatbots의 URL 포함
-    path('api/roadmaps/', include('roadmaps.urls')),  # 이 줄 추가
+    path('api/communities/', include('communities.urls')),
+    path('', include('chatbots.urls')),
+    path('api/roadmaps/', include('roadmaps.urls')),
     path('accounts/password/reset/',
          auth_views.PasswordResetView.as_view(),
          name='password_reset'),

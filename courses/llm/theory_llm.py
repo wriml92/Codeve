@@ -1,8 +1,7 @@
 from typing import Dict, Any, List
 from .base_llm import BaseLLM
-import json
-import os
-from pathlib import Path
+from ..models import TheoryContent
+from asgiref.sync import sync_to_async
 
 class TheoryLLM(BaseLLM):
     def __init__(self, model_name="gpt-4", temperature=0.7):
@@ -23,7 +22,21 @@ class TheoryLLM(BaseLLM):
         }]
         
         response = await self.llm.agenerate([messages])
-        return self._format_response(response.generations[0][0].text)
+        content = self._format_response(response.generations[0][0].text)
+        
+        # DB에 저장
+        await sync_to_async(TheoryContent.objects.update_or_create)(
+            topic_id=topic_id,
+            defaults={'content': content}
+        )
+        
+        return content
+
+    def _format_response(self, content: str) -> str:
+        """HTML 형식으로 응답 포맷팅"""
+        return f"""<div class="space-y-8">
+            {content}
+        </div>"""
         
     async def analyze(self, content: str) -> Dict[str, Any]:
         """이론 내용 분석"""
@@ -47,35 +60,3 @@ class TheoryLLM(BaseLLM):
         """핵심 개념 추출"""
         # 핵심 개념 추출 로직 구현
         pass
-
-    def _format_response(self, content: str) -> str:
-        """HTML 형식으로 응답 포맷팅"""
-        return f"""<div class="space-y-8">
-            {content}
-        </div>"""
-
-# theory_llm.py의 프롬프트 템플릿 예시
-THEORY_TEMPLATE = """
-# {topic_name}
-
-## 개념 소개
-{concept_description}
-
-## 비유로 이해하기
-{analogy}
-
-```python
-{code_example}
-# 출력 결과: {output}
-```
-
-## 핵심 포인트
-- {key_point_1}
-- {key_point_2}
-- {key_point_3}
-
-## 주의사항
-1. {caution_1}
-2. {caution_2}
-3. {caution_3}
-""" 

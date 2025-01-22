@@ -62,31 +62,18 @@ class ContentGenerator:
         try:
             topic_dir = self.data_dir / topic_id
             content_dir = topic_dir / 'content'
-            versions_dir = topic_dir / 'versions'
             
-            # 디렉토리 구조 생성
+            # content 디렉토리만 생성
             content_dir.mkdir(parents=True, exist_ok=True)
-            versions_dir.mkdir(exist_ok=True)
             
             if content_type in ['all', 'theory']:
                 # 이론 내용 생성
                 theory_content = await self.theory_llm.generate(topic_id)
                 
                 # content 디렉토리에 저장
-                theory_file = content_dir / 'theory.json'
+                theory_file = content_dir / 'theory.html'
                 with open(theory_file, 'w', encoding='utf-8') as f:
-                    json.dump({
-                        'content': theory_content,  # HTML 콘텐츠
-                        'metadata': {
-                            'created_at': datetime.now().isoformat(),
-                            'version': 1
-                        }
-                    }, f, indent=2, ensure_ascii=False)
-                
-                # versions에 백업
-                v1_dir = versions_dir / 'v1'
-                v1_dir.mkdir(exist_ok=True)
-                shutil.copy2(theory_file, v1_dir / 'theory.json')
+                    f.write(theory_content)
                 
                 print(f"✅ {topic_id} theory 내용 생성 완료")
             
@@ -105,11 +92,6 @@ class ContentGenerator:
                         }
                     }, f, indent=2, ensure_ascii=False)
                 
-                # versions에 백업
-                v1_dir = versions_dir / 'v1'
-                v1_dir.mkdir(exist_ok=True)
-                shutil.copy2(practice_file, v1_dir / 'practice.json')
-                
                 print(f"✅ {topic_id} practice 내용 생성 완료")
             
             if content_type in ['all', 'assignment']:
@@ -127,35 +109,7 @@ class ContentGenerator:
                         }
                     }, f, indent=2, ensure_ascii=False)
                 
-                # versions에 백업
-                v1_dir = versions_dir / 'v1'
-                v1_dir.mkdir(exist_ok=True)
-                shutil.copy2(assignment_file, v1_dir / 'assignment.json')
-                
                 print(f"✅ {topic_id} assignment 내용 생성 완료")
-            
-            # version.json 생성/업데이트
-            version_info = {
-                "current_version": "v1",
-                "updated_at": datetime.now().isoformat(),
-                "content": {
-                    "theory": {
-                        "version": "v1",
-                        "path": "content/theory.json"
-                    },
-                    "practice": {
-                        "version": "v1",
-                        "path": "content/practice.json"
-                    },
-                    "assignment": {
-                        "version": "v1",
-                        "path": "content/assignment.json"
-                    }
-                }
-            }
-            
-            with open(topic_dir / 'version.json', 'w', encoding='utf-8') as f:
-                json.dump(version_info, f, ensure_ascii=False, indent=2)
 
         except Exception as e:
             print(f"❌ {topic_id} 생성 중 오류 발생: {str(e)}")

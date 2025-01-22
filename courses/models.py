@@ -78,3 +78,16 @@ class UserCourse(models.Model):
 
     def __str__(self):
         return f"{self.user.username}'s progress in {self.course.title}"
+
+class TheoryContent(models.Model):
+    topic_id = models.CharField(max_length=100, unique=True)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'theory_content'
+        ordering = ['-updated_at']
+
+    def __str__(self):
+        return f"Theory content for {self.topic_id}"
