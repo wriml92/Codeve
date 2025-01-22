@@ -13,8 +13,9 @@
     <section class="mb-8">
         <h2 class="text-lg font-semibold text-black-600 mb-3">개념 소개</h2>
         <p class="text-gray-800 leading-relaxed">
-            {초보자의 눈높이에 맞춘 개념 설명}
-            {필요한 경우 단계별로 나누어 설명}
+            {일상생활에서 시작하는 개념 설명}
+            {핵심 개념은 <b>볼드체</b>로 강조}
+            {전문 용어는 <span style='color: #0066cc;'>파란색</span>으로 표시하고 쉽게 설명}
         </p>
     </section>
 
@@ -22,28 +23,55 @@
     <section class="mb-8">
         <h2 class="text-lg font-semibold text-black-600 mb-3">비유</h2>
         <p class="text-gray-800 leading-relaxed">
-            {실생활에서 찾을 수 있는 주요 비유}
-            {실생활에서 찾을 수 있는 대체 비유}
+            {학습자가 이미 알고 있는 개념에 비유}
+            {시각적인 예시나 실생활 상황 2-3개 제시}
+            {각 비유가 개념의 다른 측면을 설명하도록 구성}
         </p>
         <div class="bg-gray-900 rounded-lg p-4 mt-4">
-            <pre class="text-white font-mono text-sm">{비유를 python 코드로 구현한 예시}</pre>
-            <p class="text-green-400 mt-2"># 출력 결과: {코드 실행 결과}</p>
+            <pre class="text-white font-mono text-sm">{매우 기초적인 파이썬 예제}</pre>
+            <p class="text-green-400 mt-2"># 실행 결과: {결과}</p>
         </div>
     </section>
 
-    <!-- 3. 핵심 포인트 섹션 -->
+    <!-- 3. 실생활 응용 섹션 -->
     <section class="mb-8">
-        <h2 class="text-lg font-semibold text-black-600 mb-3">핵심 포인트</h2>
-        <ul class="list-disc list-inside space-y-2 text-gray-800">
-            {핵심 규칙들을 리스트로 작성해주세요. 각 규칙은 python 예시와 함께 제공해주세요.}
-        </ul>
+        <h2 class="text-lg font-semibold text-black-600 mb-3">실생활 응용</h2>
+        <p class="text-gray-800 leading-relaxed">
+            {배운 개념이 실제로 어떻게 사용되는지}
+            {구체적인 사례 2-3개}
+        </p>
     </section>
 
-    <!-- 4. 주의사항 섹션 -->
+    <!-- 4. 핵심 포인트 섹션 -->
+    <section class="mb-8">
+        <h2 class="text-lg font-semibold text-black-600 mb-3">핵심 포인트</h2>
+        <div class="space-y-4">
+            <div class="key-point bg-gray-50 border-l-4 border-blue-500 p-4">
+                {핵심 내용 1}
+            </div>
+            <div class="key-point bg-gray-50 border-l-4 border-blue-500 p-4">
+                {핵심 내용 2}
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. 주의사항 섹션 -->
     <section class="mb-8">
         <h2 class="text-lg font-semibold mb-3">주의사항</h2>
-        <ul class="list-decimal list-inside space-y-2 text-gray-800">
-            {주의해야 할 점들을 리스트로 작성해주세요. 만약 python 예시로 표현할 수 있다면 함께 제공해주세요.}
+        <ul class="list-decimal list-inside space-y-4">
+            <li>
+                <div class="mb-2">{초보자가 자주 실수하는 부분 설명}</div>
+                <div class="space-y-2">
+                    <div class="bg-red-50 p-3 rounded-lg border-l-4 border-red-500">
+                        <div class="text-red-600 font-medium mb-1">❌ 잘못된 예시:</div>
+                        <pre class="bg-white p-2 rounded">{잘못된 코드 예시}</pre>
+                    </div>
+                    <div class="bg-green-50 p-3 rounded-lg border-l-4 border-green-500">
+                        <div class="text-green-600 font-medium mb-1">✅ 올바른 예시:</div>
+                        <pre class="bg-white p-2 rounded">{올바른 코드 예시}</pre>
+                    </div>
+                </div>
+            </li>
         </ul>
     </section>
 </div>

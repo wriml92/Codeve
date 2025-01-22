@@ -14,6 +14,15 @@ class BaseLLM(ABC):
         self.data_dir = self.base_dir / 'data'
         self.prompt_dir = self.base_dir / 'llm' / 'prompts'
         
+    async def generate_completion(self, prompt: str) -> str:
+        """LLM을 사용하여 텍스트 생성"""
+        try:
+            response = await self.llm.ainvoke(prompt)
+            return response.content
+        except Exception as e:
+            print(f"Error in generate_completion: {e}")
+            return ""
+
     def load_prompt(self, filename: str) -> str:
         """프롬프트 템플릿 로드"""
         prompt_path = self.base_dir / 'llm' / 'prompts' / filename
