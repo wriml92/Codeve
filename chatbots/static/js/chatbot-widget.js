@@ -6,7 +6,8 @@ class ChatbotWidget {
         this.createWidget();
         this.isOpen = false;
         this.loadChatHistory();
-        this.MAX_HISTORY = 10;
+        this.MAX_HISTORY = 20;
+        this.hasInitialMessage = false;
     }
 
     isLoggedIn() {
@@ -18,7 +19,7 @@ class ChatbotWidget {
         widget.className = 'chatbot-widget';
         widget.innerHTML = `
             <div class="chat-toggle">
-                <button id="chat-toggle-btn">챗봇</button>
+                <button id="chat-toggle-btn">🤖</button>
             </div>
             <div class="chat-container" style="display: none;">
                 <div class="chat-messages"></div>
@@ -43,7 +44,11 @@ class ChatbotWidget {
             this.isOpen = !this.isOpen;
             if (this.isOpen) {
                 container.style.display = 'flex';
-                container.offsetHeight;
+                if (!this.hasInitialMessage) {
+                    this.displayMessage('코드이브입니다! 무엇이든 물어보세요 😊', 'bot-message welcome-message');
+                    this.hasInitialMessage = true;
+                }
+                this.scrollToBottom(document.querySelector('.chat-messages'));
             } else {
                 container.style.display = 'none';
             }
@@ -130,6 +135,7 @@ class ChatbotWidget {
         messagesContainer.appendChild(messageDiv);
         
         this.saveChatHistory(text, className);
+        this.scrollToBottom(messagesContainer);
     }
 
     saveChatHistory(message, type) {
