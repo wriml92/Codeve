@@ -62,15 +62,21 @@ class CourseListView(APIView):
         courses = Course.objects.filter(is_active=True)
         user_courses = UserCourse.objects.filter(user=request.user)
         
-        # 진행률 정보 추가
+        # 진행률 정보와 토픽 완료 상태 추가
         for course in courses:
             user_course = user_courses.filter(course=course).first()
             course.user_progress = user_course.progress if user_course else 0
             course.is_enrolled = bool(user_course)
+            
+            # 각 토픽의 완료 상태 확인
+            completed_topics = user_course.get_completed_topics_list() if user_course else []
+            for topic in course.topics:
+                topic['is_completed'] = topic['id'] in completed_topics
         
         context = {
             'courses': courses,
             'user_courses': user_courses,
+            'progress_percentage': user_courses.first().progress if user_courses.exists() else 0,
         }
         
         return render(request, 'roadmaps/course-list.html', context)
