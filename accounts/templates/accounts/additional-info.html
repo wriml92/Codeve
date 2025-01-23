@@ -1,4 +1,5 @@
 {% extends 'base/base.html' %}
+{% load static %}
 
 {% block title %}Codeve - 마이 페이지{% endblock %}
 
@@ -12,9 +13,37 @@
         마이 페이지</h1>
 
     <!-- Profile Form -->
-    <form method="post" action="{% url 'accounts:my_page' %}" class="space-y-6" id="nicknameForm">
+    <form method="post" action="{% url 'accounts:my_page' %}" class="space-y-6" id="nicknameForm" enctype="multipart/form-data">
         {% csrf_token %}
+        
+        <!-- Profile Image Section -->
         <div class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">프로필 이미지</label>
+                <div class="mt-1 flex items-center justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-xl hover:border-amber-400 transition-colors">
+                    <div class="space-y-1 text-center">
+                        <div class="flex flex-col items-center">
+                            {% if user.profile_image %}
+                            <img id="preview" src="{{ user.profile_image.url }}" alt="프로필 미리보기" class="w-24 h-24 rounded-full mb-4 object-cover">
+                            {% else %}
+                            <img id="preview" src="{% static 'images/codeve_icon.png' %}" alt="프로필 미리보기" class="w-24 h-24 rounded-full mb-4 object-cover">
+                            {% endif %}
+                            <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                                <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                            <div class="flex text-sm text-gray-600">
+                                <label for="file-upload" class="relative cursor-pointer bg-white rounded-md font-medium text-amber-500 hover:text-amber-400 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-amber-500">
+                                    <span>이미지 업로드</span>
+                                    <input id="file-upload" name="profile_image" type="file" class="sr-only" accept="image/*" onchange="previewImage(this)">
+                                </label>
+                                <p class="pl-1">또는 드래그 앤 드롭</p>
+                            </div>
+                            <p class="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div>
                 <label for="nickname" class="block text-sm font-medium text-gray-700 mb-1">닉네임</label>
                 <input type="text" id="nickname" name="nickname" required value="{{ user.username }}"
@@ -87,6 +116,61 @@
 
 {% block extra_scripts %}
 <script>
+    // 이미지 미리보기 함수
+    function previewImage(input) {
+        const preview = document.getElementById('preview');
+        const file = input.files[0];
+        
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+        } else {
+            preview.src = "{% static 'images/codeve_icon.png' %}";
+        }
+    }
+
+    // 드래그 앤 드롭 기능
+    const dropZone = document.querySelector('div.border-dashed');
+    const fileInput = document.getElementById('file-upload');
+
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, preventDefaults, false);
+    });
+
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropZone.addEventListener(eventName, highlight, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, unhighlight, false);
+    });
+
+    function highlight(e) {
+        dropZone.classList.add('border-amber-400', 'bg-amber-50');
+    }
+
+    function unhighlight(e) {
+        dropZone.classList.remove('border-amber-400', 'bg-amber-50');
+    }
+
+    dropZone.addEventListener('drop', handleDrop, false);
+
+    function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+
+        fileInput.files = files;
+        previewImage(fileInput);
+    }
+
     function closeDuplicateModal() {
         document.getElementById('duplicateModal').classList.add('hidden');
     }
