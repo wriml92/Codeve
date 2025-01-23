@@ -12,7 +12,7 @@
         마이 페이지</h1>
 
     <!-- Profile Form -->
-    <form method="post" action="{% url 'accounts:my_page' %}" class="space-y-6">
+    <form method="post" action="{% url 'accounts:my_page' %}" class="space-y-6" id="nicknameForm">
         {% csrf_token %}
         <div class="space-y-4">
             <div>
@@ -61,4 +61,44 @@
         </div>
     </div>
 </div>
+
+<!-- Duplicate Nickname Modal -->
+<div id="duplicateModal"
+    class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center backdrop-blur-sm">
+    <div class="bg-white p-8 rounded-xl max-w-md w-full mx-4 shadow-2xl transform transition-all duration-300">
+        <div class="flex justify-center mb-4">
+            <div class="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
+                <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
+                    </path>
+                </svg>
+            </div>
+        </div>
+        <h2 class="text-xl font-bold text-center mb-4">닉네임 중복</h2>
+        <p class="text-gray-600 text-center mb-6">이미 사용 중인 닉네임입니다.<br>다른 닉네임을 입력해주세요.</p>
+        <button onclick="closeDuplicateModal()"
+            class="w-full bg-gradient-to-r from-amber-500 to-yellow-400 text-white font-semibold py-3 rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 hover:from-amber-600 hover:to-yellow-500">
+            확인
+        </button>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    function closeDuplicateModal() {
+        document.getElementById('duplicateModal').classList.add('hidden');
+    }
+
+    {% if messages %}
+    {% for message in messages %}
+    {% if message.tags == 'warning' and '현재 닉네임과 동일합니다' in message.message %}
+        // 현재 닉네임과 동일한 경우는 무시
+    {% elif '이미 사용 중인 닉네임입니다' in message.message %}
+        document.getElementById('duplicateModal').classList.remove('hidden');
+    {% endif %}
+    {% endfor %}
+    {% endif %}
+</script>
 {% endblock %}

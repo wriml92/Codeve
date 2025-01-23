@@ -43,6 +43,7 @@ class SignUpView(APIView):
 
         # 폼 제출 처리
         email = request.POST.get('email')
+        username = request.POST.get('username')
         password = request.POST.get('password')
         password_confirm = request.POST.get('password_confirm')
 
@@ -56,7 +57,7 @@ class SignUpView(APIView):
             return redirect('accounts:signup')
 
         # 데이터 유효성 검사
-        if not all([email, password, password_confirm]):
+        if not all([email, username, password, password_confirm]):
             messages.error(request, '모든 필드를 입력해주세요.')
             return redirect('accounts:signup')
 
@@ -75,11 +76,16 @@ class SignUpView(APIView):
             messages.error(request, '이미 사용 중인 이메일입니다.')
             return redirect('accounts:signup')
 
+        # 닉네임 중복 확인
+        if User.objects.filter(username=username).exists():
+            messages.error(request, '이미 사용 중인 닉네임입니다.')
+            return redirect('accounts:signup')
+
         # 사용자 생성
         try:
             user = User.objects.create_user(
                 email=email,
-                username=email.split('@')[0],
+                username=username,
                 password=password
             )
 
@@ -344,6 +350,8 @@ class MyPageView(APIView):
             user = request.user
             if user.username == nickname:
                 messages.warning(request, '현재 닉네임과 동일합니다.')
+            elif User.objects.filter(username=nickname).exists():
+                messages.error(request, '이미 사용 중인 닉네임입니다.')
             else:
                 user.username = nickname
                 user.save()
