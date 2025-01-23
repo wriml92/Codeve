@@ -6,19 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Codeve{% endblock %}</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    {% load static %}
     {% block extra_head %}{% endblock %}
 </head>
 
 <body class="bg-[#FFEBA4] {% if user.is_authenticated %}user-logged-in{% endif %}">
-    {% load static %}
 
     <!-- Navigation -->
     <nav class="flex justify-between items-center p-4 bg-[#F4D151] border-b border-yellow-200 shadow-sm">
         <!-- Left Navigation -->
         <div class="flex items-center space-x-8">
-            <a href="{% url 'main' %}"
-                class="font-bold text-lg px-6 py-2.5 bg-gradient-to-r from-yellow-400 to-amber-400 rounded-xl hover:from-yellow-500 hover:to-amber-500 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
-                Codeve
+            <a href="{% url 'main' %}" class="transform hover:scale-105 transition-transform duration-200">
+                <img src="{% static 'images/codeve.png' %}" alt="Codeve" class="h-8">
             </a>
             <div class="space-x-6">
                 <a href="#" onclick="handlePythonClick(event)"
