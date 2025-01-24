@@ -47,9 +47,11 @@ db.sqlite3-journal
 htmlcov/
 .pytest_cache/
 .cursorrules
+media/
 
 # .gitignore 예시
 # courses/scripts/cleanup_old_data.py
 # courses/scripts/migrate_data_structure.py
 # courses/scripts/verify_migration.py
 # courses/llm/content_generator.py
+
