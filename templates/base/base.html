@@ -12,90 +12,96 @@
 
 <body class="bg-[#FFEBA4] {% if user.is_authenticated %}user-logged-in{% endif %}">
 
-    <!-- Navigation -->
+    <!-- 네비게이션 바 -->
     <nav class="flex justify-between items-center p-4 bg-[#F4D151] border-b border-yellow-200 shadow-sm">
-        <!-- Left Navigation -->
+        <!-- 왼쪽 네비게이션 -->
         <div class="flex items-center space-x-8">
+            <!-- 로고 -->
             <a href="{% url 'main' %}" class="transform hover:scale-105 transition-transform duration-200">
                 <img src="{% static 'images/codeve.png' %}" alt="Codeve" class="h-8">
             </a>
+            
+            <!-- 메인 메뉴 -->
             <div class="space-x-6">
                 <a href="#" onclick="handlePythonClick(event)"
-                    class="text-gray-700 hover:text-gray-900 font-medium relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-gray-900 after:left-0 after:-bottom-1 after:transition-all after:duration-300 hover:after:w-full">
+                   class="text-gray-700 hover:text-gray-900 font-medium relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-gray-900 after:left-0 after:-bottom-1 after:transition-all after:duration-300 hover:after:w-full">
                     Python
                 </a>
                 <a href="{% url 'communities:posts-list' %}"
-                    class="text-gray-700 hover:text-gray-900 font-medium relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-gray-900 after:left-0 after:-bottom-1 after:transition-all after:duration-300 hover:after:w-full">
+                   class="text-gray-700 hover:text-gray-900 font-medium relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-gray-900 after:left-0 after:-bottom-1 after:transition-all after:duration-300 hover:after:w-full">
                     Archive
                 </a>
             </div>
         </div>
 
-        <!-- Right Navigation -->
+        <!-- 오른쪽 네비게이션 -->
         <div class="flex items-center space-x-4">
             {% if user.is_authenticated %}
-            <!-- User Info & Actions -->
-            <div class="flex items-center space-x-4">
-                <a href="{% url 'accounts:my_page' %}"
-                    class="flex items-center space-x-2 bg-gradient-to-r from-amber-200 to-amber-300 px-4 py-2 rounded-lg hover:from-amber-300 hover:to-amber-400 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
-                    {% if user.profile_image %}
-                    <img src="{{ user.profile_image.url }}" alt="프로필 이미지" class="w-8 h-8 rounded-full object-cover">
-                    {% else %}
-                    <img src="{% static 'images/codeve_icon.png' %}" alt="기본 프로필" class="w-8 h-8 rounded-full object-cover">
-                    {% endif %}
-                    <span>{{ user.username }}</span>
-                </a>
-            </div>
-            <!-- Logout Form -->
-            <form action="{% url 'accounts:logout' %}" method="post" class="inline" id="logout-form">
-                {% csrf_token %}
-                <button type="submit" onclick="handleLogout(event)"
-                    class="bg-gradient-to-r from-amber-200 to-amber-300 px-6 py-2.5 rounded-lg hover:from-amber-300 hover:to-amber-400 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
-                    로그아웃
-                </button>
-            </form>
+                <!-- 사용자 정보 & 액션 -->
+                <div class="flex items-center space-x-4">
+                    <a href="{% url 'accounts:my_page' %}"
+                       class="flex items-center space-x-2 bg-gradient-to-r from-amber-200 to-amber-300 px-4 py-2 rounded-lg hover:from-amber-300 hover:to-amber-400 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                        {% if user.profile_image %}
+                            <img src="{{ user.profile_image.url }}" alt="프로필 이미지" class="w-8 h-8 rounded-full object-cover">
+                        {% else %}
+                            <img src="{% static 'images/codeve_icon.png' %}" alt="기본 프로필" class="w-8 h-8 rounded-full object-cover">
+                        {% endif %}
+                        <span>{{ user.username }}</span>
+                    </a>
+                </div>
+                
+                <!-- 로그아웃 폼 -->
+                <form action="{% url 'accounts:logout' %}" method="post" class="inline" id="logout-form">
+                    {% csrf_token %}
+                    <button type="submit" onclick="handleLogout(event)"
+                            class="bg-gradient-to-r from-amber-200 to-amber-300 px-6 py-2.5 rounded-lg hover:from-amber-300 hover:to-amber-400 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                        로그아웃
+                    </button>
+                </form>
             {% else %}
-            <!-- Auth Links -->
-            <a href="{% url 'accounts:login' %}?next={{ request.path }}"
-                class="bg-gradient-to-r from-amber-200 to-amber-300 px-6 py-2.5 rounded-lg hover:from-amber-300 hover:to-amber-400 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
-                로그인
-            </a>
-            <a href="{% url 'accounts:signup' %}"
-                class="bg-gradient-to-r from-amber-200 to-amber-300 px-6 py-2.5 rounded-lg hover:from-amber-300 hover:to-amber-400 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
-                회원가입
-            </a>
+                <!-- 인증 링크 -->
+                <a href="{% url 'accounts:login' %}?next={{ request.path }}"
+                   class="bg-gradient-to-r from-amber-200 to-amber-300 px-6 py-2.5 rounded-lg hover:from-amber-300 hover:to-amber-400 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                    로그인
+                </a>
+                <a href="{% url 'accounts:signup' %}"
+                   class="bg-gradient-to-r from-amber-200 to-amber-300 px-6 py-2.5 rounded-lg hover:from-amber-300 hover:to-amber-400 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                    회원가입
+                </a>
             {% endif %}
         </div>
     </nav>
 
     {% block back_button %}{% endblock %}
 
-    <!-- Main Content -->
+    <!-- 메인 컨텐츠 -->
     <main class="container mx-auto mt-8 px-4 {% block main_class %}{% endblock %}">
         {% block content %}{% endblock %}
     </main>
 
-    <!-- Messages -->
+    <!-- 메시지 알림 -->
     {% if messages %}
-    <div class="fixed bottom-4 right-4">
-        {% for message in messages %}
-        <div
-            class="mb-2 p-4 rounded-lg {% if message.tags == 'error' %}bg-red-100 text-red-700{% else %}bg-green-100 text-green-700{% endif %} shadow-lg">
-            {{ message }}
+        <div class="fixed bottom-4 right-4">
+            {% for message in messages %}
+                <div class="mb-2 p-4 rounded-lg {% if message.tags == 'error' %}bg-red-100 text-red-700{% else %}bg-green-100 text-green-700{% endif %} shadow-lg">
+                    {{ message }}
+                </div>
+            {% endfor %}
         </div>
-        {% endfor %}
-    </div>
     {% endif %}
 
     {% block extra_scripts %}{% endblock %}
 
+    <!-- 공통 스크립트 -->
     <script>
+        // 로그아웃 처리
         function handleLogout(event) {
             event.preventDefault();
             localStorage.clear();  // 모든 localStorage 데이터 삭제
             document.getElementById('logout-form').submit();
         }
 
+        // 메시지 표시
         function showMessage(message, isError = false) {
             const messageContainer = document.createElement('div');
             messageContainer.className = `fixed bottom-4 right-4 mb-2 p-4 rounded-lg shadow-lg ${isError ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`;
@@ -108,16 +114,21 @@
             }, 3000);
         }
 
+        // Python 메뉴 클릭 처리
         function handlePythonClick(event) {
             event.preventDefault();
-            {% if user.is_authenticated %}
-            window.location.href = "{% url 'courses:course-list' %}";
-            {% else %}
-            showMessage('로그인이 필요한 서비스입니다.', true);
-            setTimeout(() => {
-                window.location.href = "{% url 'accounts:login' %}?next={% url 'courses:course-list' %}";
-            }, 1500);
-            {% endif %}
+            const isAuthenticated = {{ user.is_authenticated|yesno:"true,false" }};
+            const courseListUrl = "{% url 'courses:course-list' %}";
+            const loginUrl = "{% url 'accounts:login' %}?next={% url 'courses:course-list' %}";
+            
+            if (isAuthenticated) {
+                window.location.href = courseListUrl;
+            } else {
+                showMessage('로그인이 필요한 서비스입니다.', true);
+                setTimeout(() => {
+                    window.location.href = loginUrl;
+                }, 1500);
+            }
         }
     </script>
 </body>
