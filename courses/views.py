@@ -357,22 +357,29 @@ def resume_learning(request):
     # 사용자의 마지막 학습 상태 확인
     user_course = UserCourse.objects.filter(user=request.user).first()
 
-    if not user_course:
-        # 학습 기록이 없으면 코스 목록 페이지로 이동
-        return redirect('courses:course-list')
+    if not user_course or not user_course.completed_topics:
+        # 학습 기록이 없으면 첫 번째 토픽으로 이동
+        return redirect('courses:theory-lesson-detail', topic_id=TOPICS[0]['id'])
 
     # completed_topics에서 마지막으로 완료한 토픽 ID 가져오기
     completed_topics = user_course.completed_topics.split(',') if user_course.completed_topics else []
-
+    
     if completed_topics:
-        # 마지막으로 완료한 토픽의 다음 토픽으로 이동
         last_completed_topic = completed_topics[-1]
-        # 여기서는 토픽 ID가 순차적으로 증가한다고 가정
-        next_topic_id = str(int(last_completed_topic) + 1)
-        return redirect('courses:theory-detail', topic_id=next_topic_id)
+        # TOPICS 리스트에서 현재 토픽의 인덱스 찾기
+        current_index = next((i for i, topic in enumerate(TOPICS) if topic['id'] == last_completed_topic), -1)
+        
+        if current_index >= len(TOPICS) - 1:
+            # 마지막 토픽이면 첫 번째 토픽으로 이동
+            next_topic_id = TOPICS[0]['id']
+        else:
+            # 다음 토픽으로 이동
+            next_topic_id = TOPICS[current_index + 1]['id']
+            
+        return redirect('courses:theory-lesson-detail', topic_id=next_topic_id)
     else:
         # 완료한 토픽이 없으면 첫 번째 토픽으로 이동
-        return redirect('courses:theory-detail', topic_id='variables')
+        return redirect('courses:theory-lesson-detail', topic_id=TOPICS[0]['id'])
 
 
 def load_assignment_data(topic_id: str) -> dict:
