@@ -75,11 +75,18 @@ class UserCourse(models.Model):
     def get_completed_topics_list(self):
         if not self.completed_topics:
             return []
-        return [int(x) for x in self.completed_topics.split(',') if x]
+        return self.completed_topics.split(',')
 
     def update_progress(self):
         """토픽 완료 상태를 기반으로 진행률 업데이트"""
-        completed = len(self.get_completed_topics_list())
-        total = len(self.course.topics)
-        self.progress = (completed / total * 100) if total > 0 else 0
+        completed_topics = self.get_completed_topics_list()
+        total_topics = len(self.course.topics) * 4  # 각 토픽당 4가지 유형 (이론, 실습, 과제, 회고)
+        completed_count = len(completed_topics)
+        
+        self.progress = (completed_count / total_topics * 100) if total_topics > 0 else 0
+        
+        # 모든 토픽이 완료되었다면 코스 상태를 '완료'로 변경
+        if self.progress >= 100:
+            self.status = 'completed'
+            
         self.save()
