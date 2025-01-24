@@ -129,34 +129,85 @@ class UserCourseViewSet(viewsets.ModelViewSet):
 @require_POST
 def complete_topic(request, topic_id):
     try:
-        user_course = UserCourse.objects.get(user=request.user)
-    except UserCourse.DoesNotExist:
-        user_course = UserCourse.objects.create(
-            user=request.user,
-            progress=0,
-            completed_topics=''
-        )
+        # 현재 토픽이 유효한지 확인
+        if not any(topic['id'] == topic_id for topic in TOPICS):
+            return JsonResponse({
+                'status': 'error',
+                'message': '유효하지 않은 토픽입니다.'
+            }, status=400)
+        
+        # 코스 가져오기 또는 생성
+        try:
+            course = Course.objects.first()
+            if not course:
+                course = Course.objects.create(
+                    title='Python 기초 프로그래밍',
+                    description='Python 프로그래밍의 기초를 배우는 코스입니다.',
+                    difficulty='beginner',
+                    estimated_hours=40
+                )
+        except Exception as e:
+            print(f"코스 생성 중 오류: {str(e)}")
+            return JsonResponse({
+                'status': 'error',
+                'message': '코스 생성 중 오류가 발생했습니다.'
+            }, status=500)
+        
+        try:
+            # 사용자의 코스 등록 정보 찾기 또는 생성
+            user_course, created = UserCourse.objects.get_or_create(
+                user=request.user,
+                course=course,
+                defaults={
+                    'status': 'enrolled',
+                    'progress': 0,
+                    'completed_topics': ''
+                }
+            )
+        except Exception as e:
+            print(f"사용자 코스 생성 중 오류: {str(e)}")
+            return JsonResponse({
+                'status': 'error',
+                'message': '사용자 코스 생성 중 오류가 발생했습니다.'
+            }, status=500)
 
-    # 현재 완료된 토픽 목록 가져오기
-    completed_topics = set(user_course.completed_topics.split(',')) if user_course.completed_topics else set()
-    completed_topics.add(str(topic_id))
+        try:
+            # 현재 완료된 토픽 목록 가져오기
+            completed_topics = set(user_course.completed_topics.split(',')) if user_course.completed_topics else set()
+            completed_topics.add(str(topic_id))
 
-    # 중복 제거 및 정렬
-    completed_topics = sorted(list(filter(None, completed_topics)))
+            # 중복 제거 및 정렬
+            completed_topics = sorted(list(filter(None, completed_topics)))
 
-    # 진행률 계산 (TOPICS 리스트의 길이 사용)
-    progress = (len(completed_topics) / len(TOPICS)) * 100
+            # 진행률 계산 (TOPICS 리스트의 길이 사용)
+            progress = (len(completed_topics) / len(TOPICS)) * 100
 
-    # 업데이트
-    user_course.completed_topics = ','.join(completed_topics)
-    user_course.progress = progress
-    user_course.save()
+            # 업데이트
+            user_course.completed_topics = ','.join(completed_topics)
+            user_course.progress = progress
+            if progress >= 100:
+                user_course.status = 'completed'
+            user_course.save()
+        except Exception as e:
+            print(f"진행률 업데이트 중 오류: {str(e)}")
+            return JsonResponse({
+                'status': 'error',
+                'message': '진행률 업데이트 중 오류가 발생했습니다.'
+            }, status=500)
 
-    return JsonResponse({
-        'status': 'success',
-        'message': '학습이 완료되었습니다.',
-        'progress': progress
-    })
+        return JsonResponse({
+            'status': 'success',
+            'message': '학습이 완료되었습니다.',
+            'progress': progress,
+            'completed_topics': completed_topics
+        })
+        
+    except Exception as e:
+        print(f"예상치 못한 오류: {str(e)}")
+        return JsonResponse({
+            'status': 'error',
+            'message': f'서버 오류가 발생했습니다: {str(e)}'
+        }, status=500)
 
 
 def load_topic_content(topic_id: str, content_type: str) -> dict:
