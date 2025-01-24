@@ -1,0 +1,144 @@
+<!-- 
+메타데이터:
+created_at: 2024-01-23T19:45:00
+version: 1
+-->
+<div class="theory-content space-y-8 p-6">
+    <!-- 소개 -->
+    <section class="bg-white rounded-lg shadow-md p-6 space-y-4">
+        <h1 class="text-2xl font-bold text-gray-800">VSCode: 코딩을 위한 첫 걸음</h1>
+        <p class="text-gray-600">
+            VSCode(Visual Studio Code)는 <span style='color: #0066cc;'>코드 편집기</span>입니다. 
+            마치 한글이나 워드로 문서를 작성하듯이, VSCode로는 프로그램 코드를 작성합니다.
+            처음에는 낯설 수 있지만, 이 도구 하나로 모든 프로그래밍 언어를 편리하게 다룰 수 있습니다.
+        </p>
+    </section>
+
+    <!-- 설치하기 -->
+    <section class="bg-white rounded-lg shadow-md p-6 space-y-4">
+        <h2 class="text-xl font-bold text-gray-800">1. VSCode 설치하기</h2>
+        <div class="space-y-4">
+            <p class="text-gray-600">
+                VSCode를 사용하기 위해서는 먼저 설치가 필요합니다. 
+                운영체제에 따라 설치 방법이 다르니 아래 순서대로 따라해보세요.
+            </p>
+            
+            <div class="bg-blue-50 p-4 rounded-lg">
+                <h3 class="font-semibold text-blue-800 mb-2">Windows 사용자</h3>
+                <ol class="list-decimal list-inside space-y-2 text-gray-600">
+                    <li>브라우저에서 'VSCode 다운로드' 검색 또는 <a href="https://code.visualstudio.com" class="text-blue-600 hover:underline">공식 웹사이트</a> 방문</li>
+                    <li>'Download for Windows' 버튼 클릭</li>
+                    <li>다운로드된 설치 파일 실행</li>
+                    <li>'동의함' 체크 후 '다음' 버튼으로 설치 진행</li>
+                </ol>
+            </div>
+
+            <div class="bg-blue-50 p-4 rounded-lg">
+                <h3 class="font-semibold text-blue-800 mb-2">Mac 사용자</h3>
+                <ol class="list-decimal list-inside space-y-2 text-gray-600">
+                    <li>브라우저에서 'VSCode 다운로드' 검색 또는 <a href="https://code.visualstudio.com" class="text-blue-600 hover:underline">공식 웹사이트</a> 방문</li>
+                    <li>'Download for Mac' 버튼 클릭</li>
+                    <li>다운로드된 .dmg 파일 실행</li>
+                    <li>VSCode 아이콘을 Applications 폴더로 드래그</li>
+                </ol>
+            </div>
+        </div>
+    </section>
+
+    <!-- 처음 실행하기 -->
+    <section class="bg-white rounded-lg shadow-md p-6 space-y-4">
+        <h2 class="text-xl font-bold text-gray-800">2. VSCode 처음 실행하기</h2>
+        <div class="space-y-4">
+            <div class="bg-yellow-50 p-4 rounded-lg">
+                <h3 class="font-semibold text-yellow-800 mb-2">❗ 처음 실행 시 주의사항</h3>
+                <ul class="list-disc list-inside space-y-2 text-gray-600">
+                    <li>Mac에서 처음 실행 시 "확인되지 않은 개발자" 경고가 뜰 수 있어요</li>
+                    <li>이런 경우 [시스템 환경설정 → 보안 및 개인 정보] 에서 "확인 없이 열기" 허용</li>
+                </ul>
+            </div>
+
+            <h3 class="font-semibold text-gray-800">시작 화면 살펴보기</h3>
+            <div class="space-y-2 text-gray-600">
+                <p>VSCode를 처음 실행하면 다음과 같은 화면이 보입니다:</p>
+                <ul class="list-disc list-inside space-y-2 ml-4">
+                    <li><b>시작 페이지</b>: 환영 메시지와 기본 기능 소개</li>
+                    <li><b>메뉴 바</b>: 파일, 편집, 선택, 보기 등의 메뉴</li>
+                    <li><b>사이드바</b>: 파일 탐색기, 검색, 확장 기능 등</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- 기본 용어 설명 -->
+    <section class="bg-white rounded-lg shadow-md p-6 space-y-4">
+        <h2 class="text-xl font-bold text-gray-800">3. 알아야 할 기본 용어</h2>
+        <div class="space-y-4">
+            <div class="bg-gray-50 p-4 rounded-lg">
+                <h3 class="font-semibold text-gray-800 mb-2">파일 확장자란?</h3>
+                <p class="text-gray-600">
+                    파일 이름 뒤에 붙는 점(.)과 문자를 <span style='color: #0066cc;'>확장자</span>라고 해요.
+                    예를 들어, <code>hello.py</code>에서 <code>.py</code>가 확장자입니다.
+                    이는 이 파일이 Python 코드 파일이라는 것을 나타냅니다.
+                </p>
+            </div>
+
+            <div class="bg-gray-50 p-4 rounded-lg">
+                <h3 class="font-semibold text-gray-800 mb-2">터미널이란?</h3>
+                <p class="text-gray-600">
+                    <span style='color: #0066cc;'>터미널</span>은 컴퓨터와 대화하는 창입니다.
+                    검은 바탕에 텍스트를 입력하는 것이 낯설 수 있지만, 
+                    이곳에서 프로그램을 실행하고 결과를 확인할 수 있습니다.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 기본 단축키 -->
+    <section class="bg-white rounded-lg shadow-md p-6 space-y-4">
+        <h2 class="text-xl font-bold text-gray-800">4. 꼭 알아야 할 단축키</h2>
+        <div class="space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <h3 class="font-semibold text-gray-800 mb-2">Windows 사용자</h3>
+                    <ul class="space-y-2 text-gray-600">
+                        <li>새 파일: <code>Ctrl + N</code></li>
+                        <li>파일 저장: <code>Ctrl + S</code></li>
+                        <li>터미널 열기: <code>Ctrl + `</code></li>
+                        <li>실행 취소: <code>Ctrl + Z</code></li>
+                    </ul>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <h3 class="font-semibold text-gray-800 mb-2">Mac 사용자</h3>
+                    <ul class="space-y-2 text-gray-600">
+                        <li>새 파일: <code>⌘ + N</code></li>
+                        <li>파일 저장: <code>⌘ + S</code></li>
+                        <li>터미널 열기: <code>⌘ + `</code></li>
+                        <li>실행 취소: <code>⌘ + Z</code></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 자주 하는 실수와 해결 방법 -->
+    <section class="bg-white rounded-lg shadow-md p-6 space-y-4">
+        <h2 class="text-xl font-bold text-gray-800">5. 자주 하는 실수와 해결 방법</h2>
+        <div class="space-y-4">
+            <div class="bg-red-50 p-4 rounded-lg">
+                <h3 class="font-semibold text-red-800 mb-2">파일을 저장하지 않았어요!</h3>
+                <p class="text-gray-600">
+                    파일 이름 옆에 동그라미(⚪)가 있다면, 아직 저장되지 않은 것입니다.
+                    반드시 <code>Ctrl + S</code>(Windows) 또는 <code>⌘ + S</code>(Mac)로 저장해주세요.
+                </p>
+            </div>
+
+            <div class="bg-red-50 p-4 rounded-lg">
+                <h3 class="font-semibold text-red-800 mb-2">터미널이 안 열려요!</h3>
+                <p class="text-gray-600">
+                    상단 메뉴의 [보기 → 터미널] 을 클릭하거나,
+                    <code>Ctrl + `</code>(Windows) 또는 <code>⌘ + `</code>(Mac)를 눌러보세요.
+                </p>
+            </div>
+        </div>
+    </section>
+</div> 

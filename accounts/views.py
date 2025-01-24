@@ -46,8 +46,7 @@ class SignUpView(APIView):
         username = request.POST.get('username')
         password = request.POST.get('password')
         password_confirm = request.POST.get('password_confirm')
-        profile_image = request.FILES.get('profile_image')
-
+        profile_image = request.FILES.get('profile_image')    
         # 필수 약관 동의 확인
         if not all([
             request.POST.get('agree_age'),
@@ -89,12 +88,10 @@ class SignUpView(APIView):
                 username=username,
                 password=password
             )
-
             # 프로필 이미지 처리
             if profile_image:
                 user.profile_image = profile_image
                 user.save()
-
             # 이메일 인증 토큰 생성 및 메일 발송
             verification_token = str(uuid.uuid4())
             # TODO: 이메일 발송 로직 구현
@@ -355,24 +352,21 @@ class MyPageView(APIView):
         profile_image = request.FILES.get('profile_image')
         user = request.user
         changed = False
-
+        
         if nickname:
             if user.username == nickname:
                 messages.warning(request, '현재 닉네임과 동일합니다.')
             elif User.objects.filter(username=nickname).exists():
-                messages.error(request, '이미 사용 중인 닉네임입니다.')
+                messages.error(request, '이미 사용 중인 닉네임입니다.')    
             else:
                 user.username = nickname
                 changed = True
-
         if profile_image:
             user.profile_image = profile_image
             changed = True
-
         if changed:
             user.save()
             messages.success(request, '프로필이 성공적으로 수정되었습니다.')
-
         return redirect('accounts:my_page')
 
 

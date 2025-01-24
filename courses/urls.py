@@ -15,6 +15,7 @@ app_name = 'courses'
 urlpatterns = [
     # API URLs - 'api/' 경로로 시작
     path('api/v1/', include(router.urls)),
+    path('api/v1/submit-assignment/', views.submit_assignment, name='submit-assignment'),
     
     # Web URLs
     path('', views.course_list_view, name='course-list'),
@@ -22,6 +23,7 @@ urlpatterns = [
     path('theory/<str:topic_id>/', views.theory_lesson_view, name='theory-lesson-detail'),
     path('practice/', views.practice_view, name='practice'),
     path('practice/<str:topic_id>/', views.practice_view, name='practice-detail'),
+    path('practice/<str:topic_id>/submit/', views.submit_practice, name='submit-practice'),
     path('assignment/', views.assignment_view, name='assignment'),
     path('assignment/<str:topic_id>/', views.assignment_view, name='assignment-detail'),
     path('reflection/', views.reflection_view, name='reflection'),
