@@ -7,6 +7,8 @@
     <title>{% block title %}Codeve{% endblock %}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     {% load static %}
+    <!-- Chatbot Widget Styles -->
+    <link rel="stylesheet" href="{% static 'css/chatbot-widget.css' %}">
     {% block extra_head %}{% endblock %}
 </head>
 
@@ -78,7 +80,7 @@
 
     <!-- Messages -->
     {% if messages %}
-    <div class="fixed bottom-4 right-4">
+    <div class="fixed top-4 left-1/2 transform -translate-x-1/2">
         {% for message in messages %}
         <div
             class="mb-2 p-4 rounded-lg {% if message.tags == 'error' %}bg-red-100 text-red-700{% else %}bg-green-100 text-green-700{% endif %} shadow-lg">
@@ -88,8 +90,8 @@
     </div>
     {% endif %}
 
-    {% block extra_scripts %}{% endblock %}
-
+    <!-- Chatbot Widget -->
+    <script src="{% static 'js/chatbot-widget.js' %}"></script>
     <script>
         function handleLogout(event) {
             event.preventDefault();
@@ -120,6 +122,12 @@
             }, 1500);
             {% endif %}
         }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof initChatbotWidget === 'function') {
+                initChatbotWidget();
+            }
+        });
     </script>
 </body>
 
