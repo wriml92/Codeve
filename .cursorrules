@@ -65,7 +65,7 @@ rules:
 
 
 ## AI/검색
-- OpenAI GPT API (기사 요약)
+- OpenAI GPT API (이론, 실습, 과제 생성)
 - LangChain 0.1.0 (AI 통합)
 - SQLite (개발) / PostgreSQL (배포)
 - Redis (캐싱, 세션)
