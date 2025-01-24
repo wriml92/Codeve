@@ -19,7 +19,6 @@ from django.views.decorators.csrf import csrf_exempt
 import re
 from asgiref.sync import sync_to_async
 from .scripts.assignment_tools import AssignmentDataManager, CodeSubmissionAnalyzer, CodeAnalysisResult
-from .data.tools.code_analyzer import CodeSubmissionAnalyzer
 
 
 # 공통으로 사용할 토픽 목록을 모듈 레벨에 정의
