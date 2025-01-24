@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import Course, UserCourse
 
 class CourseSerializer(serializers.ModelSerializer):
+    """코스 정보를 직렬화하는 시리얼라이저"""
     progress = serializers.FloatField(read_only=True)
     is_enrolled = serializers.BooleanField(read_only=True)
     
@@ -10,7 +11,7 @@ class CourseSerializer(serializers.ModelSerializer):
         fields = [
             'id', 
             'name', 
-            'description', 
+            'description',
             'category',
             'topics', 
             'estimated_hours',
@@ -21,7 +22,11 @@ class CourseSerializer(serializers.ModelSerializer):
         ]
 
 class UserCourseSerializer(serializers.ModelSerializer):
-    course_name = serializers.CharField(source='course.name', read_only=True)
+    """사용자의 코스 수강 정보를 직렬화하는 시리얼라이저"""
+    course_name = serializers.CharField(
+        source='course.name',
+        read_only=True
+    )
     
     class Meta:
         model = UserCourse
@@ -37,4 +42,8 @@ class UserCourseSerializer(serializers.ModelSerializer):
             'updated_at',
             'last_accessed_at'
         ]
-        read_only_fields = ['user', 'progress', 'completed_topics'] 
+        read_only_fields = [
+            'user',
+            'progress',
+            'completed_topics'
+        ] 
