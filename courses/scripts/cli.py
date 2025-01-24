@@ -83,16 +83,35 @@ async def generate_content(content_type: str, topic_id: str = None):
         try:
             if content_type == 'theory':
                 llm = TheoryLLM()
+                content = await llm.generate(topic)
+                print(f"✅ {topic} 이론 내용 생성 완료")
+                
             elif content_type == 'practice':
                 llm = PracticeLLM()
+                content = await llm.generate(topic)
+                print(f"✅ {topic} 실습 내용 생성 완료")
+                
             else:  # assignment
                 llm = AssignmentLLM()
+                result = await llm.generate(topic)
+                if isinstance(result, dict) and 'content' in result:
+                    content = result['content']
+                else:
+                    content = result
+                print(f"✅ {topic} 과제 내용 생성 완료")
+                
+            # 파일 저장 확인
+            content_dir = Path(__file__).parent.parent / 'data' / 'topics' / topic / 'content'
+            content_file = content_dir / f'{content_type}.json'
+            if content_file.exists():
+                print(f"- 파일 생성됨: {content_file}")
+                print(f"- 파일 크기: {content_file.stat().st_size:,} bytes")
             
-            await llm.generate(topic)
-            print(f"✅ {topic} 생성 완료")
         except Exception as e:
             print(f"❌ {topic} 생성 중 오류 발생: {str(e)}")
             print(f"❌ {topic} 생성 실패: {str(e)}")
+            import traceback
+            traceback.print_exc()
 
 if __name__ == '__main__':
     cli() 

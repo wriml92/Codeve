@@ -1,0 +1,56 @@
+{
+  "assignments": [
+    {
+      "id": 1,
+      "type": "concept",
+      "correct_answer": "2",
+      "hint": "튜플은 생성 후 변경할 수 없는(immutable) 자료형입니다."
+    },
+    {
+      "id": 2,
+      "type": "theory_concept",
+      "correct_answer": "'John'",
+      "hint": "Python의 인덱싱은 0부터 시작합니다. 따라서 friend_info[0]는 첫 번째 요소를 가리킵니다."
+    },
+    {
+      "id": 3,
+      "type": "metaphor",
+      "correct_answer": "2",
+      "hint": "튜플은 변경이 불가능한 데이터의 집합입니다. 전화번호부의 경우, 한 번 출력되면 그 이름과 전화번호는 변경할 수 없습니다."
+    },
+    {
+      "id": 4,
+      "type": "implementation_basic",
+      "test_cases": [
+        {
+          "input": "3, 4",
+          "output": "(3, 4)"
+        },
+        {
+          "input": "7, 9",
+          "output": "(7, 9)"
+        }
+      ],
+      "hint": "튜플은 쉼표로 구분된 여러 값을 묶는데 사용됩니다. 예를 들어, a = (3, 4)는 3과 4를 묶은 튜플입니다. 입력 받은 두 숫자를 튜플로 묶기 위해서는 a = (input1, input2) 형태로 작성하면 됩니다."
+    },
+    {
+      "id": 5,
+      "type": "implementation_basic",
+      "test_cases": [
+        {
+          "input": "(1, 2, 3, 4, 5)",
+          "output": "(1, 5)"
+        },
+        {
+          "input": "('Python', 'is', 'fun')",
+          "output": "('Python', 'fun')"
+        }
+      ],
+      "hint": "튜플의 첫 번째 요소는 인덱스 0을 사용해서 접근할 수 있고, 마지막 요소는 인덱스 -1을 사용해서 접근할 수 있습니다. 함수 내에서 이 두 개의 값을 반환하면 됩니다."
+    }
+  ],
+  "metadata": {
+    "version": 1,
+    "created_at": "2025-01-24T12:45:10.032259"
+  }
+}

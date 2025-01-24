@@ -35,6 +35,21 @@
     .CodeMirror-scroll {
         min-height: 100px;
     }
+    
+    .spinner {
+        width: 40px;
+        height: 40px;
+        margin: 20px auto;
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #3498db;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
 </style>
 {% endblock %}
 
@@ -108,66 +123,54 @@
 
             <p class="mb-8 text-gray-800">이제 과제를 풀어보겠습니다.</p>
 
-            <!-- 실제 콘텐츠 -->
-            <div>
-                {{ content|safe }}
-            </div>
-
             <!-- 각 퀴즈와 답안을 함께 표시 -->
-            {% for assignment in assignments %}
-            <div class="mb-12 bg-white rounded-2xl p-6 shadow-sm border border-yellow-200">
-                <div class="mb-8">
-                    <h2 class="text-lg font-bold mb-4">
-                        과제 {{ assignment.id }}:
-                        {% if assignment.type == 'concept' %}기본 개념
-                        {% elif assignment.type == 'theory_concept' %}이론 개념
-                        {% elif assignment.type == 'metaphor' %}비유 이해
-                        {% elif assignment.type == 'implementation_basic' %}기본 구현
-                        {% elif assignment.type == 'implementation_advanced' %}심화 구현
-                        {% endif %}
-                    </h2>
-                    <div class="text-gray-800">
-                        {{ assignment.content|safe }}
-                    </div>
-                </div>
-
-                <!-- 과제 답안 -->
-                <div class="pt-4 border-t border-yellow-200">
-                    <h3 class="text-md font-bold mb-4">과제 {{ assignment.id }} 답안</h3>
+            <div class="space-y-8">
+                {% for assignment in assignments %}
+                <div class="bg-white rounded-lg p-6 shadow-md">
+                    <h3 class="text-lg font-semibold mb-4">{{ assignment.question }}</h3>
+                    
                     {% if assignment.type == 'concept' or assignment.type == 'theory_concept' or assignment.type == 'metaphor' %}
-                    <!-- 객관식 답안 (라디오 버튼) -->
-                    <div class="space-y-3">
+                    <form class="space-y-4">
                         {% for choice in assignment.choices %}
-                        <div class="flex items-center space-x-3">
-                            <input type="radio" id="assignment{{ assignment.id }}_option{{ forloop.counter }}" 
-                                   name="assignment{{ assignment.id }}_answer"
-                                   value="{{ forloop.counter }}" class="w-4 h-4 text-yellow-400">
-                            <label for="assignment{{ assignment.id }}_option{{ forloop.counter }}" 
-                                   class="text-gray-800">{{ choice }}</label>
+                        <div class="flex items-center space-x-2 my-2">
+                            <input type="radio" name="assignment{{ assignment.id }}_answer" value="{{ forloop.counter }}" class="form-radio">
+                            <label>{{ choice }}</label>
                         </div>
                         {% endfor %}
-                    </div>
-                    {% else %}
-                    <!-- 코드 에디터 (구현 문제) -->
-                    <div class="code-editor-container">
-                        <div id="editor{{ assignment.id }}" class="code-editor"></div>
+                    </form>
+                    {% endif %}
+                    
+                    {% if assignment.type == 'implementation_basic' %}
+                    <div class="space-y-4">
+                        <div class="bg-gray-50 p-4 rounded">
+                            <h4 class="font-medium mb-2">테스트 케이스:</h4>
+                            {% for test in assignment.test_cases %}
+                            <div class="my-2">
+                                <p class="text-sm text-gray-600">입력: {{ test.input }}</p>
+                                <p class="text-sm text-gray-600">출력: {{ test.output }}</p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="mt-4">
+                            <div id="editor{{ assignment.id }}" class="code-editor h-32 border rounded"></div>
+                        </div>
                     </div>
                     {% endif %}
-
+                    
                     <button onclick="submitAssignment({{ assignment.id }}, '{{ assignment.type }}')"
-                        class="w-full mt-4 px-6 py-3 bg-gradient-to-r from-amber-500 to-yellow-400 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 hover:from-amber-600 hover:to-yellow-500 flex items-center justify-center">
+                        class="mt-6 w-full px-6 py-3 bg-gradient-to-r from-amber-500 to-yellow-400 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 hover:from-amber-600 hover:to-yellow-500 flex items-center justify-center">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
                         </svg>
-                        제출하기
+                        {% if assignment.type == 'implementation_basic' %}코드 제출하기{% else %}문제 제출하기{% endif %}
                     </button>
-
+                    
                     <div id="result{{ assignment.id }}" class="mt-4 hidden">
                         <div class="p-4 rounded-lg"></div>
                     </div>
                 </div>
+                {% endfor %}
             </div>
-            {% endfor %}
         </div>
 
         <!-- Navigation Buttons -->
@@ -201,81 +204,6 @@
     document.addEventListener('DOMContentLoaded', function () {
         new ChatbotWidget();
 
-        // 코드 에디터 초기화
-        const editors = {};
-        const initialCode = {
-            2: '# 코드를 분석해보세요\n',
-            3: '# 여기에 코드를 작성하세요\n'
-        };
-
-        document.querySelectorAll('.code-editor').forEach(element => {
-            const assignmentId = element.id.replace('editor', '');
-            editors[assignmentId] = CodeMirror(element, {
-                mode: 'python',
-                theme: 'monokai',
-                lineNumbers: true,
-                indentUnit: 4,
-                lineWrapping: true,
-                value: initialCode[assignmentId] || '# 코드를 작성하세요\n'
-            });
-        });
-
-        // 과제 제출 함수
-        window.submitAssignment = async function (assignmentId, assignmentType) {
-            const resultDiv = document.getElementById(`result${assignmentId}`);
-            const resultContent = resultDiv.querySelector('div');
-
-            try {
-                let answer;
-                if (['concept', 'theory_concept', 'metaphor'].includes(assignmentType)) {
-                    const selected = document.querySelector(`input[name="assignment${assignmentId}_answer"]:checked`);
-                    answer = selected ? selected.value : null;
-                    if (!answer) {
-                        throw new Error('답을 선택해주세요.');
-                    }
-                } else {
-                    answer = editors[assignmentId].getValue();
-                    if (!answer.trim()) {
-                        throw new Error('답을 입력해주세요.');
-                    }
-                }
-
-                const response = await fetch('/courses/api/v1/submit-assignment/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': getCookie('csrftoken')
-                    },
-                    body: JSON.stringify({
-                        assignment_id: assignmentId,
-                        assignment_type: assignmentType,
-                        answer: answer,
-                        topic_id: '{{ topic_id }}'
-                    })
-                });
-
-                const result = await response.json();
-                resultDiv.classList.remove('hidden');
-                resultContent.className = `p-4 rounded-lg ${result.correct ? 'bg-green-100' : 'bg-red-100'}`;
-                resultContent.innerHTML = result.message;
-
-                if (result.test_results) {
-                    const testResults = result.test_results.map(r => 
-                        `<div class="${r.passed ? 'text-green-600' : 'text-red-600'}">
-                            ${r.case}: ${r.passed ? '통과' : '실패'}
-                        </div>`
-                    ).join('');
-                    resultContent.innerHTML += `<div class="mt-2">${testResults}</div>`;
-                }
-
-            } catch (error) {
-                console.error('Error submitting assignment:', error);
-                resultDiv.classList.remove('hidden');
-                resultContent.className = 'p-4 rounded-lg bg-red-100';
-                resultContent.textContent = error.message || '제출 중 오류가 발생했습니다. 다시 시도해주세요.';
-            }
-        };
-
         // CSRF 토큰 가져오기
         function getCookie(name) {
             let cookieValue = null;
@@ -291,6 +219,83 @@
             }
             return cookieValue;
         }
+
+        // 코드 에디터 초기화
+        const editors = {};
+        document.querySelectorAll('.code-editor').forEach(element => {
+            const assignmentId = element.id.replace('editor', '');
+            editors[assignmentId] = CodeMirror(element, {
+                mode: 'python',
+                theme: 'monokai',
+                lineNumbers: true,
+                indentUnit: 4,
+                lineWrapping: true,
+                value: '# 코드를 작성하세요\n'
+            });
+        });
+
+        // 과제 제출 함수
+        window.submitAssignment = async function(id, type) {
+            console.log('과제 제출 시도:', id, type);
+            
+            let answer;
+            if (type === 'implementation_basic' || type === 'implementation_basic2') {
+                const editor = editors[id];
+                if (!editor) {
+                    console.error('에디터를 찾을 수 없습니다:', id);
+                    alert('코드 에디터를 초기화하는 중 오류가 발생했습니다.');
+                    return;
+                }
+                answer = editor.getValue();
+            } else {
+                const selectedRadio = document.querySelector(`input[name="assignment${id}_answer"]:checked`);
+                if (!selectedRadio && type !== 'implementation_basic' && type !== 'implementation_basic2') {
+                    alert('답을 선택해주세요.');
+                    return;
+                }
+                answer = selectedRadio ? selectedRadio.value : '';
+            }
+
+            try {
+                const response = await fetch('/courses/api/v1/submit-assignment/?topic_id={{ topic_id }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    body: JSON.stringify({
+                        assignment_id: id,
+                        type: type,
+                        answer: answer
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                console.log('제출 결과:', result);
+                
+                // 결과 표시
+                const resultDiv = document.getElementById(`result${id}`);
+                const resultContent = resultDiv.querySelector('div');
+                
+                resultDiv.classList.remove('hidden');
+                resultContent.className = `p-4 rounded-lg ${result.correct ? 'bg-green-100' : 'bg-red-100'}`;
+                resultContent.innerHTML = `
+                    <div class="font-semibold ${result.correct ? 'text-green-600' : 'text-red-600'}">
+                        ${result.correct ? '🎉 정답입니다!' : '💪 다시 한번 도전해보세요!'}
+                    </div>
+                    <div class="mt-2 whitespace-pre-line">${result.message || ''}</div>
+                `;
+                
+            } catch (error) {
+                console.error('과제 제출 중 오류 발생:', error);
+                alert(error.message || '과제 제출 중 오류가 발생했습니다.');
+            }
+        };
     });
 </script>
 {% endblock %}

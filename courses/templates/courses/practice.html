@@ -68,55 +68,44 @@
         </div>
     </div>
 
-    <!-- 오른쪽 메인 콘텐츠 -->
+    <!-- 중앙 메인 콘텐츠 -->
     <div class="flex-grow">
         <div class="bg-white rounded-2xl p-8 shadow-sm">
-            <h1 class="text-xl font-bold mb-6">
-                <span class="text-red-500">[실습]</span> {{ topic_name }}
-            </h1>
-
-            <p class="mb-8 text-gray-800">이제 앞서 설명해준 내용을 바탕으로 VSCODE에서 실습을 진행해보겠습니다.</p>
-
-            <!-- VSCode Setup -->
-            <section class="mb-8">
-                <h2 class="text-lg font-bold mb-4">1. VSCODE 실행하기</h2>
-                <p class="text-gray-800">VSCODE를 실행해 새 파일을 만드세요. 파일 이름은 {{ topic_id }}_practice.py로 저장합니다.</p>
-            </section>
-
-            <!-- File Creation -->
-            <section class="mb-8">
-                <h2 class="text-lg font-bold mb-4">2. 파일 작성</h2>
-                {{ content|safe }}
-            </section>
-
-            <!-- Execution Steps -->
-            <section class="mb-8">
-                <h2 class="text-lg font-bold mb-4">실행 단계</h2>
-                <ol class="list-decimal list-inside space-y-2 text-gray-800">
-                    <li>코드를 작성한 뒤 Ctrl+S(Windows) 또는 Cmd+S(Mac)로 파일을 저장합니다.</li>
-                    <li>터미널 열기
-                        <ul class="ml-6 mt-1">
-                            <li>• VSCODE 하단에서 Terminal 메뉴를 열고, 터미널에 아래 명령어를 입력하여 코드를 실행합니다.</li>
-                        </ul>
-                    </li>
-                </ol>
-            </section>
-
-            <!-- Code Preview -->
-            <div class="bg-gray-900 rounded-lg p-4 mb-8">
-                <pre class="text-white font-mono text-sm">python {{ topic_id }}_practice.py</pre>
+            <!-- Practice Content -->
+            <div class="prose max-w-none">
+                {{ practice_content|safe }}
             </div>
 
             <!-- Result Section -->
             <section class="mb-8">
-                <h2 class="text-lg font-bold mb-4">3. 결과 확인</h2>
-                <button class="flex items-center px-6 py-2.5 bg-gradient-to-r from-amber-500 to-yellow-400 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 hover:from-amber-600 hover:to-yellow-500">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"/>
-                    </svg>
-                    이미지 제출하기
-                </button>
-                <span class="ml-2 text-red-500"></span>
+                <div class="space-y-4">
+                    <input type="file" 
+                           id="screenshotInput" 
+                           accept="image/*" 
+                           class="hidden" 
+                           onchange="handleScreenshotUpload(event)">
+                    
+                    <button onclick="document.getElementById('screenshotInput').click()" 
+                            class="flex items-center px-6 py-2.5 bg-gradient-to-r from-amber-500 to-yellow-400 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 hover:from-amber-600 hover:to-yellow-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"/>
+                        </svg>
+                        실습 화면 제출하기
+                    </button>
+                    
+                    <!-- 분석 결과 표시 영역 -->
+                    <div id="analysisResult" class="hidden space-y-4">
+                        <!-- 전체 결과 -->
+                        <div id="overallResult" class="p-4 rounded-lg"></div>
+                        
+                        <!-- 상세 피드백 -->
+                        <div id="detailedFeedback" class="bg-white p-6 rounded-lg border border-gray-200 space-y-4">
+                            <div class="prose max-w-none">
+                                <div id="feedbackContent" class="whitespace-pre-line text-gray-700"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </section>
         </div>
 
@@ -184,5 +173,86 @@
                 console.error('Error completing topic:', error);
             });
     }
+
+    async function handleScreenshotUpload(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const analysisResult = document.getElementById('analysisResult');
+        const loadingHtml = '<div class="text-center"><div class="spinner"></div><p>실습 결과를 분석하고 있어요...</p></div>';
+        analysisResult.innerHTML = loadingHtml;
+        analysisResult.classList.remove('hidden');
+
+        try {
+            const formData = new FormData();
+            formData.append('screenshot', file);
+
+            const response = await fetch(`/courses/practice/{{ topic_id }}/submit/`, {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+            
+            analysisResult.innerHTML = '';
+            
+            if (result.success) {
+                const overallResult = document.createElement('div');
+                overallResult.className = result.passed ? 
+                    'p-4 rounded-lg bg-green-50 border border-green-200' :
+                    'p-4 rounded-lg bg-yellow-50 border border-yellow-200';
+                overallResult.innerHTML = result.passed ?
+                    '<h3 class="font-semibold text-green-600">🎉 실습 완료!</h3>' :
+                    '<h3 class="font-semibold text-yellow-600">💪 조금만 더 노력해볼까요?</h3>';
+                analysisResult.appendChild(overallResult);
+                
+                const detailedFeedback = document.createElement('div');
+                detailedFeedback.className = 'bg-white p-6 rounded-lg border border-gray-200 space-y-4';
+                
+                const feedbackContent = document.createElement('div');
+                feedbackContent.className = 'whitespace-pre-line text-gray-700';
+                feedbackContent.textContent = result.feedback;
+                
+                detailedFeedback.appendChild(feedbackContent);
+                analysisResult.appendChild(detailedFeedback);
+            } else {
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'p-4 rounded-lg bg-red-50 border border-red-200';
+                errorDiv.innerHTML = `
+                    <h3 class="font-semibold text-red-600">❌ 오류 발생</h3>
+                    <p class="text-red-600">${result.error || '실습 결과 분석 중 오류가 발생했습니다.'}</p>
+                `;
+                analysisResult.appendChild(errorDiv);
+            }
+        } catch (error) {
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'p-4 rounded-lg bg-red-50 border border-red-200';
+            errorDiv.innerHTML = `
+                <h3 class="font-semibold text-red-600">❌ 오류 발생</h3>
+                <p class="text-red-600">실습 결과 분석 중 오류가 발생했습니다.</p>
+            `;
+            analysisResult.innerHTML = '';
+            analysisResult.appendChild(errorDiv);
+        }
+    }
+
+    const style = document.createElement('style');
+    style.textContent = `
+        .spinner {
+            width: 40px;
+            height: 40px;
+            margin: 20px auto;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    `;
+    document.head.appendChild(style);
 </script>
 {% endblock %}
