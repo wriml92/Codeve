@@ -7,6 +7,8 @@
     <title>{% block title %}Codeve{% endblock %}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     {% load static %}
+    <!-- Chatbot Widget Styles -->
+    <link rel="stylesheet" href="{% static 'css/chatbot-widget.css' %}">
     {% block extra_head %}{% endblock %}
 </head>
 
@@ -35,15 +37,17 @@
         <div class="flex items-center space-x-4">
             {% if user.is_authenticated %}
             <!-- User Info & Actions -->
-            <span class="text-gray-700 font-medium">{{ user.username }}님</span>
-            <a href="{% url 'accounts:my_page' %}"
-                class="flex items-center space-x-2 bg-gradient-to-r from-amber-200 to-amber-300 px-6 py-2.5 rounded-lg hover:from-amber-300 hover:to-amber-400 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
-                <span>마이페이지</span>
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-                        clip-rule="evenodd" />
-                </svg>
-            </a>
+            <div class="flex items-center space-x-4">
+                <a href="{% url 'accounts:my_page' %}"
+                    class="flex items-center space-x-2 bg-gradient-to-r from-amber-200 to-amber-300 px-4 py-2 rounded-lg hover:from-amber-300 hover:to-amber-400 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                    {% if user.profile_image %}
+                    <img src="{{ user.profile_image.url }}" alt="프로필 이미지" class="w-8 h-8 rounded-full object-cover">
+                    {% else %}
+                    <img src="{% static 'images/codeve_icon.png' %}" alt="기본 프로필" class="w-8 h-8 rounded-full object-cover">
+                    {% endif %}
+                    <span>{{ user.username }}</span>
+                </a>
+            </div>
             <!-- Logout Form -->
             <form action="{% url 'accounts:logout' %}" method="post" class="inline" id="logout-form">
                 {% csrf_token %}
@@ -75,7 +79,7 @@
 
     <!-- Messages -->
     {% if messages %}
-    <div class="fixed bottom-4 right-4">
+    <div class="fixed top-4 left-1/2 transform -translate-x-1/2">
         {% for message in messages %}
         <div
             class="mb-2 p-4 rounded-lg {% if message.tags == 'error' %}bg-red-100 text-red-700{% else %}bg-green-100 text-green-700{% endif %} shadow-lg">
@@ -85,8 +89,8 @@
     </div>
     {% endif %}
 
-    {% block extra_scripts %}{% endblock %}
-
+    <!-- Chatbot Widget -->
+    <script src="{% static 'js/chatbot-widget.js' %}"></script>
     <script>
         function handleLogout(event) {
             event.preventDefault();
@@ -117,6 +121,12 @@
             }, 1500);
             {% endif %}
         }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof initChatbotWidget === 'function') {
+                initChatbotWidget();
+            }
+        });
     </script>
 </body>
 

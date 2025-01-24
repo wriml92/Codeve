@@ -43,8 +43,10 @@ class SignUpView(APIView):
 
         # 폼 제출 처리
         email = request.POST.get('email')
+        username = request.POST.get('username')
         password = request.POST.get('password')
         password_confirm = request.POST.get('password_confirm')
+        profile_image = request.FILES.get('profile_image')
 
         # 필수 약관 동의 확인
         if not all([
@@ -56,7 +58,7 @@ class SignUpView(APIView):
             return redirect('accounts:signup')
 
         # 데이터 유효성 검사
-        if not all([email, password, password_confirm]):
+        if not all([email, username, password, password_confirm]):
             messages.error(request, '모든 필드를 입력해주세요.')
             return redirect('accounts:signup')
 
@@ -75,13 +77,23 @@ class SignUpView(APIView):
             messages.error(request, '이미 사용 중인 이메일입니다.')
             return redirect('accounts:signup')
 
+        # 닉네임 중복 확인
+        if User.objects.filter(username=username).exists():
+            messages.error(request, '이미 사용 중인 닉네임입니다.')
+            return redirect('accounts:signup')
+
         # 사용자 생성
         try:
             user = User.objects.create_user(
                 email=email,
-                username=email.split('@')[0],
+                username=username,
                 password=password
             )
+
+            # 프로필 이미지 처리
+            if profile_image:
+                user.profile_image = profile_image
+                user.save()
 
             # 이메일 인증 토큰 생성 및 메일 발송
             verification_token = str(uuid.uuid4())
@@ -340,14 +352,27 @@ class MyPageView(APIView):
 
     def post(self, request):
         nickname = request.POST.get('nickname')
+        profile_image = request.FILES.get('profile_image')
+        user = request.user
+        changed = False
+
         if nickname:
-            user = request.user
             if user.username == nickname:
                 messages.warning(request, '현재 닉네임과 동일합니다.')
+            elif User.objects.filter(username=nickname).exists():
+                messages.error(request, '이미 사용 중인 닉네임입니다.')
             else:
                 user.username = nickname
-                user.save()
-                messages.success(request, '닉네임이 성공적으로 변경되었습니다.')
+                changed = True
+
+        if profile_image:
+            user.profile_image = profile_image
+            changed = True
+
+        if changed:
+            user.save()
+            messages.success(request, '프로필이 성공적으로 수정되었습니다.')
+
         return redirect('accounts:my_page')
 
 
