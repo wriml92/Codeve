@@ -20,9 +20,13 @@ from asgiref.sync import sync_to_async, async_to_sync
 from django.template.loader import render_to_string
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
-from .agents.analysis_agent import AnalysisAgent
+from .agents.assignment_analysis_agent import AssignmentAnalysisAgent
 from .llm.assignment_llm import AssignmentLLM
 from django.views.decorators.cache import cache_page
+from .agents.practice_analysis_agent import PracticeAnalysisAgent
+import tempfile
+import os
+import re
 
 
 # 공통으로 사용할 토픽 목록을 모듈 레벨에 정의
@@ -217,19 +221,37 @@ def practice_view(request, topic_id=None):
         topic_id = TOPICS[0]['id']
         
     topic_name = next((t['name'] for t in TOPICS if t['id'] == topic_id), '')
-    content = load_topic_content(topic_id, 'practice')
     
-    if content:
-        content_html = content['content']
-        content_html = mark_safe(content_html)  # HTML 안전하게 렌더링
-    else:
-        content_html = ''
+    # HTML 파일 직접 읽기
+    try:
+        practice_file = Path(__file__).parent / 'data' / 'topics' / topic_id / 'content' / 'practice.html'
+        if practice_file.exists():
+            with open(practice_file, 'r', encoding='utf-8') as f:
+                content_html = f.read()
+                
+                # 메타데이터와 불필요한 마크업 제거
+                # HTML 주석 제거
+                content_html = re.sub(r'<!--[\s\S]*?-->', '', content_html)
+                # 출력 데이터 마크업 제거
+                content_html = re.sub(r'#\s*출력\s*데이터\s*```html', '', content_html)
+                # 모든 백틱 제거
+                content_html = re.sub(r'```(?:html)?\s*', '', content_html)
+                # 실제 콘텐츠 부분만 추출
+                if '<div class="practice-content' in content_html:
+                    content_html = re.search(r'(<div class="practice-content.*?</div>)\s*$', content_html, re.DOTALL)
+                    if content_html:
+                        content_html = content_html.group(1)
+        else:
+            content_html = '<p>실습 내용을 찾을 수 없습니다.</p>'
+    except Exception as e:
+        print(f"실습 내용 로드 중 오류 발생: {str(e)}")
+        content_html = '<p>실습 내용을 불러오는 중 오류가 발생했습니다.</p>'
     
     context = {
         'topics': TOPICS,
         'topic_id': topic_id,
         'topic_name': topic_name,
-        'content': content_html
+        'practice_content': mark_safe(content_html)
     }
     
     return render(request, 'courses/practice.html', context)
@@ -343,20 +365,26 @@ async def assignment_view(request, topic_id=None):
     try:
         # assignment.json 파일 읽기
         assignment_data = load_topic_content(topic_id, 'assignment')
+        print(f"로드된 과제 데이터: {assignment_data}")  # 디버깅용 출력
         
         if assignment_data is None:  # 파일이 없거나 로드 실패
             context = {
                 'topics': TOPICS,
                 'topic_id': topic_id,
                 'topic_name': topic_name,
-                'content': mark_safe('<div class="alert alert-warning">과제 내용을 준비 중입니다.</div>')
+                'content': mark_safe('<div class="alert alert-warning">과제 내용을 준비 중입니다.</div>'),
+                'assignments': []
             }
         else:
+            # metadata에서 assignments 데이터 추출
+            assignments = assignment_data.get('metadata', {}).get('assignments', [])
+            
             context = {
                 'topics': TOPICS,
                 'topic_id': topic_id,
                 'topic_name': topic_name,
-                'content': mark_safe(assignment_data['content'])
+                'content': mark_safe(assignment_data.get('content', '')),
+                'assignments': assignments
             }
         
         return await sync_to_async(render)(request, 'courses/assignment.html', context)
@@ -367,35 +395,50 @@ async def assignment_view(request, topic_id=None):
             'topics': TOPICS,
             'topic_id': topic_id,
             'topic_name': topic_name,
-            'content': mark_safe('<div class="alert alert-danger">과제 내용을 불러오는데 실패했습니다.</div>')
+            'content': mark_safe('<div class="alert alert-danger">과제 내용을 불러오는데 실패했습니다.</div>'),
+            'assignments': []
         }
         return await sync_to_async(render)(request, 'courses/assignment.html', context)
 
 
-@csrf_exempt
-async def submit_assignment(request):
+def submit_assignment(request):
     """과제 제출 처리"""
-    if request.method != 'POST':
-        return JsonResponse({'error': '잘못된 요청 방식입니다.'}, status=405)
-    
+    if not request.user.is_authenticated:
+        return JsonResponse({"error": "로그인이 필요합니다."}, status=401)
+        
+    # topic_id는 URL 파라미터로 받음
+    topic_id = request.GET.get('topic_id')
+    if not topic_id:
+        return JsonResponse({"error": "topic_id가 필요합니다."}, status=400)
+        
     try:
         data = json.loads(request.body)
-        assignment_id = data.get('assignment_id')
-        assignment_type = data.get('assignment_type')
+        assignment_id = data.get('id')
+        assignment_type = data.get('type')
         answer = data.get('answer')
-        topic_id = data.get('topic_id')
         
-        if not all([assignment_id, assignment_type, answer, topic_id]):
-            return JsonResponse({'error': '필수 데이터가 누락되었습니다.'}, status=400)
+        if not all([assignment_id, assignment_type, answer]):
+            return JsonResponse({"error": "필수 파라미터가 누락되었습니다."}, status=400)
+            
+        # 과제 분석 에이전트 초기화
+        agent = AssignmentAnalysisAgent()
         
-        # 답안 분석
-        agent = AnalysisAgent()
-        result = await agent.analyze(assignment_type, answer, assignment_id, topic_id)
+        # 과제 분석 및 채점
+        result = agent.analyze({
+            'topic_id': topic_id,
+            'assignment_id': assignment_id,
+            'type': assignment_type,
+            'answer': answer,
+            'user_id': request.user.id
+        })
         
         return JsonResponse(result)
         
+    except json.JSONDecodeError:
+        return JsonResponse({"error": "잘못된 JSON 형식입니다."}, status=400)
     except Exception as e:
-        return JsonResponse({'error': f'서버 오류가 발생했습니다: {str(e)}'}, status=500)
+        print(f"Error in submit_assignment: {e}")
+        return JsonResponse({"error": "서버 오류가 발생했습니다."}, status=500)
 
 
 def save_assignment_data(topic_id: str, data: Dict[str, Any]) -> None:
@@ -408,3 +451,68 @@ def save_assignment_data(topic_id: str, data: Dict[str, Any]) -> None:
     
     with open(assignment_file, 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
+
+
+@csrf_exempt
+async def submit_practice(request, topic_id):
+    """실습 스크린샷 제출 및 분석"""
+    if request.method != 'POST':
+        return JsonResponse({'error': '잘못된 요청 방식입니다.'}, status=405)
+    
+    try:
+        if 'screenshot' not in request.FILES:
+            return JsonResponse({'error': '스크린샷이 제출되지 않았습니다.'}, status=400)
+        
+        screenshot = request.FILES['screenshot']
+        
+        # 임시 파일로 저장
+        with tempfile.NamedTemporaryFile(delete=False, suffix='.png') as temp_file:
+            for chunk in screenshot.chunks():
+                temp_file.write(chunk)
+            temp_path = temp_file.name
+        
+        try:
+            # 이미지 분석
+            agent = PracticeAnalysisAgent()
+            result = await agent.process({
+                'topic_id': topic_id,
+                'image_path': temp_path,
+                'user_id': str(request.user.id)  # 사용자 ID 추가
+            })
+            
+            print(f"분석 결과: {result}")  # 디버깅을 위한 로그 추가
+            
+            # 분석 결과에 따른 응답 생성
+            if result.get('success'):
+                response_data = {
+                    'success': True,
+                    'passed': result.get('passed', False),
+                    'feedback': result.get('feedback', ''),
+                    'sections': result.get('sections', {})
+                }
+                
+                # 모든 섹션을 통과한 경우 축하 메시지 추가
+                if result.get('passed'):
+                    response_data['message'] = '🎉 축하합니다! 실습을 성공적으로 완료했어요!'
+                
+                return JsonResponse(response_data)
+            else:
+                print(f"분석 실패: {result.get('error')}")  # 디버깅을 위한 로그 추가
+                return JsonResponse({
+                    'success': False,
+                    'error': result.get('error', '분석 중 오류가 발생했습니다.')
+                })
+                
+        finally:
+            # 임시 파일 삭제
+            if os.path.exists(temp_path):
+                os.unlink(temp_path)
+                
+    except Exception as e:
+        import traceback
+        print(f"서버 오류 발생: {str(e)}")
+        print(traceback.format_exc())  # 상세한 에러 스택 트레이스 출력
+        return JsonResponse({
+            'success': False,
+            'error': f'서버 오류가 발생했습니다: {str(e)}'
+        }, status=500)

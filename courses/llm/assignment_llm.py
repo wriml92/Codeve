@@ -34,31 +34,157 @@ class AssignmentLLM(BaseLLM):
         except (FileNotFoundError, json.JSONDecodeError):
             return topic_id
         
-    async def generate_assignment(self, topic_id: str) -> Dict[str, Any]:
-        """토픽별 과제 생성"""
+    async def generate(self, topic_id: str) -> Dict[str, Any]:
+        """토픽별 과제 HTML과 정답 데이터 생성"""
+        # 이론과 실습 내용 참조
+        theory_file = self.data_dir / topic_id / 'content' / 'theory.html'
+        practice_file = self.data_dir / topic_id / 'content' / 'practice.json'
+        
+        theory_content = ""
+        practice_content = ""
+        
+        if theory_file.exists():
+            with open(theory_file, 'r', encoding='utf-8') as f:
+                theory_content = f.read()
+        
+        if practice_file.exists():
+            with open(practice_file, 'r', encoding='utf-8') as f:
+                practice_data = json.load(f)
+                practice_content = practice_data.get('content', '')
+                
         # 토픽 정보 로드
         topic_name = self._get_topic_name(topic_id)
         
+        # 과제 데이터 생성
         assignments = []
-        for idx, type_ in enumerate(self.assignment_types, 1):
-            prompt = self._get_assignment_prompt(topic_name, type_)
-            response = await self.generate_completion(prompt)
-            
-            assignment = {
-                'id': idx,
-                'type': type_,
-                **self._parse_assignment_response(response, type_)
-            }
-            assignments.append(assignment)
+        html_content = """<div class="space-y-8">"""
         
-        return {
+        for idx, type_ in enumerate(self.assignment_types, 1):
+            # 시스템 프롬프트에 이론과 실습 내용 포함
+            system_prompt = f"""당신은 Python 과제 생성 튜터입니다.
+현재 다루는 주제: {topic_name}
+
+이론 내용:
+{theory_content}
+
+실습 내용:
+{practice_content}
+
+다음 규칙을 반드시 따라주세요:
+1. 이론 내용에서 다룬 핵심 개념을 테스트하는 문제를 출제하세요
+2. 실습에서 연습한 내용을 응용할 수 있는 문제를 만드세요
+3. 문제의 난이도는 실습보다 약간 높되, 학습한 내용으로 해결 가능해야 합니다
+4. 비전공자도 이해할 수 있도록 쉽고 명확한 언어를 사용하세요
+5. 힌트는 이론과 실습 내용을 참고하여 구체적으로 제시하세요"""
+
+            prompt = self._get_assignment_prompt(topic_name, type_)
+            
+            # GPT 호출
+            response = await self.generate_completion(prompt)
+            assignment_data = self._parse_assignment_response(response, type_)
+            
+            # 정답 데이터 저장
+            answer_data = {
+                'id': idx,
+                'type': type_
+            }
+            
+            if type_ in ['concept', 'theory_concept', 'metaphor']:
+                # 객관식 문제 HTML 생성
+                html_content += f"""
+                <div class="bg-white rounded-lg p-6 shadow-md">
+                    <h3 class="text-lg font-semibold mb-4">{assignment_data['content']}</h3>
+                    <form class="space-y-4">
+                        {''.join([
+                            f'''<div class="flex items-center space-x-2 my-2">
+                                <input type="radio" name="assignment{idx}_answer" value="{i+1}" class="form-radio">
+                                <label>{choice}</label>
+                            </div>'''
+                            for i, choice in enumerate(assignment_data['choices'])
+                        ])}
+                    </form>
+                    <button onclick="submitAssignment({idx}, '{type_}')"
+                        class="mt-6 w-full px-6 py-3 bg-gradient-to-r from-amber-500 to-yellow-400 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 hover:from-amber-600 hover:to-yellow-500 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        문제 제출하기
+                    </button>
+                    <div id="result{idx}" class="mt-4 hidden">
+                        <div class="p-4 rounded-lg"></div>
+                    </div>
+                </div>"""
+                
+                answer_data.update({
+                    'correct_answer': assignment_data['correct_answer'],
+                    'hint': assignment_data['hint']
+                })
+                
+            else:
+                # 구현 문제 HTML 생성
+                html_content += f"""
+                <div class="bg-white rounded-lg p-6 shadow-md">
+                    <h3 class="text-lg font-semibold mb-4">{assignment_data['content']}</h3>
+                    <div class="space-y-4">
+                        <div class="bg-gray-50 p-4 rounded">
+                            <h4 class="font-medium mb-2">테스트 케이스:</h4>
+                            {''.join([
+                                f'''<div class="my-2">
+                                    <p class="text-sm text-gray-600">입력: {tc['input']}</p>
+                                    <p class="text-sm text-gray-600">출력: {tc['output']}</p>
+                                </div>'''
+                                for tc in assignment_data['test_cases']
+                            ])}
+                        </div>
+                        <div class="mt-4">
+                            <div id="editor{idx}" class="code-editor h-32 border rounded"></div>
+                        </div>
+                        <button onclick="submitAssignment({idx}, '{type_}')"
+                            class="mt-6 w-full px-6 py-3 bg-gradient-to-r from-amber-500 to-yellow-400 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 hover:from-amber-600 hover:to-yellow-500 flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            코드 제출하기
+                        </button>
+                        <div id="result{idx}" class="mt-4 hidden">
+                            <div class="p-4 rounded-lg"></div>
+                        </div>
+                    </div>
+                </div>"""
+                
+                answer_data.update({
+                    'test_cases': assignment_data['test_cases'],
+                    'hint': assignment_data['hint']
+                })
+            
+            assignments.append(answer_data)
+        
+        html_content += "</div>"
+        
+        # HTML 파일 저장
+        content_dir = self.data_dir / topic_id / 'content'
+        content_dir.mkdir(parents=True, exist_ok=True)
+        
+        with open(content_dir / 'assignment.html', 'w', encoding='utf-8') as f:
+            f.write(html_content)
+            
+        # 정답 데이터 저장
+        answer_data = {
             'assignments': assignments,
             'metadata': {
                 'version': 1,
                 'created_at': self._get_current_timestamp()
             }
         }
-    
+        
+        with open(content_dir / 'assignment_answers.json', 'w', encoding='utf-8') as f:
+            json.dump(answer_data, f, indent=2, ensure_ascii=False)
+            
+        return {
+            'content': html_content,
+            'metadata': answer_data
+        }
+
     def _get_assignment_prompt(self, topic_name: str, assignment_type: str) -> str:
         """과제 생성을 위한 프롬프트 반환"""
         prompts = {
@@ -176,164 +302,6 @@ class AssignmentLLM(BaseLLM):
             }
         }
         return defaults[assignment_type]
-
-    async def generate(self, topic_id: str) -> str:
-        """과제 내용 생성"""
-        # 이론과 실습 내용 참조
-        theory_file = self.data_dir / topic_id / 'current' / 'theory.json'
-        practice_file = self.data_dir / topic_id / 'current' / 'practice.json'
-        
-        theory_content = ""
-        practice_content = ""
-        
-        if theory_file.exists():
-            with open(theory_file, 'r', encoding='utf-8') as f:
-                theory_data = json.load(f)
-                theory_content = theory_data['content']
-        
-        if practice_file.exists():
-            with open(practice_file, 'r', encoding='utf-8') as f:
-                practice_data = json.load(f)
-                practice_content = practice_data['content']
-
-        # 과제 내용 생성을 위한 입력 구성
-        input_data = {
-            "theory_content": theory_content,
-            "practice_content": practice_content,
-            "topic": topic_id
-        }
-
-        # 과제 내용 생성
-        messages = [{
-            "role": "system",
-            "content": """당신은 Python 과제 생성 튜터입니다.
-이론과 실습 내용을 참조하여 다음과 같은 HTML 형식으로 과제를 생성해주세요:
-
-<div class="space-y-8">
-    <!-- 개념 이해 문제 -->
-    <section class="bg-white rounded-lg shadow-sm p-6">
-        <h2 class="text-lg font-semibold text-gray-800 mb-4">개념 이해</h2>
-        <div class="prose max-w-none text-gray-600">
-            <p>{개념 문제}</p>
-            <div class="mt-4 space-y-2">
-                <div class="flex items-center">
-                    <input type="radio" name="q1" value="0" class="mr-2">
-                    <label>{보기 1}</label>
-                </div>
-                ...
-            </div>
-            <button onclick="submitQuiz(1, 'concept')" class="mt-6 w-full px-6 py-3 bg-gradient-to-r from-amber-500 to-yellow-400 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 hover:from-amber-600 hover:to-yellow-500 flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                </svg>
-                개념 이해 제출하기
-            </button>
-            <div id="result1" class="mt-4 hidden">
-                <div class="p-4 rounded-lg"></div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 코드 분석 문제 -->
-    <section class="bg-white rounded-lg shadow-sm p-6">
-        <h2 class="text-lg font-semibold text-gray-800 mb-4">코드 분석</h2>
-        <div class="prose max-w-none text-gray-600">
-            <p>{분석 문제}</p>
-            <div class="bg-gray-900 rounded-lg p-4 my-4">
-                <pre class="text-white font-mono text-sm overflow-x-auto">
-{분석할 코드}
-                </pre>
-            </div>
-            <div class="code-editor-container">
-                <div id="editor2" class="code-editor"></div>
-            </div>
-            <button onclick="submitQuiz(2, 'analysis')" class="mt-6 w-full px-6 py-3 bg-gradient-to-r from-amber-500 to-yellow-400 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 hover:from-amber-600 hover:to-yellow-500 flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                </svg>
-                코드 분석 제출하기
-            </button>
-            <div id="result2" class="mt-4 hidden">
-                <div class="p-4 rounded-lg"></div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 코드 구현 문제 -->
-    <section class="bg-white rounded-lg shadow-sm p-6">
-        <h2 class="text-lg font-semibold text-gray-800 mb-4">코드 구현</h2>
-        <div class="prose max-w-none text-gray-600">
-            <p>{구현 문제}</p>
-            <div class="code-editor-container">
-                <div id="editor3" class="code-editor"></div>
-            </div>
-            <div class="mt-4">
-                <p>테스트 케이스:</p>
-                <ul class="list-disc list-inside">
-                    <li>입력: {입력값} → 출력: {기대값}</li>
-                    ...
-                </ul>
-            </div>
-            <button onclick="submitQuiz(3, 'implementation')" class="mt-6 w-full px-6 py-3 bg-gradient-to-r from-amber-500 to-yellow-400 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 hover:from-amber-600 hover:to-yellow-500 flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                </svg>
-                코드 구현 제출하기
-            </button>
-            <div id="result3" class="mt-4 hidden">
-                <div class="p-4 rounded-lg"></div>
-            </div>
-        </div>
-    </section>
-</div>"""
-        }, {
-            "role": "user",
-            "content": f"""# 입력 데이터
-{json.dumps(input_data, indent=2, ensure_ascii=False)}"""
-        }]
-        
-        response = await self.llm.agenerate([messages])
-        response_text = response.generations[0][0].text
-        
-        # 응답 정제
-        if "# 출력 데이터" in response_text:
-            response_text = response_text.replace("# 출력 데이터\n", "")
-        
-        # JSON 형식이면 파싱
-        if response_text.strip().startswith("{"):
-            try:
-                data = json.loads(response_text)
-                if "assignment_content" in data:
-                    html_content = data["assignment_content"]
-                else:
-                    html_content = response_text
-            except json.JSONDecodeError:
-                html_content = response_text
-        else:
-            html_content = response_text
-        
-        # HTML 형식 확인
-        if not html_content.strip().startswith("<div"):
-            html_content = f"""
-<div class="space-y-8">
-    {html_content}
-</div>
-"""
-        
-        # 저장 및 반환
-        assignment_file = self.data_dir / topic_id / 'current' / 'assignment.json'
-        assignment_file.parent.mkdir(parents=True, exist_ok=True)
-        
-        with open(assignment_file, 'w', encoding='utf-8') as f:
-            json.dump({
-                'content': html_content,
-                'metadata': {
-                    'created_at': datetime.now().isoformat(),
-                    'version': 1
-                }
-            }, f, indent=2, ensure_ascii=False)
-
-        return html_content
 
     async def analyze(self, submission: str) -> Dict[str, Any]:
         """과제 제출물 분석"""
