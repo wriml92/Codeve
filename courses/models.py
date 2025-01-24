@@ -34,17 +34,19 @@ class Lesson(models.Model):
     def __str__(self):
         return self.title
 
-class Quiz(models.Model):
-    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
-    question = models.TextField()
-    choices = models.JSONField(null=True, blank=True)  # 객관식 문제의 경우
-    correct_answer = models.TextField()
-    explanation = models.TextField(default='')
+class Assignment(models.Model):
+    lesson = models.ForeignKey(Lesson, related_name='assignments', on_delete=models.CASCADE)
+    title = models.CharField(max_length=200)
+    content = models.TextField()
+    order = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        ordering = ['order']
+
     def __str__(self):
-        return f"Quiz for {self.lesson.title}"
+        return f"Assignment for {self.lesson.title}"
 
 class PracticeExercise(models.Model):
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)

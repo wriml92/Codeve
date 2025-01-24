@@ -6,7 +6,7 @@ from . import views
 router = DefaultRouter()
 router.register(r'courses', views.CourseViewSet)
 router.register(r'lessons', views.LessonViewSet)
-router.register(r'quizzes', views.QuizViewSet)
+router.register(r'assignments', views.AssignmentViewSet)
 router.register(r'exercises', views.PracticeExerciseViewSet)
 router.register(r'user-courses', views.UserCourseViewSet, basename='user-course')
 
@@ -29,4 +29,5 @@ urlpatterns = [
     path('reflection/', views.reflection_view, name='reflection'),
     path('complete-topic/<str:topic_id>/', views.complete_topic, name='complete-topic'),
     path('resume-learning/', views.resume_learning, name='resume-learning'),
+    path('assignment/submit/<str:topic_id>/', views.submit_assignment, name='submit-assignment'),
 ]
