@@ -5,8 +5,10 @@
 {% block extra_head %}
 <link rel="stylesheet" href="{% static 'css/chatbot-widget.css' %}">
 <!-- CodeMirror CSS -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/theme/monokai.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/monokai.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/python/python.min.js"></script>
 <style>
     .CodeMirror {
         height: auto;
@@ -140,10 +142,35 @@
                     </form>
                     {% endif %}
                     
-                    {% if assignment.type == 'implementation_basic' %}
+                    {% if assignment.type == 'analysis' %}
                     <div class="space-y-4">
                         <div class="bg-gray-50 p-4 rounded">
-                            <h4 class="font-medium mb-2">테스트 케이스:</h4>
+                            <h4 class="font-medium mb-2">분석할 코드:</h4>
+                            <pre class="text-sm bg-gray-800 text-white p-4 rounded"><code>{{ assignment.code_to_analyze }}</code></pre>
+                            <h4 class="font-medium mt-4 mb-2">고려할 점:</h4>
+                            <ul class="list-disc list-inside">
+                                {% for point in assignment.points_to_consider %}
+                                <li class="text-sm text-gray-600">{{ point }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <div class="mt-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">분석 내용 작성:</label>
+                            <div id="editor{{ assignment.id }}" class="code-editor h-48 border rounded"></div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    {% if assignment.type == 'implementation' %}
+                    <div class="space-y-4">
+                        <div class="bg-gray-50 p-4 rounded">
+                            <h4 class="font-medium mb-2">제약 사항:</h4>
+                            <ul class="list-disc list-inside">
+                                {% for constraint in assignment.constraints %}
+                                <li class="text-sm text-gray-600">{{ constraint }}</li>
+                                {% endfor %}
+                            </ul>
+                            <h4 class="font-medium mt-4 mb-2">테스트 케이스:</h4>
                             {% for test in assignment.test_cases %}
                             <div class="my-2">
                                 <p class="text-sm text-gray-600">입력: {{ test.input }}</p>
@@ -152,7 +179,8 @@
                             {% endfor %}
                         </div>
                         <div class="mt-4">
-                            <div id="editor{{ assignment.id }}" class="code-editor h-32 border rounded"></div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">코드 작성:</label>
+                            <div id="editor{{ assignment.id }}" class="code-editor h-48 border rounded"></div>
                         </div>
                     </div>
                     {% endif %}
@@ -162,7 +190,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
                         </svg>
-                        {% if assignment.type == 'implementation_basic' %}코드 제출하기{% else %}문제 제출하기{% endif %}
+                        {% if assignment.type == 'implementation' %}코드 제출하기{% else %}문제 제출하기{% endif %}
                     </button>
                     
                     <div id="result{{ assignment.id }}" class="mt-4 hidden">
@@ -196,11 +224,11 @@
 
 {% block extra_scripts %}
 <script src="{% static 'js/chatbot-widget.js' %}"></script>
-<!-- CodeMirror JS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/python/python.min.js"></script>
 
 <script>
+    // topic_id를 JavaScript 변수로 정의
+    const topic_id = '{{ topic_id }}';
+    
     document.addEventListener('DOMContentLoaded', function () {
         new ChatbotWidget();
 
@@ -229,8 +257,10 @@
                 theme: 'monokai',
                 lineNumbers: true,
                 indentUnit: 4,
-                lineWrapping: true,
-                value: '# 코드를 작성하세요\n'
+                tabSize: 4,
+                autoCloseBrackets: true,
+                matchBrackets: true,
+                lineWrapping: true
             });
         });
 
@@ -239,7 +269,7 @@
             console.log('과제 제출 시도:', id, type);
             
             let answer;
-            if (type === 'implementation_basic' || type === 'implementation_basic2') {
+            if (type === 'analysis' || type === 'implementation') {
                 const editor = editors[id];
                 if (!editor) {
                     console.error('에디터를 찾을 수 없습니다:', id);
@@ -249,15 +279,15 @@
                 answer = editor.getValue();
             } else {
                 const selectedRadio = document.querySelector(`input[name="assignment${id}_answer"]:checked`);
-                if (!selectedRadio && type !== 'implementation_basic' && type !== 'implementation_basic2') {
+                if (!selectedRadio) {
                     alert('답을 선택해주세요.');
                     return;
                 }
-                answer = selectedRadio ? selectedRadio.value : '';
+                answer = selectedRadio.value;
             }
 
             try {
-                const response = await fetch('/courses/api/v1/submit-assignment/?topic_id={{ topic_id }}', {
+                const response = await fetch(`/courses/assignment/submit/${topic_id}/`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -284,12 +314,29 @@
                 
                 resultDiv.classList.remove('hidden');
                 resultContent.className = `p-4 rounded-lg ${result.correct ? 'bg-green-100' : 'bg-red-100'}`;
-                resultContent.innerHTML = `
+                
+                let feedbackHtml = `
                     <div class="font-semibold ${result.correct ? 'text-green-600' : 'text-red-600'}">
                         ${result.correct ? '🎉 정답입니다!' : '💪 다시 한번 도전해보세요!'}
                     </div>
-                    <div class="mt-2 whitespace-pre-line">${result.message || ''}</div>
                 `;
+                
+                if (result.feedback) {
+                    feedbackHtml += `<div class="mt-2 whitespace-pre-line">${result.feedback}</div>`;
+                }
+                
+                if (result.suggestions) {
+                    feedbackHtml += `
+                        <div class="mt-2">
+                            <h4 class="font-medium">개선 제안:</h4>
+                            <ul class="list-disc list-inside">
+                                ${result.suggestions.map(s => `<li class="text-sm">${s}</li>`).join('')}
+                            </ul>
+                        </div>
+                    `;
+                }
+                
+                resultContent.innerHTML = feedbackHtml;
                 
             } catch (error) {
                 console.error('과제 제출 중 오류 발생:', error);

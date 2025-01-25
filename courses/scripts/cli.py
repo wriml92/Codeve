@@ -1,3 +1,45 @@
+"""
+Python 교육 플랫폼 CLI 도구
+
+이 스크립트는 교육 플랫폼의 관리를 위한 명령행 인터페이스(CLI)를 제공합니다.
+과제 생성, 데이터 관리, 통계 확인 등 다양한 관리 작업을 수행할 수 있습니다.
+
+주요 기능:
+1. 과제 관리
+   - 새로운 과제 생성
+   - 기존 과제 수정
+   - 과제 삭제
+   - 과제 조회
+
+2. 통계 관리
+   - 제출 현황 확인
+   - 정답률 통계
+   - 학습자 진도 확인
+
+3. 데이터 관리
+   - 토픽 데이터 백업
+   - 통계 데이터 초기화
+   - 데이터 정합성 검증
+
+사용 방법:
+1. 과제 관리:
+   python cli.py assignment create <topic_id>
+   python cli.py assignment list
+   python cli.py assignment delete <topic_id>
+
+2. 통계 확인:
+   python cli.py stats show <topic_id>
+   python cli.py stats reset
+
+3. 데이터 관리:
+   python cli.py data backup
+   python cli.py data verify
+
+참고:
+- 모든 명령은 courses 디렉토리에서 실행해야 함
+- 관리자 권한이 필요한 작업이 있을 수 있음
+"""
+
 import os
 import django
 

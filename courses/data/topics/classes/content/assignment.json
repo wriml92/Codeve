@@ -1,59 +1,82 @@
 {
-  "content": "<div class=\"space-y-8\">\n                <div class=\"bg-white rounded-lg p-6 shadow-md\">\n                    <h3 class=\"text-lg font-semibold mb-4\">클래스(class)의 가장 기본적인 정의로 올바른 것은?</h3>\n                    <form class=\"space-y-4\">\n                        <div class=\"flex items-center space-x-2 my-2\">\n                                <input type=\"radio\" name=\"assignment1_answer\" value=\"1\" class=\"form-radio\">\n                                <label>함수의 집합</label>\n                            </div><div class=\"flex items-center space-x-2 my-2\">\n                                <input type=\"radio\" name=\"assignment1_answer\" value=\"2\" class=\"form-radio\">\n                                <label>변수의 집합</label>\n                            </div><div class=\"flex items-center space-x-2 my-2\">\n                                <input type=\"radio\" name=\"assignment1_answer\" value=\"3\" class=\"form-radio\">\n                                <label>객체의 집합</label>\n                            </div><div class=\"flex items-center space-x-2 my-2\">\n                                <input type=\"radio\" name=\"assignment1_answer\" value=\"4\" class=\"form-radio\">\n                                <label>객체를 생성하기 위한 틀 또는 설계도</label>\n                            </div>\n                    </form>\n                    <button onclick=\"submitAssignment(1, 'concept')\"\n                        class=\"mt-6 w-full px-6 py-3 bg-gradient-to-r from-amber-500 to-yellow-400 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 hover:from-amber-600 hover:to-yellow-500 flex items-center justify-center\">\n                        <svg xmlns=\"http://www.w3.org/2000/svg\" class=\"h-5 w-5 mr-2\" viewBox=\"0 0 20 20\" fill=\"currentColor\">\n                            <path fill-rule=\"evenodd\" d=\"M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z\" clip-rule=\"evenodd\"/>\n                        </svg>\n                        문제 제출하기\n                    </button>\n                    <div id=\"result1\" class=\"mt-4 hidden\">\n                        <div class=\"p-4 rounded-lg\"></div>\n                    </div>\n                </div>\n                <div class=\"bg-white rounded-lg p-6 shadow-md\">\n                    <h3 class=\"text-lg font-semibold mb-4\">클래스는 실세계의 개체를 소프트웨어 세계로 모델링하는 방법입니다. 예를 들어, 우리는 '자동차'라는 클래스를 만들 수 있으며, 이 클래스는 속성(색, 브랜드, 모델, 연도 등)과 메소드(주행, 정지, 가속 등)를 가질 수 있습니다.<br><br>다음 코드를 보고 질문에 답하시오.<br><br><code>class Car:<br>  def __init__(self, color, brand, model, year):<br>    self.color = color<br>    self.brand = brand<br>    self.model = model<br>    self.year = year<br><br>  def drive(self):<br>    print('The car is driving')</code><br><br>위의 파이썬 코드에서 'drive'는 무엇을 나타내는가?</h3>\n                    <form class=\"space-y-4\">\n                        <div class=\"flex items-center space-x-2 my-2\">\n                                <input type=\"radio\" name=\"assignment2_answer\" value=\"1\" class=\"form-radio\">\n                                <label>속성</label>\n                            </div><div class=\"flex items-center space-x-2 my-2\">\n                                <input type=\"radio\" name=\"assignment2_answer\" value=\"2\" class=\"form-radio\">\n                                <label>메소드</label>\n                            </div><div class=\"flex items-center space-x-2 my-2\">\n                                <input type=\"radio\" name=\"assignment2_answer\" value=\"3\" class=\"form-radio\">\n                                <label>클래스</label>\n                            </div><div class=\"flex items-center space-x-2 my-2\">\n                                <input type=\"radio\" name=\"assignment2_answer\" value=\"4\" class=\"form-radio\">\n                                <label>객체</label>\n                            </div>\n                    </form>\n                    <button onclick=\"submitAssignment(2, 'theory_concept')\"\n                        class=\"mt-6 w-full px-6 py-3 bg-gradient-to-r from-amber-500 to-yellow-400 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 hover:from-amber-600 hover:to-yellow-500 flex items-center justify-center\">\n                        <svg xmlns=\"http://www.w3.org/2000/svg\" class=\"h-5 w-5 mr-2\" viewBox=\"0 0 20 20\" fill=\"currentColor\">\n                            <path fill-rule=\"evenodd\" d=\"M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z\" clip-rule=\"evenodd\"/>\n                        </svg>\n                        문제 제출하기\n                    </button>\n                    <div id=\"result2\" class=\"mt-4 hidden\">\n                        <div class=\"p-4 rounded-lg\"></div>\n                    </div>\n                </div>\n                <div class=\"bg-white rounded-lg p-6 shadow-md\">\n                    <h3 class=\"text-lg font-semibold mb-4\">프로그래밍에서 클래스(Class)는 어떤 것에 가장 잘 비유될 수 있을까요?</h3>\n                    <form class=\"space-y-4\">\n                        <div class=\"flex items-center space-x-2 my-2\">\n                                <input type=\"radio\" name=\"assignment3_answer\" value=\"1\" class=\"form-radio\">\n                                <label>집의 설계도</label>\n                            </div><div class=\"flex items-center space-x-2 my-2\">\n                                <input type=\"radio\" name=\"assignment3_answer\" value=\"2\" class=\"form-radio\">\n                                <label>집에 있는 가구</label>\n                            </div><div class=\"flex items-center space-x-2 my-2\">\n                                <input type=\"radio\" name=\"assignment3_answer\" value=\"3\" class=\"form-radio\">\n                                <label>집을 짓는 데 필요한 재료</label>\n                            </div><div class=\"flex items-center space-x-2 my-2\">\n                                <input type=\"radio\" name=\"assignment3_answer\" value=\"4\" class=\"form-radio\">\n                                <label>집을 짓는 작업자</label>\n                            </div>\n                    </form>\n                    <button onclick=\"submitAssignment(3, 'metaphor')\"\n                        class=\"mt-6 w-full px-6 py-3 bg-gradient-to-r from-amber-500 to-yellow-400 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 hover:from-amber-600 hover:to-yellow-500 flex items-center justify-center\">\n                        <svg xmlns=\"http://www.w3.org/2000/svg\" class=\"h-5 w-5 mr-2\" viewBox=\"0 0 20 20\" fill=\"currentColor\">\n                            <path fill-rule=\"evenodd\" d=\"M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z\" clip-rule=\"evenodd\"/>\n                        </svg>\n                        문제 제출하기\n                    </button>\n                    <div id=\"result3\" class=\"mt-4 hidden\">\n                        <div class=\"p-4 rounded-lg\"></div>\n                    </div>\n                </div>\n                <div class=\"bg-white rounded-lg p-6 shadow-md\">\n                    <h3 class=\"text-lg font-semibold mb-4\">주어진 숫자를 입력 받아 이를 제곱하는 클래스를 만들어보세요.</h3>\n                    <div class=\"space-y-4\">\n                        <div class=\"bg-gray-50 p-4 rounded\">\n                            <h4 class=\"font-medium mb-2\">테스트 케이스:</h4>\n                            <div class=\"my-2\">\n                                    <p class=\"text-sm text-gray-600\">입력: 2</p>\n                                    <p class=\"text-sm text-gray-600\">출력: 4</p>\n                                </div><div class=\"my-2\">\n                                    <p class=\"text-sm text-gray-600\">입력: 3</p>\n                                    <p class=\"text-sm text-gray-600\">출력: 9</p>\n                                </div>\n                        </div>\n                        <div class=\"mt-4\">\n                            <div id=\"editor4\" class=\"code-editor h-32 border rounded\"></div>\n                        </div>\n                        <button onclick=\"submitAssignment(4, 'implementation_basic')\"\n                            class=\"mt-6 w-full px-6 py-3 bg-gradient-to-r from-amber-500 to-yellow-400 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 hover:from-amber-600 hover:to-yellow-500 flex items-center justify-center\">\n                            <svg xmlns=\"http://www.w3.org/2000/svg\" class=\"h-5 w-5 mr-2\" viewBox=\"0 0 20 20\" fill=\"currentColor\">\n                                <path fill-rule=\"evenodd\" d=\"M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z\" clip-rule=\"evenodd\"/>\n                            </svg>\n                            코드 제출하기\n                        </button>\n                        <div id=\"result4\" class=\"mt-4 hidden\">\n                            <div class=\"p-4 rounded-lg\"></div>\n                        </div>\n                    </div>\n                </div>\n                <div class=\"bg-white rounded-lg p-6 shadow-md\">\n                    <h3 class=\"text-lg font-semibold mb-4\">클래스를 사용하여 정수를 입력받아 제곱값을 반환하는 함수를 만들어보세요.</h3>\n                    <div class=\"space-y-4\">\n                        <div class=\"bg-gray-50 p-4 rounded\">\n                            <h4 class=\"font-medium mb-2\">테스트 케이스:</h4>\n                            <div class=\"my-2\">\n                                    <p class=\"text-sm text-gray-600\">입력: 2</p>\n                                    <p class=\"text-sm text-gray-600\">출력: 4</p>\n                                </div><div class=\"my-2\">\n                                    <p class=\"text-sm text-gray-600\">입력: 3</p>\n                                    <p class=\"text-sm text-gray-600\">출력: 9</p>\n                                </div>\n                        </div>\n                        <div class=\"mt-4\">\n                            <div id=\"editor5\" class=\"code-editor h-32 border rounded\"></div>\n                        </div>\n                        <button onclick=\"submitAssignment(5, 'implementation_basic')\"\n                            class=\"mt-6 w-full px-6 py-3 bg-gradient-to-r from-amber-500 to-yellow-400 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 hover:from-amber-600 hover:to-yellow-500 flex items-center justify-center\">\n                            <svg xmlns=\"http://www.w3.org/2000/svg\" class=\"h-5 w-5 mr-2\" viewBox=\"0 0 20 20\" fill=\"currentColor\">\n                                <path fill-rule=\"evenodd\" d=\"M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z\" clip-rule=\"evenodd\"/>\n                            </svg>\n                            코드 제출하기\n                        </button>\n                        <div id=\"result5\" class=\"mt-4 hidden\">\n                            <div class=\"p-4 rounded-lg\"></div>\n                        </div>\n                    </div>\n                </div></div>",
-  "metadata": {
-    "assignments": [
-      {
-        "id": 1,
-        "type": "concept",
-        "correct_answer": "4",
-        "hint": "프로그래밍에서 객체를 만들기 위한 기본적인 구조를 무엇이라고 하나요?"
-      },
-      {
-        "id": 2,
-        "type": "theory_concept",
-        "correct_answer": "2",
-        "hint": "'drive'는 자동차가 수행할 수 있는 행동을 나타냅니다."
-      },
-      {
-        "id": 3,
-        "type": "metaphor",
-        "correct_answer": "1",
-        "hint": "클래스는 특정 객체를 생성하기 위해 변수와 메소드를 정의하는 '틀' 또는 '설계도'라고 생각할 수 있습니다."
-      },
-      {
-        "id": 4,
-        "type": "implementation_basic",
-        "test_cases": [
-          {
-            "input": "2",
-            "output": "4"
-          },
-          {
-            "input": "3",
-            "output": "9"
-          }
-        ],
-        "hint": "클래스에는 숫자를 받아서 제곱하는 함수가 필요합니다. 이를 위해 'def' 키워드를 사용하여 함수를 만들고, 이 함수는 입력받은 숫자를 제곱하여 반환해야 합니다."
-      },
-      {
-        "id": 5,
-        "type": "implementation_basic",
-        "test_cases": [
-          {
-            "input": "2",
-            "output": "4"
-          },
-          {
-            "input": "3",
-            "output": "9"
-          }
-        ],
-        "hint": "클래스 'Square'를 생성하고, 'calculate'라는 메소드에서 입력받은 정수의 제곱을 계산하여 반환하도록 합니다."
-      }
-    ],
-    "metadata": {
-      "version": 1,
-      "created_at": "2025-01-24T12:50:43.473223"
+  "assignments": [
+    {
+      "id": 1,
+      "type": "theory_concept",
+      "question": "Python에서 클래스를 정의할 때 사용하는 키워드는 무엇입니까?",
+      "choices": [
+        "class",
+        "define",
+        "function",
+        "object"
+      ],
+      "correct_answer": 1,
+      "explanation": "'class' 키워드는 Python에서 클래스를 정의할 때 사용됩니다.",
+      "hint": "이 키워드는 객체 지향 프로그래밍의 기본 단위를 생성하기 위해 사용됩니다."
+    },
+    {
+      "id": 2,
+      "type": "metaphor",
+      "question": "Python 클래스를 사용하는 것을 실생활의 어떤 것에 비유할 수 있습니까?",
+      "choices": [
+        "커피 레시피",
+        "커피 잔",
+        "커피 샵",
+        "커피 원두"
+      ],
+      "correct_answer": 1,
+      "explanation": "클래스는 '커피 레시피'에 비유할 수 있습니다. 레시피대로 여러 커피(객체)를 만들 수 있기 때문입니다.",
+      "hint": "이것은 여러 객체를 만들기 위한 일종의 '틀' 또는 '설계도'입니다."
+    },
+    {
+      "id": 3,
+      "type": "concept",
+      "question": "Python에서 클래스 내의 함수를 무엇이라고 합니까?",
+      "choices": [
+        "메소드",
+        "프로시저",
+        "함수",
+        "콜백"
+      ],
+      "correct_answer": 1,
+      "explanation": "클래스 내의 함수는 '메소드'라고 합니다.",
+      "hint": "이 용어는 객체 지향 프로그래밍에서 클래스에 속한 함수를 지칭할 때 사용됩니다."
+    },
+    {
+      "id": 4,
+      "type": "analysis",
+      "question": "다음 코드의 실행 결과는 무엇입니까?",
+      "code_to_analyze": "class Car:\n    def __init__(self, color):\n        self.color = color\n\ndef main():\n    my_car = Car('blue')\n    print(my_car.color)\n\nmain()",
+      "points_to_consider": [
+        "__init__ 메소드의 역할",
+        "클래스 인스턴스화 과정",
+        "객체 속성 접근 방법"
+      ],
+      "sample_analysis": "이 코드는 'Car' 클래스를 정의하고, 이 클래스의 인스턴스인 'my_car'를 생성하여 'blue'라는 색깔을 할당한 뒤, 이 색깔을 출력합니다. 따라서 실행 결과는 'blue'입니다."
+    },
+    {
+      "id": 5,
+      "type": "implementation",
+      "question": "Python에서 'Person' 클래스를 생성하고, 이름(name)과 나이(age)를 속성으로 갖도록 구현하세요. 또한, 개인 정보를 출력하는 'print_info' 메소드를 추가하세요.",
+      "constraints": [
+        "클래스 이름은 'Person'으로 합니다.",
+        "'__init__' 메소드를 사용하여 속성을 초기화하세요."
+      ],
+      "test_cases": [
+        {
+          "input": "person = Person('John Doe', 30)\nperson.print_info()",
+          "output": "Name: John Doe, Age: 30"
+        },
+        {
+          "input": "person = Person('Jane Doe', 25)\nperson.print_info()",
+          "output": "Name: Jane Doe, Age: 25"
+        }
+      ],
+      "sample_solution": "class Person:\n    def __init__(self, name, age):\n        self.name = name\n        self.age = age\n    \n    def print_info(self):\n        print(f'Name: {self.name}, Age: {self.age}')",
+      "hints": [
+        "'__init__' 메소드는 클래스의 생성자입니다.",
+        "'print_info' 메소드 내에서는 'self'를 사용하여 인스턴스 변수에 접근할 수 있습니다."
+      ]
     }
-  }
+  ]
 }

@@ -1,59 +1,81 @@
 {
-  "content": "<div class=\"space-y-8\">\n                <div class=\"bg-white rounded-lg p-6 shadow-md\">\n                    <h3 class=\"text-lg font-semibold mb-4\">프로그래밍에서 '문자열(string)'이란 무엇을 의미하는가?</h3>\n                    <form class=\"space-y-4\">\n                        <div class=\"flex items-center space-x-2 my-2\">\n                                <input type=\"radio\" name=\"assignment1_answer\" value=\"1\" class=\"form-radio\">\n                                <label>숫자의 나열</label>\n                            </div><div class=\"flex items-center space-x-2 my-2\">\n                                <input type=\"radio\" name=\"assignment1_answer\" value=\"2\" class=\"form-radio\">\n                                <label>문자의 나열</label>\n                            </div><div class=\"flex items-center space-x-2 my-2\">\n                                <input type=\"radio\" name=\"assignment1_answer\" value=\"3\" class=\"form-radio\">\n                                <label>변수의 집합</label>\n                            </div><div class=\"flex items-center space-x-2 my-2\">\n                                <input type=\"radio\" name=\"assignment1_answer\" value=\"4\" class=\"form-radio\">\n                                <label>함수의 집합</label>\n                            </div>\n                    </form>\n                    <button onclick=\"submitAssignment(1, 'concept')\"\n                        class=\"mt-6 w-full px-6 py-3 bg-gradient-to-r from-amber-500 to-yellow-400 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 hover:from-amber-600 hover:to-yellow-500 flex items-center justify-center\">\n                        <svg xmlns=\"http://www.w3.org/2000/svg\" class=\"h-5 w-5 mr-2\" viewBox=\"0 0 20 20\" fill=\"currentColor\">\n                            <path fill-rule=\"evenodd\" d=\"M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z\" clip-rule=\"evenodd\"/>\n                        </svg>\n                        문제 제출하기\n                    </button>\n                    <div id=\"result1\" class=\"mt-4 hidden\">\n                        <div class=\"p-4 rounded-lg\"></div>\n                    </div>\n                </div>\n                <div class=\"bg-white rounded-lg p-6 shadow-md\">\n                    <h3 class=\"text-lg font-semibold mb-4\">문자열은 여러 개의 문자가 나열된 시퀀스입니다. 예를 들어, 'Hello, World!' 는 13개의 문자가 나열된 문자열입니다. 문자열의 길이는 문자열에 포함된 문자의 수를 나타냅니다. 파이썬에서는 len() 함수를 사용하여 문자열의 길이를 얻을 수 있습니다.<br><br>다음 코드를 보고:<br><br><code>greeting = 'Hello, World!'<br>print(len(greeting))</code><br><br>다음 중 'Hello, World!'의 길이를 올바르게 표현한 것은 무엇인가요?</h3>\n                    <form class=\"space-y-4\">\n                        <div class=\"flex items-center space-x-2 my-2\">\n                                <input type=\"radio\" name=\"assignment2_answer\" value=\"1\" class=\"form-radio\">\n                                <label>13</label>\n                            </div><div class=\"flex items-center space-x-2 my-2\">\n                                <input type=\"radio\" name=\"assignment2_answer\" value=\"2\" class=\"form-radio\">\n                                <label>14</label>\n                            </div><div class=\"flex items-center space-x-2 my-2\">\n                                <input type=\"radio\" name=\"assignment2_answer\" value=\"3\" class=\"form-radio\">\n                                <label>12</label>\n                            </div><div class=\"flex items-center space-x-2 my-2\">\n                                <input type=\"radio\" name=\"assignment2_answer\" value=\"4\" class=\"form-radio\">\n                                <label>15</label>\n                            </div>\n                    </form>\n                    <button onclick=\"submitAssignment(2, 'theory_concept')\"\n                        class=\"mt-6 w-full px-6 py-3 bg-gradient-to-r from-amber-500 to-yellow-400 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 hover:from-amber-600 hover:to-yellow-500 flex items-center justify-center\">\n                        <svg xmlns=\"http://www.w3.org/2000/svg\" class=\"h-5 w-5 mr-2\" viewBox=\"0 0 20 20\" fill=\"currentColor\">\n                            <path fill-rule=\"evenodd\" d=\"M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z\" clip-rule=\"evenodd\"/>\n                        </svg>\n                        문제 제출하기\n                    </button>\n                    <div id=\"result2\" class=\"mt-4 hidden\">\n                        <div class=\"p-4 rounded-lg\"></div>\n                    </div>\n                </div>\n                <div class=\"bg-white rounded-lg p-6 shadow-md\">\n                    <h3 class=\"text-lg font-semibold mb-4\">프로그래밍에서 '문자열(strings)'은 어떤 것에 가장 가깝게 비유될 수 있을까요?</h3>\n                    <form class=\"space-y-4\">\n                        <div class=\"flex items-center space-x-2 my-2\">\n                                <input type=\"radio\" name=\"assignment3_answer\" value=\"1\" class=\"form-radio\">\n                                <label>책의 한 문장</label>\n                            </div><div class=\"flex items-center space-x-2 my-2\">\n                                <input type=\"radio\" name=\"assignment3_answer\" value=\"2\" class=\"form-radio\">\n                                <label>책장에 놓인 책들</label>\n                            </div><div class=\"flex items-center space-x-2 my-2\">\n                                <input type=\"radio\" name=\"assignment3_answer\" value=\"3\" class=\"form-radio\">\n                                <label>서점 안의 모든 책</label>\n                            </div><div class=\"flex items-center space-x-2 my-2\">\n                                <input type=\"radio\" name=\"assignment3_answer\" value=\"4\" class=\"form-radio\">\n                                <label>서점의 주소</label>\n                            </div>\n                    </form>\n                    <button onclick=\"submitAssignment(3, 'metaphor')\"\n                        class=\"mt-6 w-full px-6 py-3 bg-gradient-to-r from-amber-500 to-yellow-400 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 hover:from-amber-600 hover:to-yellow-500 flex items-center justify-center\">\n                        <svg xmlns=\"http://www.w3.org/2000/svg\" class=\"h-5 w-5 mr-2\" viewBox=\"0 0 20 20\" fill=\"currentColor\">\n                            <path fill-rule=\"evenodd\" d=\"M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z\" clip-rule=\"evenodd\"/>\n                        </svg>\n                        문제 제출하기\n                    </button>\n                    <div id=\"result3\" class=\"mt-4 hidden\">\n                        <div class=\"p-4 rounded-lg\"></div>\n                    </div>\n                </div>\n                <div class=\"bg-white rounded-lg p-6 shadow-md\">\n                    <h3 class=\"text-lg font-semibold mb-4\">주어진 문자열에서 첫 번째 문자를 출력하는 프로그램을 작성하세요.</h3>\n                    <div class=\"space-y-4\">\n                        <div class=\"bg-gray-50 p-4 rounded\">\n                            <h4 class=\"font-medium mb-2\">테스트 케이스:</h4>\n                            <div class=\"my-2\">\n                                    <p class=\"text-sm text-gray-600\">입력: Hello, World!</p>\n                                    <p class=\"text-sm text-gray-600\">출력: H</p>\n                                </div><div class=\"my-2\">\n                                    <p class=\"text-sm text-gray-600\">입력: Python</p>\n                                    <p class=\"text-sm text-gray-600\">출력: P</p>\n                                </div>\n                        </div>\n                        <div class=\"mt-4\">\n                            <div id=\"editor4\" class=\"code-editor h-32 border rounded\"></div>\n                        </div>\n                        <button onclick=\"submitAssignment(4, 'implementation_basic')\"\n                            class=\"mt-6 w-full px-6 py-3 bg-gradient-to-r from-amber-500 to-yellow-400 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 hover:from-amber-600 hover:to-yellow-500 flex items-center justify-center\">\n                            <svg xmlns=\"http://www.w3.org/2000/svg\" class=\"h-5 w-5 mr-2\" viewBox=\"0 0 20 20\" fill=\"currentColor\">\n                                <path fill-rule=\"evenodd\" d=\"M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z\" clip-rule=\"evenodd\"/>\n                            </svg>\n                            코드 제출하기\n                        </button>\n                        <div id=\"result4\" class=\"mt-4 hidden\">\n                            <div class=\"p-4 rounded-lg\"></div>\n                        </div>\n                    </div>\n                </div>\n                <div class=\"bg-white rounded-lg p-6 shadow-md\">\n                    <h3 class=\"text-lg font-semibold mb-4\">주어진 문자열을 모두 대문자로 변환해주세요.</h3>\n                    <div class=\"space-y-4\">\n                        <div class=\"bg-gray-50 p-4 rounded\">\n                            <h4 class=\"font-medium mb-2\">테스트 케이스:</h4>\n                            <div class=\"my-2\">\n                                    <p class=\"text-sm text-gray-600\">입력: hello world</p>\n                                    <p class=\"text-sm text-gray-600\">출력: HELLO WORLD</p>\n                                </div><div class=\"my-2\">\n                                    <p class=\"text-sm text-gray-600\">입력: programming is fun</p>\n                                    <p class=\"text-sm text-gray-600\">출력: PROGRAMMING IS FUN</p>\n                                </div>\n                        </div>\n                        <div class=\"mt-4\">\n                            <div id=\"editor5\" class=\"code-editor h-32 border rounded\"></div>\n                        </div>\n                        <button onclick=\"submitAssignment(5, 'implementation_basic')\"\n                            class=\"mt-6 w-full px-6 py-3 bg-gradient-to-r from-amber-500 to-yellow-400 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 hover:from-amber-600 hover:to-yellow-500 flex items-center justify-center\">\n                            <svg xmlns=\"http://www.w3.org/2000/svg\" class=\"h-5 w-5 mr-2\" viewBox=\"0 0 20 20\" fill=\"currentColor\">\n                                <path fill-rule=\"evenodd\" d=\"M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z\" clip-rule=\"evenodd\"/>\n                            </svg>\n                            코드 제출하기\n                        </button>\n                        <div id=\"result5\" class=\"mt-4 hidden\">\n                            <div class=\"p-4 rounded-lg\"></div>\n                        </div>\n                    </div>\n                </div></div>",
-  "metadata": {
-    "assignments": [
-      {
-        "id": 1,
-        "type": "concept",
-        "correct_answer": "2",
-        "hint": "문자열은 일련의 문자들을 나타냅니다."
-      },
-      {
-        "id": 2,
-        "type": "theory_concept",
-        "correct_answer": "2",
-        "hint": "공백과 특수 문자도 문자열의 길이에 포함됩니다."
-      },
-      {
-        "id": 3,
-        "type": "metaphor",
-        "correct_answer": "1",
-        "hint": "문자열은 글자들이 연속적으로 이어진 것을 의미합니다."
-      },
-      {
-        "id": 4,
-        "type": "implementation_basic",
-        "test_cases": [
-          {
-            "input": "Hello, World!",
-            "output": "H"
-          },
-          {
-            "input": "Python",
-            "output": "P"
-          }
-        ],
-        "hint": "Python에서 문자열의 첫 번째 문자를 접근하려면 인덱싱을 사용합니다. 예를 들어, str[0]은 문자열 str의 첫 번째 문자를 반환합니다."
-      },
-      {
-        "id": 5,
-        "type": "implementation_basic",
-        "test_cases": [
-          {
-            "input": "hello world",
-            "output": "HELLO WORLD"
-          },
-          {
-            "input": "programming is fun",
-            "output": "PROGRAMMING IS FUN"
-          }
-        ],
-        "hint": "Python의 내장 함수인 upper()를 사용하여 문자열을 대문자로 변환할 수 있습니다. 예를 들어, 'hello'.upper()는 'HELLO'를 반환합니다."
-      }
-    ],
-    "metadata": {
-      "version": 1,
-      "created_at": "2025-01-24T12:43:53.502688"
+  "assignments": [
+    {
+      "id": 1,
+      "type": "theory_concept",
+      "question": "Python에서 문자열은 불변(immutable)입니다. 이것이 의미하는 바는 무엇인가요?",
+      "choices": [
+        "문자열 값을 변경할 수 있다",
+        "문자열을 한 번 생성하면, 그 값을 변경할 수 없다",
+        "문자열은 숫자 데이터 유형만 저장할 수 있다",
+        "모든 문자열은 기본적으로 공백 문자로 시작한다"
+      ],
+      "correct_answer": 2,
+      "explanation": "문자열이 불변이라는 것은 문자열이 한 번 생성되면 그 내용을 변경할 수 없다는 것을 의미합니다.",
+      "hint": "불변 객체는 그 상태를 변경할 수 없습니다."
+    },
+    {
+      "id": 2,
+      "type": "metaphor",
+      "question": "문자열의 불변성을 실생활에 비유한다면 어떤 것과 가장 비슷할까요?",
+      "choices": [
+        "흐르는 강물",
+        "새겨진 문신",
+        "지워지는 연필 글씨",
+        "바뀌는 계절"
+      ],
+      "correct_answer": 2,
+      "explanation": "문신은 한 번 새겨지면 원래 상태로 되돌릴 수 없는 것처럼, 문자열도 한 번 생성되면 변경할 수 없습니다.",
+      "hint": "영구적인 것을 생각해보세요."
+    },
+    {
+      "id": 3,
+      "type": "concept",
+      "question": "다음 중 문자열을 합치는 올바른 방법은 무엇인가요?",
+      "choices": [
+        "'Hello, ' + 'World!'",
+        "'Hello, ' - 'World!'",
+        "'Hello, '.append('World!')",
+        "'Hello, '.concat('World!')"
+      ],
+      "correct_answer": 1,
+      "explanation": "'+' 연산자를 사용하여 문자열을 합칠 수 있습니다.",
+      "hint": "문자열을 더하는 데 사용되는 기호는 무엇인가요?"
+    },
+    {
+      "id": 4,
+      "type": "analysis",
+      "question": "다음 코드의 결과는 무엇일까요?",
+      "code_to_analyze": "'Python'.replace('P', 'J')",
+      "points_to_consider": [
+        "replace 메소드의 기능",
+        "문자열의 불변성"
+      ],
+      "sample_analysis": "이 코드는 'Python'이라는 문자열에서 'P'를 'J'로 대체하여 'Jython'을 새로운 문자열로 생성합니다. 원본 문자열은 변경되지 않습니다."
+    },
+    {
+      "id": 5,
+      "type": "implementation",
+      "question": "사용자로부터 입력받은 두 문자열을 합쳐서 출력하는 프로그램을 작성하세요.",
+      "constraints": [
+        "input 함수를 사용하여 문자열을 입력받는다",
+        "두 문자열 사이에는 공백 하나를 둔다"
+      ],
+      "test_cases": [
+        {
+          "input": "'Hello' 'World'",
+          "output": "'Hello World'"
+        },
+        {
+          "input": "'Good' 'Morning'",
+          "output": "'Good Morning'"
+        }
+      ],
+      "sample_solution": "str1 = input()\nstr2 = input()\nprint(str1 + ' ' + str2)",
+      "hints": [
+        "두 문자열 사이에 공백을 추가하는 방법을 고려하세요.",
+        "input 함수를 사용하여 사용자 입력을 받을 수 있습니다."
+      ]
     }
-  }
+  ]
 }

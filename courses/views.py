@@ -1,32 +1,24 @@
 from django.shortcuts import render, redirect
-from rest_framework import viewsets, status, generics
+from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from django.shortcuts import get_object_or_404
-from .models import Course, Lesson, Quiz, PracticeExercise, UserCourse, TheoryContent
-from .serializers import (CourseSerializer, LessonSerializer, QuizSerializer,
+from .models import Course, Lesson, Assignment, PracticeExercise, UserCourse
+from .serializers import (CourseSerializer, LessonSerializer, AssignmentSerializer,
                           PracticeExerciseSerializer, UserCourseSerializer)
 from django.http import JsonResponse
 import json
 from typing import Dict, Any
-import openai
 from pathlib import Path
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_POST, require_http_methods
 from django.contrib.auth.decorators import login_required
 from django.utils.safestring import mark_safe
-from .llm.theory_llm import TheoryLLM
-from asgiref.sync import sync_to_async, async_to_sync
-from django.template.loader import render_to_string
-from django.http import HttpResponse
-from django.views.decorators.csrf import csrf_exempt
-from .agents.assignment_analysis_agent import AssignmentAnalysisAgent
-from .llm.assignment_llm import AssignmentLLM
 from django.views.decorators.cache import cache_page
-from .agents.practice_analysis_agent import PracticeAnalysisAgent
-import tempfile
-import os
+from django.views.decorators.csrf import csrf_exempt
 import re
+from asgiref.sync import sync_to_async
+from .scripts.assignment_tools import AssignmentDataManager, CodeSubmissionAnalyzer, CodeAnalysisResult
 
 
 # 공통으로 사용할 토픽 목록을 모듈 레벨에 정의
@@ -82,10 +74,9 @@ class LessonViewSet(viewsets.ModelViewSet):
         return Lesson.objects.all()
 
 
-class QuizViewSet(viewsets.ModelViewSet):
-    queryset = Quiz.objects.all()
-    serializer_class = QuizSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+class AssignmentViewSet(viewsets.ModelViewSet):
+    queryset = Assignment.objects.all()
+    serializer_class = AssignmentSerializer
 
 
 class PracticeExerciseViewSet(viewsets.ModelViewSet):
@@ -217,9 +208,8 @@ def complete_topic(request, topic_id):
 def load_topic_content(topic_id: str, content_type: str) -> dict:
     """토픽의 현재 버전 콘텐츠 로드"""
     try:
-        theory_llm = TheoryLLM()
         # content 디렉토리에서 파일을 찾도록 수정
-        current_file = theory_llm.data_dir / topic_id / 'content' / f'{content_type}.json'
+        current_file = Path(__file__).parent / 'data' / 'topics' / topic_id / 'content' / f'{content_type}.json'
         
         if current_file.exists():
             with open(current_file, 'r', encoding='utf-8') as f:
@@ -240,30 +230,42 @@ def topic_view(request, topic_id):
     return render(request, 'courses/topic.html', context)
 
 
-async def theory_lesson_view(request, topic_id=None):
+@cache_page(60 * 15)  # 15분 캐싱
+def theory_lesson_view(request, topic_id=None):
     """이론 학습 뷰"""
     if topic_id is None:
         topic_id = TOPICS[0]['id']
         
     topic_name = next((t['name'] for t in TOPICS if t['id'] == topic_id), '')
     
-    # DB에서 내용 가져오기
     try:
-        theory_content = await sync_to_async(TheoryContent.objects.get)(topic_id=topic_id)
-        content_html = theory_content.content
-    except TheoryContent.DoesNotExist:
-        # 없으면 생성
-        theory_llm = TheoryLLM()
-        content_html = await theory_llm.generate(topic_id)
+        # HTML 파일 직접 읽기
+        theory_file = Path(__file__).parent / 'data' / 'topics' / topic_id / 'content' / 'theory.html'
+        if theory_file.exists():
+            with open(theory_file, 'r', encoding='utf-8') as f:
+                content_html = f.read()
+        else:
+            content_html = '<p>이론 내용을 찾을 수 없습니다.</p>'
+            
+    except Exception as e:
+        print(f"이론 내용 로드 중 오류 발생: {str(e)}")
+        content_html = '<p>이론 내용을 불러오는 중 오류가 발생했습니다.</p>'
+    
+    # 이전/다음 토픽 찾기
+    current_index = next((i for i, topic in enumerate(TOPICS) if topic['id'] == topic_id), -1)
+    prev_topic = TOPICS[current_index - 1] if current_index > 0 else None
+    next_topic = TOPICS[current_index + 1] if current_index < len(TOPICS) - 1 else None
     
     context = {
         'topics': TOPICS,
         'topic_id': topic_id,
         'topic_name': topic_name,
-        'content': mark_safe(content_html)
+        'content': mark_safe(content_html),
+        'prev_topic': prev_topic,
+        'next_topic': next_topic
     }
     
-    return await sync_to_async(render)(request, 'courses/theory-lesson.html', context)
+    return render(request, 'courses/theory-lesson.html', context)
 
 
 def practice_view(request, topic_id=None):
@@ -413,7 +415,7 @@ def load_assignment_data(topic_id: str) -> dict:
             ]
         }
 
-async def assignment_view(request, topic_id=None):
+def assignment_view(request, topic_id=None):
     """과제 뷰"""
     if topic_id is None:
         topic_id = TOPICS[0]['id']
@@ -434,18 +436,14 @@ async def assignment_view(request, topic_id=None):
                 'assignments': []
             }
         else:
-            # metadata에서 assignments 데이터 추출
-            assignments = assignment_data.get('metadata', {}).get('assignments', [])
-            
             context = {
                 'topics': TOPICS,
                 'topic_id': topic_id,
                 'topic_name': topic_name,
-                'content': mark_safe(assignment_data.get('content', '')),
-                'assignments': assignments
+                'assignments': assignment_data.get('assignments', [])
             }
         
-        return await sync_to_async(render)(request, 'courses/assignment.html', context)
+        return render(request, 'courses/assignment.html', context)
         
     except Exception as e:
         print(f"Error loading assignment content: {str(e)}")
@@ -456,47 +454,72 @@ async def assignment_view(request, topic_id=None):
             'content': mark_safe('<div class="alert alert-danger">과제 내용을 불러오는데 실패했습니다.</div>'),
             'assignments': []
         }
-        return await sync_to_async(render)(request, 'courses/assignment.html', context)
+        return render(request, 'courses/assignment.html', context)
 
 
-def submit_assignment(request):
-    """과제 제출 처리"""
-    if not request.user.is_authenticated:
-        return JsonResponse({"error": "로그인이 필요합니다."}, status=401)
-        
-    # topic_id는 URL 파라미터로 받음
-    topic_id = request.GET.get('topic_id')
-    if not topic_id:
-        return JsonResponse({"error": "topic_id가 필요합니다."}, status=400)
-        
+@csrf_exempt
+@require_http_methods(["POST"])
+def submit_assignment(request, topic_id):
     try:
         data = json.loads(request.body)
-        assignment_id = data.get('id')
-        assignment_type = data.get('type')
+        assignment_id = data.get('assignment_id')
+        answer_type = data.get('type')
         answer = data.get('answer')
-        
-        if not all([assignment_id, assignment_type, answer]):
-            return JsonResponse({"error": "필수 파라미터가 누락되었습니다."}, status=400)
+
+        # 과제 데이터 로드
+        current_file = Path(__file__).parent / 'data' / 'topics' / topic_id / 'content' / 'assignment.json'
+        with open(current_file, 'r', encoding='utf-8') as f:
+            assignments = json.load(f)['assignments']
+
+        # 해당 과제 찾기
+        assignment = next((a for a in assignments if str(a['id']) == str(assignment_id)), None)
+        if not assignment:
+            return JsonResponse({'error': '과제를 찾을 수 없습니다.'}, status=404)
+
+        # 과제 유형에 따른 처리
+        if answer_type in ['concept', 'theory_concept', 'metaphor']:
+            # 객관식 문제 처리
+            is_correct = str(answer) == str(assignment['correct_answer'])
+            feedback = assignment['explanation'] if is_correct else assignment['hint']
             
-        # 과제 분석 에이전트 초기화
-        agent = AssignmentAnalysisAgent()
-        
-        # 과제 분석 및 채점
-        result = agent.analyze({
-            'topic_id': topic_id,
-            'assignment_id': assignment_id,
-            'type': assignment_type,
-            'answer': answer,
-            'user_id': request.user.id
-        })
-        
-        return JsonResponse(result)
-        
+            return JsonResponse({
+                'correct': is_correct,
+                'feedback': feedback
+            })
+            
+        elif answer_type in ['analysis', 'implementation']:
+            # 코드 분석 및 구현 문제 처리
+            analyzer = CodeSubmissionAnalyzer()
+            
+            if answer_type == 'analysis':
+                # 분석 문제 평가
+                result = analyzer.analyze_code_analysis(
+                    submitted_analysis=answer,
+                    code_to_analyze=assignment.get('code_to_analyze', ''),
+                    points_to_consider=assignment.get('points_to_consider', []),
+                    expected_points=assignment.get('expected_points', [])
+                )
+            else:
+                # 구현 문제 평가
+                result = analyzer.analyze_code_implementation(
+                    submitted_code=answer,
+                    test_cases=assignment.get('test_cases', []),
+                    constraints=assignment.get('constraints', [])
+                )
+            
+            return JsonResponse({
+                'correct': result.is_correct,
+                'feedback': result.feedback,
+                'suggestions': result.suggestions
+            })
+            
+        else:
+            return JsonResponse({'error': '지원하지 않는 과제 유형입니다.'}, status=400)
+
     except json.JSONDecodeError:
-        return JsonResponse({"error": "잘못된 JSON 형식입니다."}, status=400)
+        return JsonResponse({'error': '잘못된 요청 형식입니다.'}, status=400)
     except Exception as e:
-        print(f"Error in submit_assignment: {e}")
-        return JsonResponse({"error": "서버 오류가 발생했습니다."}, status=500)
+        return JsonResponse({'error': f'서버 오류가 발생했습니다: {str(e)}'}, status=500)
 
 
 def save_assignment_data(topic_id: str, data: Dict[str, Any]) -> None:

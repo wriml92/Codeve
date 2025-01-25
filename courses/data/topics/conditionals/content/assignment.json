@@ -1,63 +1,81 @@
 {
-  "content": "<div class=\"space-y-8\">\n                <div class=\"bg-white rounded-lg p-6 shadow-md\">\n                    <h3 class=\"text-lg font-semibold mb-4\">다음 중 조건문(Conditionals)에 대한 가장 정확한 설명은 무엇인가요?</h3>\n                    <form class=\"space-y-4\">\n                        <div class=\"flex items-center space-x-2 my-2\">\n                                <input type=\"radio\" name=\"assignment1_answer\" value=\"1\" class=\"form-radio\">\n                                <label>조건문은 프로그램 내의 특정 조건이 충족될 때만 실행되는 코드의 일부분을 의미한다.</label>\n                            </div><div class=\"flex items-center space-x-2 my-2\">\n                                <input type=\"radio\" name=\"assignment1_answer\" value=\"2\" class=\"form-radio\">\n                                <label>조건문은 모든 코드를 실행하는 데 필요한 구조이다.</label>\n                            </div><div class=\"flex items-center space-x-2 my-2\">\n                                <input type=\"radio\" name=\"assignment1_answer\" value=\"3\" class=\"form-radio\">\n                                <label>조건문은 프로그램에서 에러를 처리하는 방법이다.</label>\n                            </div><div class=\"flex items-center space-x-2 my-2\">\n                                <input type=\"radio\" name=\"assignment1_answer\" value=\"4\" class=\"form-radio\">\n                                <label>조건문은 코드의 실행 순서를 변경하는 방법이다.</label>\n                            </div>\n                    </form>\n                    <button onclick=\"submitAssignment(1, 'concept')\"\n                        class=\"mt-6 w-full px-6 py-3 bg-gradient-to-r from-amber-500 to-yellow-400 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 hover:from-amber-600 hover:to-yellow-500 flex items-center justify-center\">\n                        <svg xmlns=\"http://www.w3.org/2000/svg\" class=\"h-5 w-5 mr-2\" viewBox=\"0 0 20 20\" fill=\"currentColor\">\n                            <path fill-rule=\"evenodd\" d=\"M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z\" clip-rule=\"evenodd\"/>\n                        </svg>\n                        문제 제출하기\n                    </button>\n                    <div id=\"result1\" class=\"mt-4 hidden\">\n                        <div class=\"p-4 rounded-lg\"></div>\n                    </div>\n                </div>\n                <div class=\"bg-white rounded-lg p-6 shadow-md\">\n                    <h3 class=\"text-lg font-semibold mb-4\">상황에 따라 다른 동작을 하는 프로그램을 만들려면 조건문이 필요합니다. 예를 들어, 비가 오면 우산을 챙기고, 비가 오지 않으면 썬크림을 바르는 것처럼요.<br><br>다음 Python 코드를 살펴봅시다.<br><br><code>rainy = True<br>if rainy:<br>    print('Take an umbrella!')<br>else:<br>    print('Put on sunscreen!')</code><br><br>만약 'rainy' 변수의 값이 False로 바뀐다면, 어떤 메시지가 출력될까요?</h3>\n                    <form class=\"space-y-4\">\n                        <div class=\"flex items-center space-x-2 my-2\">\n                                <input type=\"radio\" name=\"assignment2_answer\" value=\"1\" class=\"form-radio\">\n                                <label>'Take an umbrella!'</label>\n                            </div><div class=\"flex items-center space-x-2 my-2\">\n                                <input type=\"radio\" name=\"assignment2_answer\" value=\"2\" class=\"form-radio\">\n                                <label>'Put on sunscreen!'</label>\n                            </div><div class=\"flex items-center space-x-2 my-2\">\n                                <input type=\"radio\" name=\"assignment2_answer\" value=\"3\" class=\"form-radio\">\n                                <label>아무 것도 출력되지 않음</label>\n                            </div><div class=\"flex items-center space-x-2 my-2\">\n                                <input type=\"radio\" name=\"assignment2_answer\" value=\"4\" class=\"form-radio\">\n                                <label>오류 메시지가 출력됨</label>\n                            </div>\n                    </form>\n                    <button onclick=\"submitAssignment(2, 'theory_concept')\"\n                        class=\"mt-6 w-full px-6 py-3 bg-gradient-to-r from-amber-500 to-yellow-400 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 hover:from-amber-600 hover:to-yellow-500 flex items-center justify-center\">\n                        <svg xmlns=\"http://www.w3.org/2000/svg\" class=\"h-5 w-5 mr-2\" viewBox=\"0 0 20 20\" fill=\"currentColor\">\n                            <path fill-rule=\"evenodd\" d=\"M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z\" clip-rule=\"evenodd\"/>\n                        </svg>\n                        문제 제출하기\n                    </button>\n                    <div id=\"result2\" class=\"mt-4 hidden\">\n                        <div class=\"p-4 rounded-lg\"></div>\n                    </div>\n                </div>\n                <div class=\"bg-white rounded-lg p-6 shadow-md\">\n                    <h3 class=\"text-lg font-semibold mb-4\">프로그래밍에서 '만약 오늘 비가 오면 우산을 가져갈 것'이라는 조건문을 일상생활에서 어떻게 표현하면 좋을까요?</h3>\n                    <form class=\"space-y-4\">\n                        <div class=\"flex items-center space-x-2 my-2\">\n                                <input type=\"radio\" name=\"assignment3_answer\" value=\"1\" class=\"form-radio\">\n                                <label>'오늘 비가 오니까 우산을 가져가야지'</label>\n                            </div><div class=\"flex items-center space-x-2 my-2\">\n                                <input type=\"radio\" name=\"assignment3_answer\" value=\"2\" class=\"form-radio\">\n                                <label>'비가 오면 우산을 가져가고, 그렇지 않으면 우산을 가져가지 않는다'</label>\n                            </div><div class=\"flex items-center space-x-2 my-2\">\n                                <input type=\"radio\" name=\"assignment3_answer\" value=\"3\" class=\"form-radio\">\n                                <label>'우산을 가져가라'</label>\n                            </div><div class=\"flex items-center space-x-2 my-2\">\n                                <input type=\"radio\" name=\"assignment3_answer\" value=\"4\" class=\"form-radio\">\n                                <label>'비가 오든지 말든지 우산을 가져가라'</label>\n                            </div>\n                    </form>\n                    <button onclick=\"submitAssignment(3, 'metaphor')\"\n                        class=\"mt-6 w-full px-6 py-3 bg-gradient-to-r from-amber-500 to-yellow-400 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 hover:from-amber-600 hover:to-yellow-500 flex items-center justify-center\">\n                        <svg xmlns=\"http://www.w3.org/2000/svg\" class=\"h-5 w-5 mr-2\" viewBox=\"0 0 20 20\" fill=\"currentColor\">\n                            <path fill-rule=\"evenodd\" d=\"M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z\" clip-rule=\"evenodd\"/>\n                        </svg>\n                        문제 제출하기\n                    </button>\n                    <div id=\"result3\" class=\"mt-4 hidden\">\n                        <div class=\"p-4 rounded-lg\"></div>\n                    </div>\n                </div>\n                <div class=\"bg-white rounded-lg p-6 shadow-md\">\n                    <h3 class=\"text-lg font-semibold mb-4\">사용자로부터 하나의 숫자를 입력받아, 그 숫자가 10보다 크면 'Large'라는 문자열을, 10보다 작거나 같으면 'Small'이라는 문자열을 출력하는 프로그램을 작성하세요.</h3>\n                    <div class=\"space-y-4\">\n                        <div class=\"bg-gray-50 p-4 rounded\">\n                            <h4 class=\"font-medium mb-2\">테스트 케이스:</h4>\n                            <div class=\"my-2\">\n                                    <p class=\"text-sm text-gray-600\">입력: 15</p>\n                                    <p class=\"text-sm text-gray-600\">출력: Large</p>\n                                </div><div class=\"my-2\">\n                                    <p class=\"text-sm text-gray-600\">입력: 10</p>\n                                    <p class=\"text-sm text-gray-600\">출력: Small</p>\n                                </div><div class=\"my-2\">\n                                    <p class=\"text-sm text-gray-600\">입력: 5</p>\n                                    <p class=\"text-sm text-gray-600\">출력: Small</p>\n                                </div>\n                        </div>\n                        <div class=\"mt-4\">\n                            <div id=\"editor4\" class=\"code-editor h-32 border rounded\"></div>\n                        </div>\n                        <button onclick=\"submitAssignment(4, 'implementation_basic')\"\n                            class=\"mt-6 w-full px-6 py-3 bg-gradient-to-r from-amber-500 to-yellow-400 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 hover:from-amber-600 hover:to-yellow-500 flex items-center justify-center\">\n                            <svg xmlns=\"http://www.w3.org/2000/svg\" class=\"h-5 w-5 mr-2\" viewBox=\"0 0 20 20\" fill=\"currentColor\">\n                                <path fill-rule=\"evenodd\" d=\"M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z\" clip-rule=\"evenodd\"/>\n                            </svg>\n                            코드 제출하기\n                        </button>\n                        <div id=\"result4\" class=\"mt-4 hidden\">\n                            <div class=\"p-4 rounded-lg\"></div>\n                        </div>\n                    </div>\n                </div>\n                <div class=\"bg-white rounded-lg p-6 shadow-md\">\n                    <h3 class=\"text-lg font-semibold mb-4\">사용자로부터 하나의 정수를 입력받아, 이 정수가 짝수이면 'Even'이라는 문자열을, 홀수이면 'Odd'라는 문자열을 출력하는 프로그램을 작성해주세요.</h3>\n                    <div class=\"space-y-4\">\n                        <div class=\"bg-gray-50 p-4 rounded\">\n                            <h4 class=\"font-medium mb-2\">테스트 케이스:</h4>\n                            <div class=\"my-2\">\n                                    <p class=\"text-sm text-gray-600\">입력: 4</p>\n                                    <p class=\"text-sm text-gray-600\">출력: Even</p>\n                                </div><div class=\"my-2\">\n                                    <p class=\"text-sm text-gray-600\">입력: 7</p>\n                                    <p class=\"text-sm text-gray-600\">출력: Odd</p>\n                                </div>\n                        </div>\n                        <div class=\"mt-4\">\n                            <div id=\"editor5\" class=\"code-editor h-32 border rounded\"></div>\n                        </div>\n                        <button onclick=\"submitAssignment(5, 'implementation_basic')\"\n                            class=\"mt-6 w-full px-6 py-3 bg-gradient-to-r from-amber-500 to-yellow-400 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 hover:from-amber-600 hover:to-yellow-500 flex items-center justify-center\">\n                            <svg xmlns=\"http://www.w3.org/2000/svg\" class=\"h-5 w-5 mr-2\" viewBox=\"0 0 20 20\" fill=\"currentColor\">\n                                <path fill-rule=\"evenodd\" d=\"M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z\" clip-rule=\"evenodd\"/>\n                            </svg>\n                            코드 제출하기\n                        </button>\n                        <div id=\"result5\" class=\"mt-4 hidden\">\n                            <div class=\"p-4 rounded-lg\"></div>\n                        </div>\n                    </div>\n                </div></div>",
-  "metadata": {
-    "assignments": [
-      {
-        "id": 1,
-        "type": "concept",
-        "correct_answer": "1",
-        "hint": "조건문은 특정 조건이 충족될 때만 실행되는 구문입니다."
-      },
-      {
-        "id": 2,
-        "type": "theory_concept",
-        "correct_answer": "2",
-        "hint": "'if' 문은 조건이 참일 때 실행되고, 'else' 문은 조건이 거짓일 때 실행됩니다."
-      },
-      {
-        "id": 3,
-        "type": "metaphor",
-        "correct_answer": "2",
-        "hint": "'만약 ~하면 ~할 것'이라는 패턴을 찾아보세요."
-      },
-      {
-        "id": 4,
-        "type": "implementation_basic",
-        "test_cases": [
-          {
-            "input": "15",
-            "output": "Large"
-          },
-          {
-            "input": "10",
-            "output": "Small"
-          },
-          {
-            "input": "5",
-            "output": "Small"
-          }
-        ],
-        "hint": "python의 input() 함수를 사용하여 사용자로부터 숫자를 입력받을 수 있습니다. 이때 입력받은 값은 문자열 형태이므로 int() 함수를 사용하여 정수로 변환해야 합니다. if-else 구문을 사용하여 입력받은 숫자가 10보다 큰지 작은지를 판단하고, 각 경우에 맞는 문자열을 출력하세요."
-      },
-      {
-        "id": 5,
-        "type": "implementation_basic",
-        "test_cases": [
-          {
-            "input": "4",
-            "output": "Even"
-          },
-          {
-            "input": "7",
-            "output": "Odd"
-          }
-        ],
-        "hint": "먼저, input 함수를 사용하여 사용자로부터 정수를 입력받습니다. 그 다음, if-else 문을 사용하여 입력받은 숫자가 짝수인지 홀수인지를 판단합니다. 이때, % 연산자를 사용하여 2로 나눈 나머지를 확인하면 홀수와 짝수를 구별할 수 있습니다."
-      }
-    ],
-    "metadata": {
-      "version": 1,
-      "created_at": "2025-01-24T12:46:40.761452"
+  "assignments": [
+    {
+      "id": 1,
+      "type": "theory_concept",
+      "question": "Python에서 'if' 문이 수행되는 조건은 무엇인가요?",
+      "choices": [
+        "조건이 거짓(False)일 때",
+        "조건이 참(True)일 때",
+        "조건과 상관없이 항상",
+        "코드에 오류가 없을 때"
+      ],
+      "correct_answer": 2,
+      "explanation": "'if' 문은 조건이 참(True)일 때 수행됩니다.",
+      "hint": "'if' 문의 조건 검사 방식을 고려하세요."
+    },
+    {
+      "id": 2,
+      "type": "metaphor",
+      "question": "'if-elif-else' 구조를 실생활의 어떤 상황에 비유할 수 있을까요?",
+      "choices": [
+        "신호등이 빨간색이면 멈추고, 녹색이면 가고, 그 외에는 주의하며 진행",
+        "밥을 다 먹으면 설거지를 하고, 안 먹었으면 계속 먹기",
+        "책을 다 읽으면 잠자리에 들고, 안 읽었으면 계속 읽기",
+        "옷을 입고 나가면 문을 잠그고, 아니면 잠그지 않기"
+      ],
+      "correct_answer": 1,
+      "explanation": "신호등 비유는 'if-elif-else'의 조건 분기 구조를 잘 나타냅니다.",
+      "hint": "여러 조건에 따라 다른 행동을 취하는 상황을 생각해보세요."
+    },
+    {
+      "id": 3,
+      "type": "concept",
+      "question": "다음 중 Python에서 'else' 문이 필수적으로 필요한 경우는?",
+      "choices": [
+        "'if' 문 다음에 항상",
+        "여러 'elif' 문 다음에",
+        "'if' 문 없이는 사용할 수 없음",
+        "필수적으로 필요한 경우는 없음"
+      ],
+      "correct_answer": 4,
+      "explanation": "'else' 문은 선택적으로 사용되며, 모든 상황을 커버하는 마지막 조건으로 사용됩니다.",
+      "hint": "'else' 문의 역할을 생각해보세요."
+    },
+    {
+      "id": 4,
+      "type": "analysis",
+      "question": "다음 코드의 출력 결과는 무엇인가요?",
+      "code_to_analyze": "x = 10\nif x > 5:\n    print('x is greater than 5')\nelif x < 10:\n    print('x is less than 10')\nelse:\n    print('x is 10')",
+      "points_to_consider": [
+        "'if' 조건의 결과",
+        "'elif'와 'else' 조건의 순서와 결과"
+      ],
+      "sample_analysis": "첫 번째 'if' 조건이 참이므로 'x is greater than 5'가 출력됩니다. 'elif'와 'else'는 평가되지 않습니다."
+    },
+    {
+      "id": 5,
+      "type": "implementation",
+      "question": "사용자로부터 입력받은 숫자가 짝수인지 홀수인지 판별하는 Python 프로그램을 작성하세요.",
+      "constraints": [
+        "입력 값을 int로 변환하세요.",
+        "'if-else' 구조를 사용하세요."
+      ],
+      "test_cases": [
+        {
+          "input": "2",
+          "output": "짝수"
+        },
+        {
+          "input": "3",
+          "output": "홀수"
+        }
+      ],
+      "sample_solution": "number = int(input())\nif number % 2 == 0:\n    print('짝수')\nelse:\n    print('홀수')",
+      "hints": [
+        "짝수는 2로 나누었을 때 나머지가 0입니다.",
+        "'input' 함수와 'int' 함수를 사용하여 입력 값을 정수로 변환하세요."
+      ]
     }
-  }
+  ]
 }
