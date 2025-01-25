@@ -1,0 +1,143 @@
+<!-- 
+메타데이터:
+created_at: 2024-01-23T19:45:00
+version: 1
+-->
+<div class="practice-content space-y-8 p-6">
+    <!-- 실습 제목 -->
+    <section class="bg-white rounded-lg shadow-md p-6 space-y-4">
+        <h1 class="text-2xl font-bold text-gray-800">VSCode 실습하기</h1>
+        <p class="text-gray-600">
+            이제 VSCode를 직접 설치하고 사용해보면서 기본적인 기능들을 익혀보겠습니다.
+        </p>
+    </section>
+
+    <!-- 실습 1: VSCode 설치 -->
+    <section class="bg-white rounded-lg shadow-md p-6 space-y-4">
+        <h2 class="text-xl font-bold text-gray-800">실습 1: VSCode 설치하기</h2>
+        <div class="space-y-4">
+            <div class="bg-blue-50 p-4 rounded-lg">
+                <h3 class="font-semibold text-blue-800 mb-2">설치 확인하기</h3>
+                <ol class="list-decimal list-inside space-y-2 text-gray-600">
+                    <li>VSCode가 이미 설치되어 있다면 이 단계는 건너뛰어도 됩니다.</li>
+                    <li>설치 여부를 모르겠다면, 아래 방법으로 확인해보세요:
+                        <ul class="list-disc list-inside ml-8 mt-2">
+                            <li>Windows: 시작 메뉴에서 'Visual Studio Code' 검색</li>
+                            <li>Mac: Spotlight(⌘ + Space)에서 'Visual Studio Code' 검색</li>
+                        </ul>
+                    </li>
+                </ol>
+            </div>
+
+            <div class="bg-green-50 p-4 rounded-lg">
+                <h3 class="font-semibold text-green-800 mb-2">설치 과정</h3>
+                <ol class="list-decimal list-inside space-y-2 text-gray-600">
+                    <li>브라우저를 열고 'VSCode 다운로드'를 검색하거나 <a href="https://code.visualstudio.com" class="text-blue-600 hover:underline">공식 웹사이트</a>를 방문하세요.</li>
+                    <li>운영체제에 맞는 다운로드 버튼을 클릭하세요.</li>
+                    <li>다운로드된 파일을 실행하고 설치를 진행하세요.</li>
+                    <li>설치가 완료되면 VSCode를 실행해보세요.</li>
+                </ol>
+            </div>
+        </div>
+    </section>
+
+    <!-- 실습 2: 기본 기능 익히기 -->
+    <section class="bg-white rounded-lg shadow-md p-6 space-y-4">
+        <h2 class="text-xl font-bold text-gray-800">실습 2: 기본 기능 익히기</h2>
+        <div class="space-y-4">
+            <div class="bg-yellow-50 p-4 rounded-lg">
+                <h3 class="font-semibold text-yellow-800 mb-2">새 파일 만들기</h3>
+                <ol class="list-decimal list-inside space-y-2 text-gray-600">
+                    <li>VSCode를 실행하세요.</li>
+                    <li>다음 중 한 가지 방법으로 새 파일을 만드세요:
+                        <ul class="list-disc list-inside ml-8 mt-2">
+                            <li>Windows: Ctrl + N</li>
+                            <li>Mac: ⌘ + N</li>
+                            <li>또는 상단 메뉴 [파일 → 새 파일] 클릭</li>
+                        </ul>
+                    </li>
+                    <li>파일에 다음 내용을 입력해보세요:
+                        <pre class="bg-gray-800 text-white p-2 rounded mt-2">안녕하세요!
+이것은 제가 VSCode로 작성한
+첫 번째 파일입니다.</pre>
+                    </li>
+                </ol>
+            </div>
+
+            <div class="bg-yellow-50 p-4 rounded-lg">
+                <h3 class="font-semibold text-yellow-800 mb-2">파일 저장하기</h3>
+                <ol class="list-decimal list-inside space-y-2 text-gray-600">
+                    <li>다음 중 한 가지 방법으로 파일을 저장하세요:
+                        <ul class="list-disc list-inside ml-8 mt-2">
+                            <li>Windows: Ctrl + S</li>
+                            <li>Mac: ⌘ + S</li>
+                            <li>또는 상단 메뉴 [파일 → 저장] 클릭</li>
+                        </ul>
+                    </li>
+                    <li>파일 이름을 'first_file.txt'로 지정하세요.</li>
+                    <li>저장 위치는 바탕화면이나 문서 폴더를 추천합니다.</li>
+                </ol>
+            </div>
+        </div>
+    </section>
+
+    <!-- 실습 3: 터미널 사용해보기 -->
+    <section class="bg-white rounded-lg shadow-md p-6 space-y-4">
+        <h2 class="text-xl font-bold text-gray-800">실습 3: 터미널 사용해보기</h2>
+        <div class="space-y-4">
+            <div class="bg-purple-50 p-4 rounded-lg">
+                <h3 class="font-semibold text-purple-800 mb-2">터미널 열기</h3>
+                <ol class="list-decimal list-inside space-y-2 text-gray-600">
+                    <li>다음 중 한 가지 방법으로 터미널을 열어보세요:
+                        <ul class="list-disc list-inside ml-8 mt-2">
+                            <li>Windows: Ctrl + `</li>
+                            <li>Mac: ⌘ + `</li>
+                            <li>또는 상단 메뉴 [보기 → 터미널] 클릭</li>
+                        </ul>
+                    </li>
+                    <li>검은 바탕의 터미널 창이 VSCode 하단에 나타날 것입니다.</li>
+                    <li>터미널에 다음 명령어를 입력해보세요:
+                        <pre class="bg-gray-800 text-white p-2 rounded mt-2">echo "Hello from Terminal!"</pre>
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </section>
+
+    <!-- 실습 4: 단축키 연습하기 -->
+    <section class="bg-white rounded-lg shadow-md p-6 space-y-4">
+        <h2 class="text-xl font-bold text-gray-800">실습 4: 단축키 연습하기</h2>
+        <div class="space-y-4">
+            <div class="bg-indigo-50 p-4 rounded-lg">
+                <h3 class="font-semibold text-indigo-800 mb-2">기본 단축키 연습</h3>
+                <ol class="list-decimal list-inside space-y-2 text-gray-600">
+                    <li>새 파일을 하나 더 만들어보세요. (Ctrl/⌘ + N)</li>
+                    <li>아무 내용이나 입력해보세요.</li>
+                    <li>실행 취소를 해보세요. (Ctrl/⌘ + Z)</li>
+                    <li>다시 실행을 해보세요. (Ctrl/⌘ + Y 또는 Ctrl/⌘ + Shift + Z)</li>
+                    <li>파일을 저장하지 않고 닫아보세요.</li>
+                </ol>
+            </div>
+        </div>
+    </section>
+
+    <!-- 실습 완료 -->
+    <section class="bg-green-50 rounded-lg shadow-md p-6 space-y-4">
+        <h2 class="text-xl font-bold text-green-800">✅ 실습 완료하기</h2>
+        <div class="space-y-4">
+            <p class="text-gray-600">
+                모든 실습을 완료하셨나요? 다음 항목들을 체크해보세요:
+            </p>
+            <ul class="list-disc list-inside space-y-2 text-gray-600">
+                <li>VSCode가 정상적으로 설치되었나요?</li>
+                <li>새 파일을 만들고 저장할 수 있나요?</li>
+                <li>터미널을 열고 간단한 명령어를 실행해보았나요?</li>
+                <li>기본 단축키들을 사용해보았나요?</li>
+            </ul>
+            <p class="text-gray-600">
+                위 항목들을 모두 완료하셨다면, VSCode의 기본적인 사용법을 익히신 겁니다!
+                이제 본격적으로 프로그래밍을 시작할 준비가 되었습니다.
+            </p>
+        </div>
+    </section>
+</div> 
