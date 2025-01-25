@@ -28,7 +28,7 @@ def main_view(request):
 
 
 def main2_view(request):
-    return render(request, 'base/main2.html')
+    return render(request, 'base/main.html')
 
 
 urlpatterns = [
