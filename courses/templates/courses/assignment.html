@@ -128,10 +128,9 @@
             <!-- 각 퀴즈와 답안을 함께 표시 -->
             <div class="space-y-8">
                 {% for assignment in assignments %}
-                <div class="bg-white rounded-lg p-6 shadow-md">
-                    <h3 class="text-lg font-semibold mb-4">{{ assignment.question }}</h3>
-                    
-                    {% if assignment.type == 'concept' or assignment.type == 'theory_concept' or assignment.type == 'metaphor' %}
+                {% if assignment.type == 'concept_basic' or assignment.type == 'concept_application' or assignment.type == 'concept_analysis' or assignment.type == 'concept_debug' or assignment.type == 'metaphor' or assignment.type == 'theory_concept' or assignment.type == 'concept_synthesis' %}
+                <div class="bg-white rounded-lg p-6 shadow-md mb-8">
+                    <h3 class="text-lg font-semibold mb-4">{{ assignment.content }}</h3>
                     <form class="space-y-4">
                         {% for choice in assignment.choices %}
                         <div class="flex items-center space-x-2 my-2">
@@ -140,63 +139,28 @@
                         </div>
                         {% endfor %}
                     </form>
-                    {% endif %}
-                    
-                    {% if assignment.type == 'analysis' %}
-                    <div class="space-y-4">
-                        <div class="bg-gray-50 p-4 rounded">
-                            <h4 class="font-medium mb-2">분석할 코드:</h4>
-                            <pre class="text-sm bg-gray-800 text-white p-4 rounded"><code>{{ assignment.code_to_analyze }}</code></pre>
-                            <h4 class="font-medium mt-4 mb-2">고려할 점:</h4>
-                            <ul class="list-disc list-inside">
-                                {% for point in assignment.points_to_consider %}
-                                <li class="text-sm text-gray-600">{{ point }}</li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                        <div class="mt-4">
-                            <label class="block text-sm font-medium text-gray-700 mb-2">분석 내용 작성:</label>
-                            <div id="editor{{ assignment.id }}" class="code-editor h-48 border rounded"></div>
-                        </div>
-                    </div>
-                    {% endif %}
-                    
-                    {% if assignment.type == 'implementation' %}
-                    <div class="space-y-4">
-                        <div class="bg-gray-50 p-4 rounded">
-                            <h4 class="font-medium mb-2">제약 사항:</h4>
-                            <ul class="list-disc list-inside">
-                                {% for constraint in assignment.constraints %}
-                                <li class="text-sm text-gray-600">{{ constraint }}</li>
-                                {% endfor %}
-                            </ul>
-                            <h4 class="font-medium mt-4 mb-2">테스트 케이스:</h4>
-                            {% for test in assignment.test_cases %}
-                            <div class="my-2">
-                                <p class="text-sm text-gray-600">입력: {{ test.input }}</p>
-                                <p class="text-sm text-gray-600">출력: {{ test.output }}</p>
-                            </div>
-                            {% endfor %}
-                        </div>
-                        <div class="mt-4">
-                            <label class="block text-sm font-medium text-gray-700 mb-2">코드 작성:</label>
-                            <div id="editor{{ assignment.id }}" class="code-editor h-48 border rounded"></div>
-                        </div>
-                    </div>
-                    {% endif %}
-                    
                     <button onclick="submitAssignment({{ assignment.id }}, '{{ assignment.type }}')"
                         class="mt-6 w-full px-6 py-3 bg-gradient-to-r from-amber-500 to-yellow-400 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 hover:from-amber-600 hover:to-yellow-500 flex items-center justify-center">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
                         </svg>
-                        {% if assignment.type == 'implementation' %}코드 제출하기{% else %}문제 제출하기{% endif %}
+                        문제 제출하기
                     </button>
-                    
                     <div id="result{{ assignment.id }}" class="mt-4 hidden">
                         <div class="p-4 rounded-lg"></div>
                     </div>
                 </div>
+                {% elif assignment.type == 'implementation_playground' or assignment.type == 'implementation_modify' or assignment.type == 'implementation_creative' %}
+                <div class="bg-white rounded-lg p-6 shadow-md mb-8">
+                    <div class="flex flex-col items-center justify-center p-8">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-gray-300 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                        <h3 class="text-xl font-semibold text-gray-700 mb-2">구현 문제 준비 중</h3>
+                        <p class="text-gray-500 text-center">더 나은 학습 경험을 위해 준비 중입니다.<br>조금만 기다려주세요!</p>
+                    </div>
+                </div>
+                {% endif %}
                 {% endfor %}
             </div>
         </div>
@@ -226,7 +190,6 @@
 <script src="{% static 'js/chatbot-widget.js' %}"></script>
 
 <script>
-    // topic_id를 JavaScript 변수로 정의
     const topic_id = '{{ topic_id }}';
     
     document.addEventListener('DOMContentLoaded', function () {
@@ -266,27 +229,39 @@
 
         // 과제 제출 함수
         window.submitAssignment = async function(id, type) {
-            console.log('과제 제출 시도:', id, type);
+            console.log('과제 제출 시도:', id, type);  // 디버깅용
+            
+            // 결과 표시 영역 초기화
+            const resultDiv = document.getElementById(`result${id}`);
+            const resultContent = resultDiv.querySelector('div');
+            resultDiv.classList.remove('hidden');
+            resultContent.innerHTML = '<div class="spinner"></div>';
             
             let answer;
-            if (type === 'analysis' || type === 'implementation') {
+            if (type === 'implementation') {
                 const editor = editors[id];
                 if (!editor) {
                     console.error('에디터를 찾을 수 없습니다:', id);
-                    alert('코드 에디터를 초기화하는 중 오류가 발생했습니다.');
+                    resultContent.innerHTML = '<div class="p-4 bg-red-100 rounded-lg text-red-600">코드 에디터를 초기화하는 중 오류가 발생했습니다.</div>';
                     return;
                 }
                 answer = editor.getValue();
+                if (!answer.trim()) {
+                    resultContent.innerHTML = '<div class="p-4 bg-yellow-100 rounded-lg text-yellow-600">코드를 입력해주세요.</div>';
+                    return;
+                }
             } else {
                 const selectedRadio = document.querySelector(`input[name="assignment${id}_answer"]:checked`);
                 if (!selectedRadio) {
-                    alert('답을 선택해주세요.');
+                    resultContent.innerHTML = '<div class="p-4 bg-yellow-100 rounded-lg text-yellow-600">답을 선택해주세요.</div>';
                     return;
                 }
                 answer = selectedRadio.value;
             }
 
             try {
+                console.log('서버로 전송하는 데이터:', { assignment_id: id, type, answer });  // 디버깅용
+                
                 const response = await fetch(`/courses/assignment/submit/${topic_id}/`, {
                     method: 'POST',
                     headers: {
@@ -306,41 +281,50 @@
                 }
 
                 const result = await response.json();
-                console.log('제출 결과:', result);
+                console.log('제출 결과:', result);  // 디버깅용
                 
                 // 결과 표시
-                const resultDiv = document.getElementById(`result${id}`);
-                const resultContent = resultDiv.querySelector('div');
-                
-                resultDiv.classList.remove('hidden');
-                resultContent.className = `p-4 rounded-lg ${result.correct ? 'bg-green-100' : 'bg-red-100'}`;
-                
                 let feedbackHtml = `
-                    <div class="font-semibold ${result.correct ? 'text-green-600' : 'text-red-600'}">
+                    <div class="font-semibold ${result.correct ? 'text-green-600' : 'text-red-600'} mb-2">
                         ${result.correct ? '🎉 정답입니다!' : '💪 다시 한번 도전해보세요!'}
                     </div>
                 `;
                 
                 if (result.feedback) {
-                    feedbackHtml += `<div class="mt-2 whitespace-pre-line">${result.feedback}</div>`;
+                    feedbackHtml += `
+                        <div class="mt-2 text-gray-700 whitespace-pre-line">
+                            ${result.feedback}
+                        </div>
+                    `;
                 }
                 
-                if (result.suggestions) {
+                if (result.suggestions && result.suggestions.length > 0) {
                     feedbackHtml += `
-                        <div class="mt-2">
-                            <h4 class="font-medium">개선 제안:</h4>
-                            <ul class="list-disc list-inside">
-                                ${result.suggestions.map(s => `<li class="text-sm">${s}</li>`).join('')}
+                        <div class="mt-4">
+                            <h4 class="font-medium text-gray-700">개선 제안:</h4>
+                            <ul class="list-disc list-inside space-y-1 mt-2">
+                                ${result.suggestions.map(s => `
+                                    <li class="text-gray-600">${s}</li>
+                                `).join('')}
                             </ul>
                         </div>
                     `;
                 }
                 
-                resultContent.innerHTML = feedbackHtml;
+                resultContent.innerHTML = `
+                    <div class="p-4 ${result.correct ? 'bg-green-50' : 'bg-red-50'} rounded-lg">
+                        ${feedbackHtml}
+                    </div>
+                `;
                 
             } catch (error) {
                 console.error('과제 제출 중 오류 발생:', error);
-                alert(error.message || '과제 제출 중 오류가 발생했습니다.');
+                resultContent.innerHTML = `
+                    <div class="p-4 bg-red-100 rounded-lg">
+                        <div class="text-red-600 font-semibold">오류가 발생했습니다</div>
+                        <div class="text-red-500 mt-1">${error.message}</div>
+                    </div>
+                `;
             }
         };
     });
