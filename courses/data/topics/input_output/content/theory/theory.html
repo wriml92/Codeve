@@ -1,0 +1,80 @@
+<div class="space-y-8">
+            <div class="space-y-8">
+    <!-- 1. 개념 소개 섹션 -->
+    <section class="mb-8">
+        <h2 class="text-lg font-semibold text-black-600 mb-3">개념 소개</h2>
+        <p class="text-gray-800 leading-relaxed">
+            우리가 컴퓨터나 스마트폰을 사용할 때, 사용자와 기기 간에 어떻게 정보를 주고 받을까요? 바로 <b>입력</b>과 <b>출력</b>을 통해 이루어집니다. 여기서 <b>입력</b>은 사용자로부터 데이터를 받는 것을, <b>출력</b>은 처리된 결과를 사용자에게 보여주는 것을 의미합니다. 파이썬에서는 이를 위해 <span style='color: #0066cc;'>input()</span>과 <span style='color: #0066cc;'>print()</span> 함수를 사용합니다.
+        </p>
+    </section>
+
+    <!-- 2. 실생활 비유 섹션 -->
+    <section class="mb-8">
+        <h2 class="text-lg font-semibold text-black-600 mb-3">비유</h2>
+        <p class="text-gray-800 leading-relaxed">
+            이를 이해하는 가장 좋은 방법은 우리 일상의 예를 들어보는 것입니다. 가령, 당신이 카페에서 주문을 할 때, 주문 내용을 바리스타에게 말하는 것이 바로 <b>입력</b>이라고 할 수 있습니다. 그리고 바리스타가 커피를 만들어서 당신에게 제공하는 것이 <b>출력</b>입니다. 이처럼, 파이썬에서도 사용자의 데이터를 입력받아 처리하고, 그 결과를 사용자에게 돌려주는 과정이 바로 <b>입력</b>과 <b>출력</b>입니다.
+        </p>
+        <div class="bg-gray-900 rounded-lg p-4 mt-4">
+            <pre class="text-white font-mono text-sm">
+# 사용자로부터 이름을 입력받아 출력해봅시다.
+name = input("당신의 이름은 무엇인가요?: ")  # 사용자 입력 받기
+print(f"안녕하세요, {name}님!")  # 입력받은 데이터 출력하기
+            </pre>
+            <p class="text-green-400 mt-2"># 실행 결과: "안녕하세요, {사용자가 입력한 이름}님!"</p>
+        </div>
+    </section>
+
+    <!-- 3. 실생활 응용 섹션 -->
+    <section class="mb-8">
+        <h2 class="text-lg font-semibold text-black-600 mb-3">실생활 응용</h2>
+        <p class="text-gray-800 leading-relaxed">
+            실생활에서 <b>입력</b>과 <b>출력</b>은 어디에서나 쓰입니다. 예를 들어, 온라인 쇼핑몰에서 주문을 하려면 상품명, 수량, 배송지 등을 입력해야하고, 결제 완료 화면이 출력되는 것을 볼 수 있습니다. 또한, 스마트폰의 알람 설정에서도 시간을 입력하고, 설정한 시간에 알람 소리가 출력되는 것을 확인할 수 있습니다.
+        </p>
+    </section>
+
+    <!-- 4. 핵심 포인트 섹션 -->
+    <section class="mb-8">
+        <h2 class="text-lg font-semibold text-black-600 mb-3">핵심 포인트</h2>
+        <div class="space-y-4">
+            <div class="key-point bg-gray-50 border-l-4 border-blue-500 p-4">
+                파이썬에서는 <b>input()</b> 함수를 통해 사용자로부터 데이터를 입력받을 수 있습니다.
+            </div>
+            <div class="key-point bg-gray-50 border-l-4 border-blue-500 p-4">
+                결과를 출력하려면 <b>print()</b> 함수를 사용합니다.
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. 주의사항 섹션 -->
+    <section class="mb-8">
+        <h2 class="text-lg font-semibold mb-3">주의사항</h2>
+        <ul class="list-decimal list-inside space-y-4">
+            <li>
+                <div class="mb-2">input() 함수는 사용자로부터 어떤 데이터를 입력받아도 결과는 항상 문자열 형태로 반환합니다. 따라서 숫자를 입력받아 계산 등의 연산을 하려면 데이터 타입을 변환해야 합니다.</div>
+                <div class="space-y-2">
+                    <div class="bg-red-50 p-3 rounded-lg border-l-4 border-red-500">
+                        <div class="text-red-600 font-medium mb-1">❌ 잘못된 예시:</div>
+                        <pre class="bg-white p-2 rounded">
+# 사용자로부터 숫자를 입력받아 더하기 연산을 하려고 합니다.
+num1 = input("첫 번째 숫자를 입력해주세요: ")
+num2 = input("두 번째 숫자를 입력해주세요: ")
+sum = num1 + num2
+print(sum)
+                        </pre>
+                    </div>
+                    <div class="bg-green-50 p-3 rounded-lg border-l-4 border-green-500">
+                        <div class="text-green-600 font-medium mb-1">✅ 올바른 예시:</div>
+                        <pre class="bg-white p-2 rounded">
+# 사용자로부터 숫자를 입력받아 더하기 연산을 하려고 합니다.
+num1 = int(input("첫 번째 숫자를 입력해주세요: "))  # 문자열을 정수로 변환
+num2 = int(input("두 번째 숫자를 입력해주세요: "))  # 문자열을 정수로 변환
+sum = num1 + num2
+print(sum)
+                        </pre>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </section>
+</div>
+        </div>

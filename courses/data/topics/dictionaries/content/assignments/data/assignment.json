@@ -1,0 +1,158 @@
+{
+  "assignments": [
+    {
+      "id": 1,
+      "type": "concept_basic",
+      "content": "파이썬에서 'dictionary'의 정의는 무엇인가요?",
+      "choices": [
+        "순서가 있는 변경 불가능한 항목의 집합",
+        "순서가 정해져 있고 변경 가능한 항목의 집합",
+        "키와 값의 쌍으로 이루어진 변경 가능한 항목의 집합",
+        "동일한 유형의 항목만 포함할 수 있는 집합"
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 2,
+      "type": "concept_application",
+      "content": "당신은 파이썬을 사용하여 온라인 쇼핑몰에서 판매되는 상품들의 가격을 기록하고 관리해야 합니다. 각 상품의 이름을 키(key)로, 그 상품의 가격을 값(value)으로 저장하려고 합니다. 어떤 방법이 가장 적절할까요?",
+      "choices": [
+        "product_prices = ['T-shirt', 20, 'Jeans', 50, 'Socks', 5]",
+        "product_prices = [(20, 'T-shirt'), (50, 'Jeans'), (5, 'Socks')]",
+        "product_prices = {'T-shirt': 20, 'Jeans': 50, 'Socks': 5}",
+        "product_prices = ('T-shirt' - 20, 'Jeans' - 50, 'Socks' - 5)"
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 3,
+      "type": "concept_analysis",
+      "content": "다음 코드를 실행하면 어떤 결과가 출력될까요?<br><br><code>info = {'name': 'Alice', 'age': 25}<br>print(info['name'])</code>",
+      "choices": [
+        "'name'",
+        "'Alice'",
+        "25",
+        "{'name': 'Alice', 'age': 25}"
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 4,
+      "type": "concept_debug",
+      "content": "다음 코드에서 발생하는 오류는 무엇일까요?<br><br><code>favorite_colors = {'Alice': 'blue', 'Bob': 'green', 'Charlie': 'red'}<br>color = favorite_colors['Dave']<br>print(color)</code>",
+      "choices": [
+        "SyntaxError: 잘못된 문법입니다",
+        "NameError: 정의되지 않은 변수를 사용했습니다",
+        "KeyError: 사전에 없는 키를 참조했습니다",
+        "TypeError: 데이터 타입이 올바르지 않습니다"
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 5,
+      "type": "metaphor",
+      "content": "프로그래밍에서 'dictionaries'는 어떤 일상적인 물건과 가장 비슷한 기능을 가지고 있습니까?",
+      "choices": [
+        "수퍼마켓의 쇼핑 카트: 다양한 품목을 담을 수 있습니다.",
+        "도서관의 책꽂이: 책들이 저자의 이름으로 정렬되어 있습니다.",
+        "사무실의 파일 캐비닛: 서류들이 각각의 라벨로 구분되어 보관됩니다.",
+        "주방의 냉장고: 음식들이 유통기한 순으로 배열되어 있습니다."
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 6,
+      "type": "theory_concept",
+      "content": "당신은 도서관에서 책을 빌리려고 합니다. 도서관의 컴퓨터 시스템은 각 책의 제목과 해당 책이 현재 대출 가능한지의 정보를 저장하고 있습니다.<br><br><code>books = {'The Alchemist': 'Available', '1984': 'Checked out', 'To Kill a Mockingbird': 'Available'}<br>status = books['The Alchemist']</code><br><br>위 코드는 실생활에서 무엇과 같을까요?",
+      "choices": [
+        "도서관 카탈로그에서 'The Alchemist' 책의 대출 가능 여부를 확인하는 것",
+        "책 '1984'의 저자를 찾는 것",
+        "도서관에서 'To Kill a Mockingbird' 책을 빌리는 것",
+        "도서관에서 모든 책의 목록을 출력하는 것"
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 7,
+      "type": "concept_synthesis",
+      "content": "문제를 준비 중입니다.",
+      "choices": [
+        "준비 중",
+        "준비 중",
+        "준비 중",
+        "준비 중"
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 8,
+      "type": "implementation_playground",
+      "content": "아래 제공된 코드는 '책'에 대한 정보를 담고 있는 사전(dictionary)입니다. 코드를 실행해보고, 다양한 키(key)와 값을(value) 변경하며 사전이 어떻게 변하는지 관찰해보세요.",
+      "choices": null,
+      "test_cases": [
+        {
+          "input": "book = {'title': 'The Little Prince', 'author': 'Antoine de Saint-Exupéry', 'published': 1943}\nprint(book)",
+          "output": "{'title': 'The Little Prince', 'author': 'Antoine de Saint-Exupéry', 'published': 1943}"
+        },
+        {
+          "input": "book['title'] = 'Animal Farm'\nbook['author'] = 'George Orwell'\nbook['published'] = 1945\nprint(book)",
+          "output": "{'title': 'Animal Farm', 'author': 'George Orwell', 'published': 1945}"
+        },
+        {
+          "input": "book['pages'] = 112\nprint(book)",
+          "output": "{'title': 'Animal Farm', 'author': 'George Orwell', 'published': 1945, 'pages': 112}"
+        },
+        {
+          "input": "del book['published']\nprint(book)",
+          "output": "{'title': 'Animal Farm', 'author': 'George Orwell', 'pages': 112}"
+        }
+      ],
+      "constraints": null
+    },
+    {
+      "id": 9,
+      "type": "implementation_modify",
+      "content": "다음 코드는 사용자의 취미를 저장하는 프로그램입니다. 사용자의 이름과 취미를 입력받아 딕셔너리에 저장하려고 합니다. 빈 부분을 채워 사용자의 이름을 key로, 취미를 value로 저장하는 코드를 완성해보세요.",
+      "choices": null,
+      "test_cases": [
+        {
+          "input": "user_hobbies = {}\nuser_name = 'Alice'\nhobby = 'Painting'\n# 여기에 코드를 작성하세요\nprint(user_hobbies)",
+          "output": "{'Alice': 'Painting'}"
+        },
+        {
+          "input": "user_hobbies = {}\nuser_name = 'Bob'\nhobby = 'Cooking'\n# 여기에 코드를 작성하세요\nprint(user_hobbies)",
+          "output": "{'Bob': 'Cooking'}"
+        }
+      ],
+      "constraints": null
+    },
+    {
+      "id": 10,
+      "type": "implementation_creative",
+      "content": "당신은 '과일 주스 바'를 운영하고 있습니다. 고객이 주문한 과일 주스를 만들기 위해, 각 과일의 가격을 확인하고 주문한 과일 주스의 총 가격을 계산하는 프로그램을 작성해보세요. 과일 가격은 사전(dictionary)에 저장되어 있으며, 고객이 주문한 과일 목록은 리스트(list)로 주어집니다. 고객이 주문한 각 과일의 가격을 찾아 총합을 출력하는 코드를 작성하세요.",
+      "choices": null,
+      "test_cases": [
+        {
+          "input": "fruit_prices = {'apple': 100, 'banana': 80, 'cherry': 120}\norder = ['apple', 'banana']\nprint(sum([fruit_prices[fruit] for fruit in order]))",
+          "output": "180"
+        },
+        {
+          "input": "fruit_prices = {'apple': 100, 'banana': 80, 'cherry': 120}\norder = ['cherry', 'cherry', 'apple']\nprint(sum([fruit_prices[fruit] for fruit in order]))",
+          "output": "340"
+        }
+      ],
+      "constraints": null
+    }
+  ],
+  "metadata": {
+    "version": 1,
+    "created_at": "2025-01-26T06:22:23.948083"
+  }
+}

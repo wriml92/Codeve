@@ -1,0 +1,150 @@
+{
+  "assignments": [
+    {
+      "id": 1,
+      "type": "concept_basic",
+      "content": "print 함수의 정의는 무엇인가요?",
+      "choices": [
+        "프로그램에서 에러를 찾기 위한 기능입니다.",
+        "프로그램의 성능을 측정하는 도구입니다.",
+        "화면에 텍스트나 변수의 값을 출력하는 기능입니다.",
+        "프로그램에서 사용자의 입력을 받는 기능입니다."
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 2,
+      "type": "concept_application",
+      "content": "Alice는 파이썬으로 프로그래밍을 배우기 시작했습니다. 첫 번째 과제로 'Hello, World!'라는 문장을 화면에 출력해야 합니다. Alice가 코드를 작성할 때 어떤 방법을 사용해야 할까요?",
+      "choices": [
+        "Hello, World!",
+        "print('Hello, World!')",
+        "'Hello, World!'를 화면에 출력하라.",
+        "print Hello, World!"
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 3,
+      "type": "concept_analysis",
+      "content": "다음 코드를 실행하면 어떤 결과가 출력될까요?<br><br><code>greeting = '안녕하세요!'<br>print(greeting)</code>",
+      "choices": [
+        "'greeting'",
+        "'안녕하세요!'",
+        "안녕하세요!",
+        "greeting"
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 4,
+      "type": "concept_debug",
+      "content": "다음 코드에서 발생하는 오류는 무엇일까요?<br><br><code>print('Hello World!')<br>Print('Goodbye World!')</code>",
+      "choices": [
+        "첫 번째 줄의 print 함수 사용이 잘못되었습니다.",
+        "두 번째 줄의 Print 함수는 Python에 존재하지 않습니다.",
+        "변수가 선언되지 않았습니다.",
+        "문자열에 따옴표(')가 빠져 있습니다."
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 5,
+      "type": "metaphor",
+      "content": "프로그래밍에서 'print' 명령어의 역할을 일상생활에서의 어떤 상황과 가장 잘 비교할 수 있을까요?",
+      "choices": [
+        "보기1: 컴퓨터 화면에 문서를 띄우는 것처럼, 음식 메뉴를 벽에 붙여 고객들이 볼 수 있게 하는 것",
+        "보기2: 달력에 중요한 날짜를 체크하는 것처럼, 프로그램에서 중요한 변수를 강조하는 것",
+        "보기3: 전화로 친구에게 최신 소식을 전하는 것처럼, 프로그램에서 데이터베이스에 새 정보를 저장하는 것",
+        "보기4: 라디오에서 DJ가 청취자들에게 음악을 소개하는 것처럼, 프로그램에서 사용자에게 정보를 보여주는 것"
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 6,
+      "type": "theory_concept",
+      "content": "카페에서 친구들과 대화를 나누던 중, 새로 출시된 디저트가 있다는 것을 알게 되었습니다. 카페 메뉴판에는 새 디저트의 이름과 가격이 적혀있습니다. 여러분은 그 디저트를 시켜보기로 결정하고, 이를 카페 종업원에게 알려줍니다.<br><br><code>dessert = '초코 무스 케이크'\nprint('제가 주문할 메뉴는', dessert, '입니다.')</code><br><br>위 코드의 실행 결과는 실생활에서 무엇과 가장 비슷할까요?",
+      "choices": [
+        "카페 메뉴판을 보고 무엇을 먹을지 고민하는 상황",
+        "종업원에게 '초코 무스 케이크' 한 조각을 주문하는 행동",
+        "친구에게 디저트 메뉴를 추천하는 대화",
+        "주문한 디저트의 가격을 계산하는 상황"
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 7,
+      "type": "concept_synthesis",
+      "content": "비전공자가 프로그래밍 수업에서 파이썬의 기본 출력 기능을 배우고 있습니다.<br><br><code>message = 'Hello, World!'<br>print(message)</code><br><br>위 코드에서 사용된 개념들의 올바른 설명은 무엇일까요?",
+      "choices": [
+        "변수 'message'는 문자열 'Hello, World!'를 저장하고, 'print' 함수는 변수 내용을 콘솔에 출력합니다.",
+        "'print'는 변수 'message'의 값을 변경하고, 'Hello, World!'는 이 변경된 값을 나타냅니다.",
+        "변수 'message'는 'print' 함수를 호출하는데 사용되며, 'Hello, World!'는 호출된 함수의 이름입니다.",
+        "'print' 함수는 'message' 변수를 생성하고, 'Hello, World!'는 콘솔에 출력되는 에러 메시지입니다."
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 8,
+      "type": "implementation_playground",
+      "content": "다음 제공된 코드를 실행해보세요. 그 다음에는, 제공된 코드의 message 변수에 있는 텍스트를 변경하고 다시 실행해보면서 출력 결과가 어떻게 달라지는지 관찰해보세요.",
+      "choices": null,
+      "test_cases": [
+        {
+          "input": "message = 'Hello, World!'\nprint(message)",
+          "output": "Hello, World!"
+        },
+        {
+          "input": "message = '안녕하세요, 파이썬!'\nprint(message)",
+          "output": "안녕하세요, 파이썬!"
+        }
+      ],
+      "constraints": null
+    },
+    {
+      "id": 9,
+      "type": "implementation_modify",
+      "content": "아래의 코드는 사용자의 이름을 입력받아 환영 메시지를 출력하는 코드입니다. 코드의 빈 부분을 채워서 사용자의 이름을 화면에 출력하는 프로그램을 완성해보세요.",
+      "choices": null,
+      "test_cases": [
+        {
+          "input": "name = input('이름을 입력해주세요: ')\nprint('환영합니다, ' + ___)",
+          "output": "이름을 입력해주세요: 홍길동\n환영합니다, 홍길동"
+        },
+        {
+          "input": "name = input('Enter your name: ')\nprint('Welcome, ' + ___)",
+          "output": "Enter your name: Alice\nWelcome, Alice"
+        }
+      ],
+      "constraints": null
+    },
+    {
+      "id": 10,
+      "type": "implementation_creative",
+      "content": "당신은 방금 프로그래밍을 시작한 신입 마법사입니다. 첫 번째 마법 수업에서는 마법의 주문을 외워서 마법진을 활성화하는 연습을 하게 됩니다. 주문을 올바르게 외우면 마법진이 '반짝'하고 빛나며 활성화됩니다. 당신의 목표는 주어진 마법 주문 변수를 사용해서 마법진을 활성화하는 코드를 작성하는 것입니다.\n\n주어진 변수:\nmagic_spell = 'Abracadabra'\n\n당신이 작성해야 할 코드는 다음과 같습니다:\n1. 마법 주문을 화면에 출력하세요.\n2. 주문이 화면에 출력되면 마법진이 활성화되며 '반짝!'이라고 표시됩니다.\n\n마법 주문이 올바르게 출력되고 마법진이 활성화되었는지 확인하기 위해 코드를 실행해 보세요!",
+      "choices": null,
+      "test_cases": [
+        {
+          "input": "print(magic_spell)\nprint('반짝!')",
+          "output": "Abracadabra\n반짝!"
+        },
+        {
+          "input": "print(magic_spell + ', 반짝!')",
+          "output": "Abracadabra, 반짝!"
+        }
+      ],
+      "constraints": null
+    }
+  ],
+  "metadata": {
+    "version": 1,
+    "created_at": "2025-01-26T06:16:15.294749"
+  }
+}

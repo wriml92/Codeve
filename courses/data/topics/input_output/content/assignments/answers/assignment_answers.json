@@ -1,0 +1,99 @@
+{
+  "assignments": [
+    {
+      "id": 1,
+      "type": "concept_basic",
+      "correct_answer": "3",
+      "hint": "입출력은 컴퓨터와 사용자 또는 다른 시스템 간에 데이터를 주고받는 행위를 말합니다."
+    },
+    {
+      "id": 2,
+      "type": "concept_application",
+      "correct_answer": "1",
+      "hint": "입력을 받기 위해서는 파이썬의 내장 함수 'input()'을 사용해야 하며, 사용자로부터 받은 값을 저장하기 위해서는 변수를 이용합니다."
+    },
+    {
+      "id": 3,
+      "type": "concept_analysis",
+      "correct_answer": "3",
+      "hint": "문자열들은 '+' 연산자를 사용하여 연결됩니다. 'Hello, '와 'Alice' 그리고 '!'가 연결되어 출력됩니다."
+    },
+    {
+      "id": 4,
+      "type": "concept_debug",
+      "correct_answer": "1",
+      "hint": "변수를 사용하기 전에 해당 변수에 값을 할당해야 합니다. 코드에서 'name' 변수는 사용되고 있으나, 어디에서도 값을 할당받지 않았습니다. 프로그램이 'name'이라는 이름을 가진 변수를 찾을 수 없기 때문에 오류가 발생합니다."
+    },
+    {
+      "id": 5,
+      "type": "metaphor",
+      "correct_answer": "2",
+      "hint": "컴퓨터에 정보를 입력하면 프로그램이 처리하여 결과를 내놓는 과정을 생각해보세요."
+    },
+    {
+      "id": 6,
+      "type": "theory_concept",
+      "correct_answer": "1",
+      "hint": "이 코드는 레몬에이드의 단가에 고객이 주문한 수량을 곱하여 총 비용을 계산합니다. 실생활에서는 이것이 고객이 지불해야 할 금액을 의미합니다."
+    },
+    {
+      "id": 7,
+      "type": "concept_synthesis",
+      "correct_answer": "1",
+      "hint": "input 함수는 사용자의 입력을 프로그램으로 전달하는 역할을 하며, 입력된 데이터는 변수에 저장됩니다. print 함수는 변수에 저장된 값을 포함하여 문자열을 화면에 출력합니다. 이 두 함수는 프로그램의 입력과 출력을 다루는 기본적인 예입니다."
+    },
+    {
+      "id": 8,
+      "type": "implementation_playground",
+      "test_cases": [
+        {
+          "input": "for i in range(3):\n    print('Hello, World!')",
+          "output": "Hello, World!\nHello, World!\nHello, World!"
+        },
+        {
+          "input": "for i in range(5):\n    print('안녕하세요!')",
+          "output": "안녕하세요!\n안녕하세요!\n안녕하세요!\n안녕하세요!\n안녕하세요!"
+        },
+        {
+          "input": "for i in range(1):\n    print('First Program')",
+          "output": "First Program"
+        }
+      ],
+      "hint": "이 코드는 for 반복문을 사용해 지정된 횟수만큼 메시지를 출력합니다. 'range(3)' 부분은 반복 횟수를 정하며, 'print' 함수는 괄호 안의 메시지를 화면에 출력합니다. 반복 횟수를 변경하려면 'range' 함수 안의 숫자를 바꾸고, 출력 메시지를 변경하려면 'print' 함수 안의 텍스트를 수정하세요."
+    },
+    {
+      "id": 9,
+      "type": "implementation_modify",
+      "test_cases": [
+        {
+          "input": "name = input('Enter your name: ')\nage = input('Enter your age: ')\nprint(f'Welcome, ___(1)____! You are ___(2)____ years old.')",
+          "output": "Enter your name: Alice\nEnter your age: 23\nWelcome, Alice! You are 23 years old."
+        },
+        {
+          "input": "name = input('Enter your name: ')\nage = input('Enter your age: ')\nprint(f'Hello, ___(1)____! Next year, you will be ___(2)____.')",
+          "output": "Enter your name: Bob\nEnter your age: 30\nHello, Bob! Next year, you will be 31."
+        }
+      ],
+      "hint": "빈칸 (1)에는 사용자의 이름을 출력하는 코드를, 빈칸 (2)에는 사용자의 나이를 출력하는 코드를 넣어야 합니다. 예를 들어, 첫 번째 빈칸에는 'name' 변수를, 두 번째 빈칸에는 'age' 변수를 넣을 수 있습니다. 만약 나이를 1 증가시키려면, 'age' 변수에 1을 더한 값을 넣으세요."
+    },
+    {
+      "id": 10,
+      "type": "implementation_creative",
+      "test_cases": [
+        {
+          "input": "addEspresso()\naddWater()\naddWater()",
+          "output": "아메리카노 완성!"
+        },
+        {
+          "input": "addEspresso()\naddWater()",
+          "output": "아메리카노 미완성!"
+        }
+      ],
+      "hint": "먼저 'addEspresso()' 함수를 사용해서 에스프레소를 추가하세요. 그 다음에 'addWater()' 함수를 두 번 호출하여 아메리카노를 완성하세요. 각 함수를 호출할 때마다 줄을 바꿔서 작성하세요."
+    }
+  ],
+  "metadata": {
+    "version": 1,
+    "created_at": "2025-01-26T05:37:30.467860"
+  }
+}

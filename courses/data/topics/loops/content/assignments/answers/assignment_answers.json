@@ -1,0 +1,103 @@
+{
+  "assignments": [
+    {
+      "id": 1,
+      "type": "concept_basic",
+      "correct_answer": "1",
+      "hint": "준비 중입니다."
+    },
+    {
+      "id": 2,
+      "type": "concept_application",
+      "correct_answer": "2",
+      "hint": "반복문을 사용하면 동일한 작업을 여러 번 수행할 때 코드를 간결하게 유지할 수 있습니다. 'for' 반복문은 정해진 횟수만큼 반복 실행하는 데 적합합니다."
+    },
+    {
+      "id": 3,
+      "type": "concept_analysis",
+      "correct_answer": "2",
+      "hint": "range() 함수는 0부터 시작하여 주어진 범위까지의 숫자들을 생성합니다. 예를 들면, range(3)은 0, 1, 2의 숫자를 생성합니다."
+    },
+    {
+      "id": 4,
+      "type": "concept_debug",
+      "correct_answer": "3",
+      "hint": "파이썬에서는 for 루프를 시작할 때 문장의 끝에 콜론(:)을 사용하여 코드 블록의 시작을 나타냅니다. 만약 이를 누락하면 문법 오류(Syntax Error)가 발생합니다."
+    },
+    {
+      "id": 5,
+      "type": "metaphor",
+      "correct_answer": "3",
+      "hint": "루프는 동일한 작업을 여러 번 반복하는 것을 의미합니다."
+    },
+    {
+      "id": 6,
+      "type": "theory_concept",
+      "correct_answer": "3",
+      "hint": "이 코드는 'for' 루프를 통해 5번의 반복을 나타내며, 각 반복에서는 1분간 휴식을 취하고 다음 운동 세션으로 넘어갑니다. 각 'rest_for_a_minute()'와 'do_next_exercise()'는 실생활에서의 휴식과 운동 세션을 나타냅니다."
+    },
+    {
+      "id": 7,
+      "type": "concept_synthesis",
+      "correct_answer": "1",
+      "hint": "준비 중입니다."
+    },
+    {
+      "id": 8,
+      "type": "implementation_playground",
+      "test_cases": [
+        {
+          "input": "size = 4\nfor i in range(size):\n    for j in range(size):\n        print('*', end=' ')\n    print()",
+          "output": "* * * *\n* * * *\n* * * *\n* * * *"
+        },
+        {
+          "input": "size = 3\nfor i in range(size):\n    for j in range(size):\n        print('*', end=' ')\n    print()",
+          "output": "* * *\n* * *\n* * *"
+        },
+        {
+          "input": "size = 5\nfor i in range(size):\n    for j in range(size):\n        print('*', end=' ')\n    print()",
+          "output": "* * * * *\n* * * * *\n* * * * *\n* * * * *\n* * * * *"
+        },
+        {
+          "input": "size = 7\nfor i in range(size):\n    for j in range(size):\n        print('*', end=' ')\n    print()",
+          "output": "* * * * * * *\n* * * * * * *\n* * * * * * *\n* * * * * * *\n* * * * * * *\n* * * * * * *\n* * * * * * *"
+        }
+      ],
+      "hint": "이 코드에서 'size' 변수는 사각형의 가로와 세로 길이를 결정합니다. 'for i in range(size):'는 세로 줄을 반복하는 루프이며, 'for j in range(size):'는 가로 줄을 반복하는 루프입니다. 'print('*', end=' ')'는 별을 한 줄에 연속해서 찍되, 줄바꿈을 하지 않도록 합니다. 'print()'는 각 가로 줄의 끝에서 다음 줄로 넘어가기 위해 사용됩니다."
+    },
+    {
+      "id": 9,
+      "type": "implementation_modify",
+      "test_cases": [
+        {
+          "input": "count = 0\nwhile count < 5:\n    count = count + 1\n    print(____)",
+          "output": "1\n2\n3\n4\n5\n"
+        },
+        {
+          "input": "count = 0\nwhile count < 10:\n    count = count + 1\n    if count <= 5:\n        print(____)",
+          "output": "1\n2\n3\n4\n5\n"
+        }
+      ],
+      "hint": "빈칸에 들어갈 코드는 변수 count를 출력하는 코드입니다. 파이썬에서 변수를 출력하기 위해서는 print 함수를 사용하며, 변수명을 괄호 안에 넣어주면 됩니다. 예를 들어, 변수명이 var라면 print(var)와 같이 작성할 수 있습니다."
+    },
+    {
+      "id": 10,
+      "type": "implementation_creative",
+      "test_cases": [
+        {
+          "input": "for i in range(1, 6):\n    servePie(i)",
+          "output": "손님 #1: 딸기 파이를 받았습니다!\n손님 #2: 딸기 파이를 받았습니다!\n손님 #3: 딸기 파이를 받았습니다!\n손님 #4: 딸기 파이를 받았습니다!\n손님 #5: 딸기 파이를 받았습니다!"
+        },
+        {
+          "input": "i = 1\nwhile i <= 5:\n    servePie(i)\n    i += 1",
+          "output": "손님 #1: 딸기 파이를 받았습니다!\n손님 #2: 딸기 파이를 받았습니다!\n손님 #3: 딸기 파이를 받았습니다!\n손님 #4: 딸기 파이를 받았습니다!\n손님 #5: 딸기 파이를 받았습니다!"
+        }
+      ],
+      "hint": "힌트: 여러분은 'servePie(customer_number)' 함수를 사용할 수 있습니다. 이 함수는 호출될 때마다 해당 손님 번호에 맞춰 파이를 제공하는 메시지를 출력합니다. 'range(1, 6)'을 사용하여 1부터 5까지의 숫자를 생성할 수 있습니다. 반복문을 사용하여 이 숫자들을 이용해 'servePie()' 함수를 여러 번 호출하세요. 'for' 루프를 사용하거나, 'while' 루프와 카운터 변수를 사용할 수 있습니다. 코드 작성 순서는 다음과 같습니다: 1. 반복문 시작하기, 2. 'servePie()' 함수를 호출하고 손님 번호를 인자로 전달하기, 3. 반복문 종료하기."
+    }
+  ],
+  "metadata": {
+    "version": 1,
+    "created_at": "2025-01-26T06:24:56.317509"
+  }
+}

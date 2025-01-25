@@ -1,0 +1,154 @@
+{
+  "assignments": [
+    {
+      "id": 1,
+      "type": "concept_basic",
+      "content": "컴퓨터 과학에서 '입출력(input/output)'의 정의는 무엇인가요?",
+      "choices": [
+        "프로그램이 실행되는 동안 발생하는 오류를 처리하는 과정",
+        "데이터를 저장하는 장치 또는 메모리 영역",
+        "사용자나 다른 시스템으로부터 데이터를 받아들이고, 결과를 전달하는 과정",
+        "프로그램의 소스 코드를 컴퓨터가 이해할 수 있는 기계어로 변환하는 과정"
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 2,
+      "type": "concept_application",
+      "content": "당신은 파이썬을 사용하여 콘솔에서 사용자로부터 이름을 입력받고 이를 화면에 출력하는 간단한 프로그램을 작성하고 있습니다. 사용자의 이름을 입력받기 위해서 어떻게 해야 할까요?",
+      "choices": [
+        "name = input('Enter your name: ')",
+        "print('Enter your name: ')",
+        "name = 'Enter your name: '",
+        "input = 'Enter your name: '"
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 3,
+      "type": "concept_analysis",
+      "content": "다음 코드를 실행하면 어떤 결과가 출력될까요?<br><br><code>name = 'Alice'<br>print('Hello, ' + name + '!')</code>",
+      "choices": [
+        "Hello Alice!",
+        "Hello, Alice",
+        "Hello, Alice!",
+        "Alice, Hello!"
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 4,
+      "type": "concept_debug",
+      "content": "다음 코드에서 발생하는 오류는 무엇일까요?<br><br><code>print('당신의 이름은: ' + name)</code>",
+      "choices": [
+        "name 변수가 정의되지 않았습니다",
+        "print 함수의 괄호가 닫히지 않았습니다",
+        "문자열 연결에 사용된 + 기호가 잘못되었습니다",
+        "문자열에 단일따옴표(')가 아닌 이중따옴표(\")를 사용해야 합니다"
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 5,
+      "type": "metaphor",
+      "content": "컴퓨터 프로그램의 '입력(input)'과 '출력(output)' 과정을 일상에서의 어떤 상황으로 가장 잘 비유할 수 있을까요?",
+      "choices": [
+        "책을 읽으면서 내용을 이해하는 과정",
+        "음식 재료를 넣고 레시피에 따라 요리하는 과정",
+        "가게에서 물건을 고르고 결제하는 과정",
+        "음악을 듣고 감정이 변화하는 과정"
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 6,
+      "type": "theory_concept",
+      "content": "당신은 레몬에이드 스탠드를 운영하고 있고, 각 고객이 주문한 레몬에이드의 양을 계산해야 합니다. 한 컵의 레몬에이드 가격은 1500원입니다.<br><br><code>lemonade_price = 1500<br>customer_order = 2<br>total_cost = lemonade_price * customer_order</code><br><br>위 코드의 결과는 실생활에서 무엇과 같을까요?",
+      "choices": [
+        "레몬에이드 2컵을 주문한 고객에게 3000원을 청구합니다.",
+        "레몬에이드 1컵당 가격이 3000원으로 책정됩니다.",
+        "고객이 레몬에이드 2컵을 주문하지만 1컵만 지불합니다.",
+        "레몬에이드를 팔기 위해 3000원의 투자를 합니다."
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 7,
+      "type": "concept_synthesis",
+      "content": "사용자로부터 이름을 입력받아 인사말을 출력하는 프로그램을 작성했습니다.<br><br><code>name = input('Enter your name: ')<br>print('Hello, ' + name + '!')</code><br><br>이 코드에서 사용된 개념들의 올바른 설명은 무엇일까요?",
+      "choices": [
+        "input 함수는 사용자의 입력을 받아 변수에 저장하고, print 함수는 저장된 값을 연결하여 출력한다.",
+        "input 함수는 프로그램의 출력을 생성하고, print 함수는 사용자로부터 데이터를 요청한다.",
+        "print 함수는 사용자의 입력을 받아 변수에 저장하고, input 함수는 저장된 값을 연결하여 출력한다.",
+        "input 함수와 print 함수 모두 프로그램의 데이터를 처리하지 않고 단순히 텍스트를 화면에 출력한다."
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 8,
+      "type": "implementation_playground",
+      "content": "아래에 제공된 Python 코드를 실행해보세요. 이 코드는 'Hello, World!' 라는 메시지를 세 번 출력합니다. 코드를 실행한 후, 반복 횟수를 변경하고, 출력되는 메시지를 수정하여 결과가 어떻게 바뀌는지 관찰해보세요.",
+      "choices": null,
+      "test_cases": [
+        {
+          "input": "for i in range(3):\n    print('Hello, World!')",
+          "output": "Hello, World!\nHello, World!\nHello, World!"
+        },
+        {
+          "input": "for i in range(5):\n    print('안녕하세요!')",
+          "output": "안녕하세요!\n안녕하세요!\n안녕하세요!\n안녕하세요!\n안녕하세요!"
+        },
+        {
+          "input": "for i in range(1):\n    print('First Program')",
+          "output": "First Program"
+        }
+      ],
+      "constraints": null
+    },
+    {
+      "id": 9,
+      "type": "implementation_modify",
+      "content": "아래 코드는 사용자로부터 이름과 나이를 입력받아 환영 메시지를 출력하는 프로그램입니다. 하지만 코드에는 일부분이 누락되어 있어서 완성하지 못했습니다. 빈 부분을 채워 프로그램을 완성해보세요.",
+      "choices": null,
+      "test_cases": [
+        {
+          "input": "name = input('Enter your name: ')\nage = input('Enter your age: ')\nprint(f'Welcome, ___(1)____! You are ___(2)____ years old.')",
+          "output": "Enter your name: Alice\nEnter your age: 23\nWelcome, Alice! You are 23 years old."
+        },
+        {
+          "input": "name = input('Enter your name: ')\nage = input('Enter your age: ')\nprint(f'Hello, ___(1)____! Next year, you will be ___(2)____.')",
+          "output": "Enter your name: Bob\nEnter your age: 30\nHello, Bob! Next year, you will be 31."
+        }
+      ],
+      "constraints": null
+    },
+    {
+      "id": 10,
+      "type": "implementation_creative",
+      "content": "당신은 '코드 카페'의 바리스타가 되었습니다. 카페에서는 손님들의 주문을 코드로 받아 커피를 제조합니다. 손님이 '아메리카노'를 주문했다면, 그에 맞는 커피를 만들어내는 코드를 작성해보세요. 커피 제조기(machine)에는 'addEspresso()'와 'addWater()'라는 함수가 있으며, 아메리카노를 만들기 위해서는 에스프레소 한 번에 물을 두 번 추가해야 합니다. 코드를 성공적으로 작성하면, 커피 제조기가 '아메리카노 완성!'이라고 알려줄 것입니다.",
+      "choices": null,
+      "test_cases": [
+        {
+          "input": "addEspresso()\naddWater()\naddWater()",
+          "output": "아메리카노 완성!"
+        },
+        {
+          "input": "addEspresso()\naddWater()",
+          "output": "아메리카노 미완성!"
+        }
+      ],
+      "constraints": null
+    }
+  ],
+  "metadata": {
+    "version": 1,
+    "created_at": "2025-01-26T05:37:30.469081"
+  }
+}

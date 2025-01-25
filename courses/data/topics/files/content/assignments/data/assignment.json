@@ -1,0 +1,150 @@
+{
+  "assignments": [
+    {
+      "id": 1,
+      "type": "concept_basic",
+      "content": "파일(file)의 정의는 무엇인가요?",
+      "choices": [
+        "컴퓨터에서 데이터를 저장하기 위해 사용되는 가상의 공간",
+        "인터넷을 통해 데이터를 전송하는 행위",
+        "데이터를 임시로 저장하는 컴퓨터의 메모리 단위",
+        "입출력 장치를 관리하는 시스템 소프트웨어"
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 2,
+      "type": "concept_application",
+      "content": "파이썬에서 'recipes.txt'라는 새로운 텍스트 파일을 생성하고, 'Chocolate Cake'라는 레시피 제목을 파일에 쓰려고 합니다. 어떤 코드를 사용해야 할까요?",
+      "choices": [
+        "open('recipes.txt', 'r').write('Chocolate Cake')",
+        "open('recipes.txt', 'w').write('Chocolate Cake')",
+        "open('recipes.txt', 'a').write('Chocolate Cake')",
+        "open('recipes.txt', 'x').write('Chocolate Cake')"
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 3,
+      "type": "concept_analysis",
+      "content": "다음 코드를 실행하면 파일의 내용을 어떻게 출력할까요?<br><br><code>file = open('hello.txt', 'r')<br>print(file.read())<br>file.close()</code>",
+      "choices": [
+        "hello.txt 파일의 모든 내용을 출력한다.",
+        "hello.txt 파일을 만들고 아무것도 출력하지 않는다.",
+        "파일을 읽지 못하고 오류 메시지를 출력한다.",
+        "프로그램이 종료된다."
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 4,
+      "type": "concept_debug",
+      "content": "다음 코드에서 발생하는 오류는 무엇일까요?<br><br><code>file = open('example.txt', 'r')<br>contents = file.reade()<br>print(contents)</code>",
+      "choices": [
+        "파일을 연 후에 닫지 않았습니다.",
+        "'reade()'는 올바른 파일 읽기 메소드가 아닙니다.",
+        "파일 'example.txt'가 존재하지 않습니다.",
+        "파일을 읽기 모드로 열지 않았습니다."
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 5,
+      "type": "metaphor",
+      "content": "컴퓨터의 파일 시스템을 책꽂이에 비유한다면, 하나의 파일은 책꽂이에서 무엇과 가장 유사할까요?",
+      "choices": [
+        "책 한 권",
+        "책꽂이의 한 칸",
+        "도서관의 방문자",
+        "책꽂이 전체"
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 6,
+      "type": "theory_concept",
+      "content": "문제를 준비 중입니다.",
+      "choices": [
+        "준비 중",
+        "준비 중",
+        "준비 중",
+        "준비 중"
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 7,
+      "type": "concept_synthesis",
+      "content": "비전공자가 파일을 읽고 내용을 출력하는 프로그래밍을 배웠습니다.<br><br><code>file = open('example.txt', 'r')<br>content = file.read()<br>print(content)</code><br><br>위 코드에서 사용된 개념들의 올바른 설명은 무엇일까요?",
+      "choices": [
+        "변수 'file'은 'example.txt'라는 이름의 파일을 쓰기 모드로 열기 위해 사용되었고, 'content'는 파일의 쓰기된 내용을 저장합니다.",
+        "'open' 함수는 파일을 새로 생성하고, 'read' 메서드는 파일에 데이터를 쓴 후에 파일을 닫습니다.",
+        "변수 'file'은 'example.txt'라는 파일을 읽기 모드로 열기 위한 파일 객체를 저장하고, 'content'는 파일의 전체 내용을 저장합니다.",
+        "'print' 함수는 콘솔에 'content' 변수를 출력하기 전에 텍스트 파일을 인터넷으로 전송하는 데 사용됩니다."
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 8,
+      "type": "implementation_playground",
+      "content": "아래에 제공된 파이썬 코드를 실행해보고, 파일 내용을 읽는 방법을 관찰해보세요. 그런 다음, 코드를 조금씩 수정하여 다른 파일을 읽거나 파일 내용을 다르게 출력해보세요.",
+      "choices": null,
+      "test_cases": [
+        {
+          "input": "with open('example.txt', 'r') as file:\n    content = file.read()\nprint(content)",
+          "output": "example.txt 파일의 내용이 출력됩니다."
+        },
+        {
+          "input": "with open('example.txt', 'r') as file:\n    lines = file.readlines()\nfor line in lines:\n    print(line.strip())",
+          "output": "example.txt 파일의 각 줄이 한 줄씩 출력됩니다, 줄바꿈 문자는 제거됩니다."
+        }
+      ],
+      "constraints": null
+    },
+    {
+      "id": 9,
+      "type": "implementation_modify",
+      "content": "다음 코드는 파일을 생성하고, 사용자가 입력한 텍스트를 파일에 쓰는 프로그램입니다. 코드의 빈 부분을 채워 파일 작성을 완성해보세요.",
+      "choices": null,
+      "test_cases": [
+        {
+          "input": "filename = 'hello.txt'\ntext_to_write = '안녕하세요! 파일에 처음으로 글을 씁니다.'\n\n# 파일을 쓰기 모드로 열기\nwith open(filename, 'w') as file:\n    # 여기에 코드를 작성하세요\n\nprint(f'파일 {filename}이 생성되었고, 내용이 작성되었습니다.')",
+          "output": "파일 hello.txt이 생성되었고, 내용이 작성되었습니다."
+        },
+        {
+          "input": "filename = 'greeting.txt'\ntext_to_write = 'Hello, welcome to the file writing world!'\n\n# 파일을 쓰기 모드로 열기\nwith open(filename, 'w') as file:\n    # 여기에 코드를 작성하세요\n\nprint(f'파일 {filename}이 생성되었고, 내용이 작성되었습니다.')",
+          "output": "파일 greeting.txt이 생성되었고, 내용이 작성되었습니다."
+        }
+      ],
+      "constraints": null
+    },
+    {
+      "id": 10,
+      "type": "implementation_creative",
+      "content": "당신은 매직 펫 숍의 주인입니다. 고객들이 자신의 마법동물을 선택할 수 있도록, 마법동물 리스트를 화면에 표시하는 코드를 작성해보세요. 각 마법동물의 이름과 종류, 그리고 특별한 능력을 한 줄에 표시해야 합니다. 마법동물 리스트는 이미 주어져 있으며, 당신은 이를 화면에 출력하는 코드만 작성하면 됩니다.",
+      "choices": null,
+      "test_cases": [
+        {
+          "input": "display_magic_pet('불사조', '새', '불을 다룹니다')",
+          "output": "불사조 - 새: 불을 다룹니다\n"
+        },
+        {
+          "input": "display_magic_pet('유니콘', '말', '치유의 힘을 가졌습니다')",
+          "output": "유니콘 - 말: 치유의 힘을 가졌습니다\n"
+        }
+      ],
+      "constraints": null
+    }
+  ],
+  "metadata": {
+    "version": 1,
+    "created_at": "2025-01-26T06:31:17.317080"
+  }
+}

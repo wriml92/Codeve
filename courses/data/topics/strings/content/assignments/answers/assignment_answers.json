@@ -1,0 +1,103 @@
+{
+  "assignments": [
+    {
+      "id": 1,
+      "type": "concept_basic",
+      "correct_answer": "1",
+      "hint": "문자열은 글자나 기호들이 연속적으로 나열된 것을 말하며, 프로그래밍에서 텍스트 데이터를 표현하는 데 사용됩니다."
+    },
+    {
+      "id": 2,
+      "type": "concept_application",
+      "correct_answer": "2",
+      "hint": "문자열을 합치려면 두 문자열 사이에 '+' 연산자를 사용할 수 있고, 문자열 리터럴 사이에는 공백 없이 바로 붙여 쓰면 자동으로 합쳐집니다. 변수와 문자열을 연결할 때는 변수 이름을 따옴표로 묶지 않습니다."
+    },
+    {
+      "id": 3,
+      "type": "concept_analysis",
+      "correct_answer": "2",
+      "hint": "문자열을 '+' 연산자를 사용하여 연결할 수 있습니다. 또한, 공백과 특수 문자도 문자열에 포함될 수 있습니다."
+    },
+    {
+      "id": 4,
+      "type": "concept_debug",
+      "correct_answer": "4",
+      "hint": "코드 자체에 문법적인 오류는 없습니다. 하지만 사용자로부터 입력을 받는 경우, 예상치 못한 입력이 주어질 때 오류가 발생할 수 있습니다. 예를 들어, 사용자가 문자열 대신 다른 타입의 데이터(숫자 등)를 입력할 경우 프로그램이 예상한 대로 동작하지 않을 수 있습니다."
+    },
+    {
+      "id": 5,
+      "type": "metaphor",
+      "correct_answer": "2",
+      "hint": "문자열은 일련의 문자들이 연속적으로 나열된 것을 말합니다. 이를 물리적으로 나열된 물건들과 연관지어 생각해볼 수 있습니다."
+    },
+    {
+      "id": 6,
+      "type": "theory_concept",
+      "correct_answer": "1",
+      "hint": "이 코드는 문자열을 연결하는 과정을 나타냅니다. 프로그래밍에서 '+'는 두 문자열을 하나로 이어 붙이는 연산자로 사용됩니다. 이는 실생활에서 이름을 커피 주문과 연결하여 적는 행위와 유사합니다."
+    },
+    {
+      "id": 7,
+      "type": "concept_synthesis",
+      "correct_answer": "1",
+      "hint": "준비 중입니다."
+    },
+    {
+      "id": 8,
+      "type": "implementation_playground",
+      "test_cases": [
+        {
+          "input": "message = 'Hello, World!'\nprint(message)",
+          "output": "Hello, World!"
+        },
+        {
+          "input": "message = 'Goodbye, World!'\nprint(message)",
+          "output": "Goodbye, World!"
+        },
+        {
+          "input": "greeting = 'Hello, '\nname = 'Alice'\nmessage = greeting + name\nprint(message)",
+          "output": "Hello, Alice"
+        },
+        {
+          "input": "message = 'Hello, World!'\nprint(len(message))",
+          "output": "13"
+        }
+      ],
+      "hint": "첫 번째 줄의 'message' 변수는 문자열을 저장하는 데 사용됩니다. print() 함수는 'message' 변수에 저장된 문자열을 출력합니다. '+' 연산자는 두 문자열을 연결하여 새로운 문자열을 만들 때 사용합니다. len() 함수는 문자열의 길이, 즉 문자열에 포함된 문자의 개수를 반환합니다."
+    },
+    {
+      "id": 9,
+      "type": "implementation_modify",
+      "test_cases": [
+        {
+          "input": "name = input('당신의 이름을 입력해주세요: ')\ngreeting = '안녕하세요, ___! 오늘도 좋은 하루 보내세요.'\nprint(greeting.format(___))",
+          "output": "안녕하세요, 철수! 오늘도 좋은 하루 보내세요."
+        },
+        {
+          "input": "name = input('당신의 이름을 입력해주세요: ')\ngreeting = '반가워요, ___! 즐거운 시간 되세요.'\nprint(greeting.format(___))",
+          "output": "반가워요, 영희! 즐거운 시간 되세요."
+        }
+      ],
+      "hint": "빈칸에는 'name'이라는 변수를 넣어야 합니다. 파이썬에서 문자열의 포맷을 사용할 때는 중괄호 '{}'를 사용하고, .format() 메소드에 변수를 전달하여 해당 위치에 변수의 값을 삽입할 수 있습니다. 예를 들어, '안녕하세요, {}!'.format(name)은 name 변수의 값을 중괄호 자리에 넣어 문자열을 완성합니다."
+    },
+    {
+      "id": 10,
+      "type": "implementation_creative",
+      "test_cases": [
+        {
+          "input": "name = 'Alex'\nfavorite_number = 3\noutput = name + '*' * favorite_number",
+          "output": "Alex***"
+        },
+        {
+          "input": "name = 'Sam'\nfavorite_number = 5\noutput = name + '*' * favorite_number",
+          "output": "Sam*****"
+        }
+      ],
+      "hint": "다음 변수와 연산자를 사용하세요:\n- name: 사용자의 이름을 저장하는 변수입니다.\n- favorite_number: 사용자가 좋아하는 숫자를 저장하는 변수입니다.\n- * 연산자: 문자열을 반복하는 데 사용됩니다.\n코드 작성 순서:\n1. name 변수에 사용자의 이름을 할당하세요.\n2. favorite_number 변수에 사용자가 좋아하는 숫자를 할당하세요.\n3. name 변수와 '*' 문자열을 favorite_number 횟수만큼 반복하여 결합하세요."
+    }
+  ],
+  "metadata": {
+    "version": 1,
+    "created_at": "2025-01-26T06:18:37.321816"
+  }
+}
