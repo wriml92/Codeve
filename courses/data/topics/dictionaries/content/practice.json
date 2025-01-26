@@ -1,7 +1,0 @@
-{
-  "content": "\n<!-- \n메타데이터:\ncreated_at: 2025-01-24T05:46:58.910589\nversion: 1\nkey_concepts: \n-->\n\n<div class=\"practice-content space-y-8 p-6\">\n    # 출력 데이터\n```html\n<div class=\"space-y-8 p-6\">\n    <section class=\"bg-white rounded-lg shadow-md p-6 space-y-4\">\n        <h2 class=\"text-2xl font-bold text-gray-800\">Dictionaries</h2>\n        <p class=\"text-gray-600\">Dictionary는 Python에서 key-value 쌍을 저장하는 데 사용되는 데이터 유형입니다. 각 키는 유일해야 하며, 각 키는 해당 값을 참조합니다.</p>\n        <div class=\"bg-gray-50 p-4 rounded-md\">\n            <pre><code class=\"language-python\"># 예제 코드를 입력하세요\nprint(\"Hello, World! 👋\")</code></pre>\n        </div>\n    </section>\n    <section class=\"bg-white rounded-lg shadow-md p-6 space-y-4\">\n        <h2 class=\"text-2xl font-bold text-gray-800\">실습</h2>\n        <p class=\"text-gray-600\">아래의 단계를 따라 실습을 진행해보세요.</p>\n        <ol class=\"list-decimal list-inside\">\n            <li>VSCode에서 새 파일을 만들고 'dictionaries_practice.py'으로 저장하세요.</li>\n            <li>아래 예제 코드를 파일에 복사하세요.</li>\n            <li>터미널에서 'python dictionaries_practice.py' 명령으로 실행하세요.</li>\n        </ol>\n    </section>\n</div>\n```\n</div>\n<script src=\"https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/prism.min.js\"></script>\n<script src=\"https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-python.min.js\"></script>\n<link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism.min.css\">\n",
-  "metadata": {
-    "created_at": "2025-01-24T05:46:58.911961",
-    "version": 1
-  }
-}

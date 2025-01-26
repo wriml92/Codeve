@@ -9,6 +9,8 @@ from .serializers import (CourseSerializer, LessonSerializer, AssignmentSerializ
                           PracticeExerciseSerializer, UserCourseSerializer)
 from django.http import JsonResponse
 import json
+import os
+import tempfile
 from typing import Dict, Any
 from pathlib import Path
 from django.views.decorators.http import require_POST, require_http_methods
@@ -19,11 +21,14 @@ from django.views.decorators.csrf import csrf_exempt
 import re
 from asgiref.sync import sync_to_async
 from .scripts.assignment_tools import AssignmentDataManager, CodeSubmissionAnalyzer, CodeAnalysisResult
+from .llm.practice_llm import PracticeAnalysisAgent
+from datetime import datetime
 
 
 # 공통으로 사용할 토픽 목록을 모듈 레벨에 정의
 TOPICS = [
-    {'id': 'input_output', 'name': '입출력'},
+    {'id': 'input_output', 'name': '입력과 출력'},
+    {'id': 'print', 'name': 'print() 함수'},
     {'id': 'variables', 'name': '변수'},
     {'id': 'strings', 'name': '문자열'},
     {'id': 'lists', 'name': '리스트'},
@@ -206,14 +211,27 @@ def complete_topic(request, topic_id):
 
 
 def load_topic_content(topic_id: str, content_type: str) -> dict:
-    """토픽의 현재 버전 콘텐츠 로드"""
+    """토픽의 콘텐츠 로드"""
     try:
         # content 디렉토리에서 파일을 찾도록 수정
-        current_file = Path(__file__).parent / 'data' / 'topics' / topic_id / 'content' / f'{content_type}.json'
+        content_file = Path(__file__).parent / 'data' / 'topics' / topic_id / 'content' / f'{content_type}.json'
         
-        if current_file.exists():
-            with open(current_file, 'r', encoding='utf-8') as f:
+        if content_file.exists():
+            with open(content_file, 'r', encoding='utf-8') as f:
                 return json.load(f)
+        
+        # 파일이 없을 경우 기본 템플릿 반환
+        if content_type == 'assignment':
+            return {
+                "assignments": [
+                    {
+                        "id": 1,
+                        "type": "concept",
+                        "content": "문제를 준비 중입니다.",
+                        "choices": ["준비 중", "준비 중", "준비 중", "준비 중"]
+                    }
+                ]
+            }
         return None
     except Exception as e:
         print(f"콘텐츠 로드 중 오류 발생: {str(e)}")
@@ -231,7 +249,7 @@ def topic_view(request, topic_id):
 
 
 @cache_page(60 * 15)  # 15분 캐싱
-def theory_lesson_view(request, topic_id=None):
+def theory_lesson_detail(request, topic_id=None):
     """이론 학습 뷰"""
     if topic_id is None:
         topic_id = TOPICS[0]['id']
@@ -239,33 +257,38 @@ def theory_lesson_view(request, topic_id=None):
     topic_name = next((t['name'] for t in TOPICS if t['id'] == topic_id), '')
     
     try:
-        # HTML 파일 직접 읽기
-        theory_file = Path(__file__).parent / 'data' / 'topics' / topic_id / 'content' / 'theory.html'
-        if theory_file.exists():
-            with open(theory_file, 'r', encoding='utf-8') as f:
-                content_html = f.read()
-        else:
-            content_html = '<p>이론 내용을 찾을 수 없습니다.</p>'
+        # 새로운 경로 구조에 맞게 수정
+        base_dir = Path(__file__).parent
+        theory_file = base_dir / 'data' / 'topics' / topic_id / 'content' / 'theory' / 'theory.html'
+        
+        with open(theory_file, 'r', encoding='utf-8') as f:
+            content = f.read()
             
+        context = {
+            'topics': TOPICS,
+            'topic_id': topic_id,
+            'topic_name': topic_name,
+            'content': mark_safe(content)
+        }
+        return render(request, 'courses/theory-lesson.html', context)
+        
+    except FileNotFoundError:
+        context = {
+            'topics': TOPICS,
+            'topic_id': topic_id,
+            'topic_name': topic_name,
+            'content': mark_safe('<div class="alert alert-warning">이론 내용을 준비 중입니다.</div>')
+        }
+        return render(request, 'courses/theory-lesson.html', context)
     except Exception as e:
-        print(f"이론 내용 로드 중 오류 발생: {str(e)}")
-        content_html = '<p>이론 내용을 불러오는 중 오류가 발생했습니다.</p>'
-    
-    # 이전/다음 토픽 찾기
-    current_index = next((i for i, topic in enumerate(TOPICS) if topic['id'] == topic_id), -1)
-    prev_topic = TOPICS[current_index - 1] if current_index > 0 else None
-    next_topic = TOPICS[current_index + 1] if current_index < len(TOPICS) - 1 else None
-    
-    context = {
-        'topics': TOPICS,
-        'topic_id': topic_id,
-        'topic_name': topic_name,
-        'content': mark_safe(content_html),
-        'prev_topic': prev_topic,
-        'next_topic': next_topic
-    }
-    
-    return render(request, 'courses/theory-lesson.html', context)
+        print(f"Error loading theory content: {str(e)}")
+        context = {
+            'topics': TOPICS,
+            'topic_id': topic_id,
+            'topic_name': topic_name,
+            'content': mark_safe('<div class="alert alert-danger">이론 내용을 불러오는데 실패했습니다.</div>')
+        }
+        return render(request, 'courses/theory-lesson.html', context)
 
 
 def practice_view(request, topic_id=None):
@@ -275,39 +298,50 @@ def practice_view(request, topic_id=None):
         
     topic_name = next((t['name'] for t in TOPICS if t['id'] == topic_id), '')
     
-    # HTML 파일 직접 읽기
     try:
-        practice_file = Path(__file__).parent / 'data' / 'topics' / topic_id / 'content' / 'practice.html'
-        if practice_file.exists():
-            with open(practice_file, 'r', encoding='utf-8') as f:
-                content_html = f.read()
-                
-                # 메타데이터와 불필요한 마크업 제거
-                # HTML 주석 제거
-                content_html = re.sub(r'<!--[\s\S]*?-->', '', content_html)
-                # 출력 데이터 마크업 제거
-                content_html = re.sub(r'#\s*출력\s*데이터\s*```html', '', content_html)
-                # 모든 백틱 제거
-                content_html = re.sub(r'```(?:html)?\s*', '', content_html)
-                # 실제 콘텐츠 부분만 추출
-                if '<div class="practice-content' in content_html:
-                    content_html = re.search(r'(<div class="practice-content.*?</div>)\s*$', content_html, re.DOTALL)
-                    if content_html:
-                        content_html = content_html.group(1)
-        else:
-            content_html = '<p>실습 내용을 찾을 수 없습니다.</p>'
+        # 새로운 경로 구조에 맞게 수정
+        base_dir = Path(__file__).parent
+        practice_file = base_dir / 'data' / 'topics' / topic_id / 'content' / 'practice' / 'practice.html'
+        
+        with open(practice_file, 'r', encoding='utf-8') as f:
+            content = f.read()
+            
+            # 메타데이터와 불필요한 마크업 제거
+            content = re.sub(r'<!--[\s\S]*?-->', '', content)  # HTML 주석 제거
+            content = re.sub(r'#\s*출력\s*데이터\s*```html', '', content)  # 출력 데이터 마크업 제거
+            content = re.sub(r'```(?:html)?\s*', '', content)  # 모든 백틱 제거
+            
+            # 실제 콘텐츠 부분만 추출
+            if '<div class="practice-content' in content:
+                content_match = re.search(r'(<div class="practice-content.*?</div>)\s*$', content, re.DOTALL)
+                if content_match:
+                    content = content_match.group(1)
+                    
+        context = {
+            'topics': TOPICS,
+            'topic_id': topic_id,
+            'topic_name': topic_name,
+            'practice_content': mark_safe(content)
+        }
+        return render(request, 'courses/practice.html', context)
+        
+    except FileNotFoundError:
+        context = {
+            'topics': TOPICS,
+            'topic_id': topic_id,
+            'topic_name': topic_name,
+            'practice_content': mark_safe('<div class="alert alert-warning">실습 내용을 준비 중입니다.</div>')
+        }
+        return render(request, 'courses/practice.html', context)
     except Exception as e:
-        print(f"실습 내용 로드 중 오류 발생: {str(e)}")
-        content_html = '<p>실습 내용을 불러오는 중 오류가 발생했습니다.</p>'
-    
-    context = {
-        'topics': TOPICS,
-        'topic_id': topic_id,
-        'topic_name': topic_name,
-        'practice_content': mark_safe(content_html)
-    }
-    
-    return render(request, 'courses/practice.html', context)
+        print(f"Error loading practice content: {str(e)}")
+        context = {
+            'topics': TOPICS,
+            'topic_id': topic_id,
+            'topic_name': topic_name,
+            'practice_content': mark_safe('<div class="alert alert-danger">실습 내용을 불러오는데 실패했습니다.</div>')
+        }
+        return render(request, 'courses/practice.html', context)
 
 
 def reflection_view(request):
@@ -388,7 +422,7 @@ def load_assignment_data(topic_id: str) -> dict:
     """토픽별 과제 데이터 로드"""
     try:
         base_dir = Path(__file__).parent
-        assignment_file = base_dir / 'data' / 'topics' / topic_id / 'content' / 'assignment.json'
+        assignment_file = base_dir / 'data' / 'topics' / topic_id / 'content' / 'assignments' / 'data' / 'assignment.json'
         
         with open(assignment_file, 'r', encoding='utf-8') as f:
             return json.load(f)
@@ -398,19 +432,9 @@ def load_assignment_data(topic_id: str) -> dict:
             "assignments": [
                 {
                     "id": 1,
-                    "type": "concept",
+                    "type": "concept_basic",
                     "content": "문제를 준비 중입니다.",
                     "choices": ["준비 중", "준비 중", "준비 중", "준비 중"]
-                },
-                {
-                    "id": 2,
-                    "type": "analysis",
-                    "content": "문제를 준비 중입니다."
-                },
-                {
-                    "id": 3,
-                    "type": "implementation",
-                    "content": "문제를 준비 중입니다."
                 }
             ]
         }
@@ -424,7 +448,7 @@ def assignment_view(request, topic_id=None):
     
     try:
         # assignment.json 파일 읽기
-        assignment_data = load_topic_content(topic_id, 'assignment')
+        assignment_data = load_assignment_data(topic_id)
         print(f"로드된 과제 데이터: {assignment_data}")  # 디버깅용 출력
         
         if assignment_data is None:  # 파일이 없거나 로드 실패
@@ -442,6 +466,11 @@ def assignment_view(request, topic_id=None):
                 'topic_name': topic_name,
                 'assignments': assignment_data.get('assignments', [])
             }
+            
+        # 렌더링된 HTML 확인
+        from django.template.loader import render_to_string
+        rendered_html = render_to_string('courses/assignment.html', context, request)
+        print(f"렌더링된 HTML (일부): {rendered_html[:1000]}")  # 처음 1000자만 출력
         
         return render(request, 'courses/assignment.html', context)
         
@@ -465,67 +494,86 @@ def submit_assignment(request, topic_id):
         assignment_id = data.get('assignment_id')
         answer_type = data.get('type')
         answer = data.get('answer')
+        user_id = str(request.user.id)  # 사용자 ID 가져오기
 
-        # 과제 데이터 로드
-        current_file = Path(__file__).parent / 'data' / 'topics' / topic_id / 'content' / 'assignment.json'
-        with open(current_file, 'r', encoding='utf-8') as f:
-            assignments = json.load(f)['assignments']
+        print(f"제출된 데이터: type={answer_type}, id={assignment_id}")  # 디버깅용
 
-        # 해당 과제 찾기
-        assignment = next((a for a in assignments if str(a['id']) == str(assignment_id)), None)
-        if not assignment:
+        # 파일 경로 설정
+        base_path = Path(__file__).parent
+        content_file = base_path / 'data' / 'topics' / topic_id / 'content' / 'assignments' / 'data' / 'assignment.json'
+        answer_file = base_path / 'data' / 'topics' / topic_id / 'content' / 'assignments' / 'answers' / 'assignment_answers.json'
+        attempts_file = base_path / 'agents' / 'assignment_attempts.json'
+
+        # 데이터 로드
+        with open(content_file, 'r', encoding='utf-8') as f:
+            assignments_data = json.load(f)
+        with open(answer_file, 'r', encoding='utf-8') as f:
+            answers_data = json.load(f)
+        
+        # 시도 횟수 데이터 로드
+        attempts = {}
+        if attempts_file.exists():
+            with open(attempts_file, 'r') as f:
+                attempts = json.load(f)
+        
+        attempt_key = f"{user_id}_{topic_id}_{assignment_id}"
+        user_attempts = attempts.get(attempt_key, {'attempts': 0})
+        current_attempt = user_attempts.get('attempts', 0) + 1
+
+        # 해당 과제와 정답 찾기
+        assignment = next((a for a in assignments_data['assignments'] if str(a['id']) == str(assignment_id)), None)
+        answer_data = next((a for a in answers_data['assignments'] if str(a['id']) == str(assignment_id)), None)
+        
+        if not assignment or not answer_data:
             return JsonResponse({'error': '과제를 찾을 수 없습니다.'}, status=404)
 
         # 과제 유형에 따른 처리
-        if answer_type in ['concept', 'theory_concept', 'metaphor']:
+        if answer_type in ['concept_basic', 'concept_application', 'concept_analysis', 'concept_debug', 'metaphor', 'theory_concept', 'concept_synthesis']:
             # 객관식 문제 처리
-            is_correct = str(answer) == str(assignment['correct_answer'])
-            feedback = assignment['explanation'] if is_correct else assignment['hint']
+            is_correct = str(answer) == str(answer_data['correct_answer'])
+            
+            if is_correct:
+                feedback = "정답입니다! 잘 이해하고 계시네요."
+            else:
+                # 두 번째 시도부터 힌트 제공
+                feedback = answer_data.get('hint', '다시 한번 생각해보세요.') if current_attempt >= 2 else "다시 한번 생각해보세요."
+                
+                # 시도 횟수 업데이트
+                user_attempts['attempts'] = current_attempt
+                user_attempts['last_attempt'] = datetime.now().isoformat()
+                attempts[attempt_key] = user_attempts
+                
+                # 시도 횟수 저장
+                with open(attempts_file, 'w') as f:
+                    json.dump(attempts, f, indent=2)
             
             return JsonResponse({
                 'correct': is_correct,
                 'feedback': feedback
             })
             
-        elif answer_type in ['analysis', 'implementation']:
-            # 코드 분석 및 구현 문제 처리
-            analyzer = CodeSubmissionAnalyzer()
-            
-            if answer_type == 'analysis':
-                # 분석 문제 평가
-                result = analyzer.analyze_code_analysis(
-                    submitted_analysis=answer,
-                    code_to_analyze=assignment.get('code_to_analyze', ''),
-                    points_to_consider=assignment.get('points_to_consider', []),
-                    expected_points=assignment.get('expected_points', [])
-                )
-            else:
-                # 구현 문제 평가
-                result = analyzer.analyze_code_implementation(
-                    submitted_code=answer,
-                    test_cases=assignment.get('test_cases', []),
-                    constraints=assignment.get('constraints', [])
-                )
-            
+        elif answer_type in ['implementation_playground', 'implementation_modify', 'implementation_creative']:
+            # 구현 문제는 현재 지원하지 않음
             return JsonResponse({
-                'correct': result.is_correct,
-                'feedback': result.feedback,
-                'suggestions': result.suggestions
-            })
+                'error': '구현 문제는 현재 준비 중입니다.'
+            }, status=400)
             
         else:
-            return JsonResponse({'error': '지원하지 않는 과제 유형입니다.'}, status=400)
+            return JsonResponse({
+                'error': f'지원하지 않는 과제 유형입니다: {answer_type}'
+            }, status=400)
 
     except json.JSONDecodeError:
         return JsonResponse({'error': '잘못된 요청 형식입니다.'}, status=400)
     except Exception as e:
+        print(f"과제 제출 처리 중 오류 발생: {str(e)}")  # 디버깅용
         return JsonResponse({'error': f'서버 오류가 발생했습니다: {str(e)}'}, status=500)
 
 
 def save_assignment_data(topic_id: str, data: Dict[str, Any]) -> None:
     """과제 데이터 저장"""
     base_dir = Path(__file__).parent
-    assignment_file = base_dir / 'data' / 'topics' / topic_id / 'content' / 'assignment.json'
+    assignment_file = base_dir / 'data' / 'topics' / topic_id / 'content' / 'assignments' / 'data' / 'assignment.json'
     
     # 디렉토리가 없으면 생성
     assignment_file.parent.mkdir(parents=True, exist_ok=True)

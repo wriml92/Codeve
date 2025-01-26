@@ -1,0 +1,99 @@
+{
+  "assignments": [
+    {
+      "id": 1,
+      "type": "concept_basic",
+      "correct_answer": "1",
+      "hint": "리스트는 여러 값들을 하나의 변수에 저장할 수 있게 해주며, 이 값들의 순서가 있고 각 요소를 변경할 수 있습니다."
+    },
+    {
+      "id": 2,
+      "type": "concept_application",
+      "correct_answer": "3",
+      "hint": "리스트는 순서를 유지하면서 여러 값을 저장할 수 있는 자료 구조입니다. 각 요소에는 인덱스를 통해 접근할 수 있습니다."
+    },
+    {
+      "id": 3,
+      "type": "concept_analysis",
+      "correct_answer": "3",
+      "hint": "리스트의 인덱싱은 0부터 시작합니다. 따라서 fruits[1]은 두 번째 요소를 의미합니다."
+    },
+    {
+      "id": 4,
+      "type": "concept_debug",
+      "correct_answer": "4",
+      "hint": "리스트의 인덱싱은 0부터 시작하며, 리스트의 크기를 넘어서는 인덱스에 접근하려고 할 때 IndexError가 발생합니다. 이 리스트는 총 3개의 원소를 가지고 있으므로 유효한 인덱스는 0, 1, 그리고 2입니다."
+    },
+    {
+      "id": 5,
+      "type": "metaphor",
+      "correct_answer": "1",
+      "hint": "리스트는 여러 요소들을 순서대로 저장하는 구조를 가지고 있습니다."
+    },
+    {
+      "id": 6,
+      "type": "theory_concept",
+      "correct_answer": "2",
+      "hint": "이 코드에서는 'books'라는 리스트에 새로운 책의 제목을 'append' 메소드를 사용하여 추가하고 있습니다."
+    },
+    {
+      "id": 7,
+      "type": "concept_synthesis",
+      "correct_answer": "1",
+      "hint": "준비 중입니다."
+    },
+    {
+      "id": 8,
+      "type": "implementation_playground",
+      "test_cases": [
+        {
+          "input": "animals = ['dog', 'cat', 'bird']\nprint(animals)",
+          "output": "['dog', 'cat', 'bird']"
+        },
+        {
+          "input": "animals = ['dog', 'cat', 'bird']\nanimals.append('fish')\nprint(animals)",
+          "output": "['dog', 'cat', 'bird', 'fish']"
+        },
+        {
+          "input": "animals = ['dog', 'cat', 'bird', 'fish']\nanimals.remove('cat')\nprint(animals)",
+          "output": "['dog', 'bird', 'fish']"
+        }
+      ],
+      "hint": "리스트는 여러 값을 순서대로 저장할 수 있는 자료구조입니다. 'append' 함수는 리스트의 끝에 새로운 요소를 추가합니다. 'remove' 함수는 리스트에서 첫 번째로 나오는 특정 값을 제거합니다. 코드를 수정할 때는 리스트에 새로운 요소를 추가하거나 제거하는 부분만 변경하세요."
+    },
+    {
+      "id": 9,
+      "type": "implementation_modify",
+      "test_cases": [
+        {
+          "input": "friends = ['Alice', 'Bob', 'Charlie', 'Diana']\nsearch_name = 'Charlie'\n\n# 여기에 코드를 작성하세요\n________ = friends.________(search_name)\n\nprint(f'{search_name}은(는) 리스트의 {index + 1}번째에 있습니다.')",
+          "output": "Charlie은(는) 리스트의 3번째에 있습니다."
+        },
+        {
+          "input": "friends = ['Eva', 'Frank', 'Grace', 'Henry']\nsearch_name = 'Eva'\n\n# 여기에 코드를 작성하세요\n________ = friends.________(search_name)\n\nprint(f'{search_name}은(는) 리스트의 {index + 1}번째에 있습니다.')",
+          "output": "Eva은(는) 리스트의 1번째에 있습니다."
+        }
+      ],
+      "hint": "빈 칸에는 리스트의 특정 요소의 인덱스를 찾는 리스트 메서드와 해당 메서드에 전달할 인자가 들어갑니다. 예를 들어, 'my_list'라는 리스트에서 'item'이라는 요소의 위치를 찾으려면 'index = my_list.index(item)'와 같이 사용할 수 있습니다."
+    },
+    {
+      "id": 10,
+      "type": "implementation_creative",
+      "test_cases": [
+        {
+          "input": "plant.append('빨강'); plant.append('파랑'); plant.append('노랑')",
+          "output": "['뿌리', '줄기', '잎', '빨강', '파랑', '노랑']"
+        },
+        {
+          "input": "plant += ['빨강', '파랑', '노랑']",
+          "output": "['뿌리', '줄기', '잎', '빨강', '파랑', '노랑']"
+        }
+      ],
+      "hint": "힌트: 사용할 수 있는 변수는 'plant'이며, 이는 초기 식물의 부분을 포함하는 리스트입니다. 리스트에 새로운 요소를 추가하기 위해 '.append()' 메서드를 사용할 수 있습니다. 'append' 메서드는 리스트의 끝에 새로운 요소를 추가합니다. 코드 작성 순서는 다음과 같습니다. 1. 'plant' 리스트를 확인하세요. 2. 세 가지 색깔의 꽃잎을 리스트에 추가하세요. 각각의 꽃잎을 추가하기 위해서는 '.append()' 메서드를 세 번 호출하거나, 리스트 연결을 통해 한 번에 추가할 수 있습니다."
+    }
+  ],
+  "metadata": {
+    "version": 1,
+    "created_at": "2025-01-26T06:19:50.040850"
+  }
+}

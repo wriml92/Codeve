@@ -1,135 +1,115 @@
-"""토픽별 과제 생성 스크립트"""
+"""
+과제 생성 스크립트
 
+특정 토픽의 과제를 생성하는 스크립트입니다.
+이론과 실습 내용을 참고하여 과제를 생성합니다.
+
+유효한 토픽 목록(VALID_TOPICS)은 courses/config/constants.py의 TOPICS 리스트를 참조합니다:
+- input_output: 입출력
+- print: print() 함수
+- variables: 변수
+- strings: 문자열
+- lists: 리스트
+- tuples: 튜플
+- dictionaries: 딕셔너리
+- conditionals: 조건문
+- loops: 반복문
+- functions: 함수
+- classes: 클래스
+- modules: 모듈
+- exceptions: 예외처리
+- files: 파일 입출력
+
+루트 디렉토리에서 실행할때는 courses/scripts/generate_assignments.py 로 실행해야 합니다.
+
+사용법:
+1. 특정 토픽 과제 생성(예시:변수):
+   python generate_assignments.py variables
+
+2. 여러 토픽 과제 생성:
+   python generate_assignments.py variables strings lists
+
+3. 모든 토픽 과제 생성:
+   python generate_assignments.py all
+
+4. 특정 과제 유형만 생성:
+   python generate_assignments.py variables --types concept_basic concept_application
+"""
+
+import os
+import sys
 from pathlib import Path
-import json
+import argparse
+
+# 프로젝트 루트 디렉토리를 Python 경로에 추가
+project_root = str(Path(__file__).parent.parent.parent)
+sys.path.insert(0, project_root)
+
+# Django 설정 초기화 (이론 내용 참조를 위해 필요)
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Codeve.settings')
+import django
+django.setup()
+
 import asyncio
-from langchain_openai import ChatOpenAI
-import logging
-from datetime import datetime
+from dotenv import load_dotenv
+from courses.llm.assignment_llm import AssignmentLLM
+from courses.config.constants import TOPICS
 
-# 로깅 설정
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+# 유효한 토픽 목록
+VALID_TOPICS = [topic['id'] for topic in TOPICS]
 
-def setup_logging():
-    """로그 파일 설정"""
-    log_dir = Path(__file__).parent / 'logs'
-    log_dir.mkdir(exist_ok=True)
+async def generate_assignment(topics: list[str], assignment_types: list[str] = None):
+    """과제 생성"""
+    # 모든 토픽이 유효한지 확인
+    invalid_topics = [topic for topic in topics if topic != 'all' and topic not in VALID_TOPICS]
+    if invalid_topics:
+        print(f"❌ 잘못된 토픽 ID: {', '.join(invalid_topics)}")
+        print(f"사용 가능한 토픽: {', '.join(VALID_TOPICS)}")
+        return
+
+    # .env 파일에서 API 키 로드
+    load_dotenv()
+    api_key = os.getenv('OPENAI_API_KEY')
+    if not api_key:
+        print("❌ OPENAI_API_KEY가 설정되지 않았습니다.")
+        return
+
+    # 생성할 토픽 목록 결정
+    topics_to_generate = VALID_TOPICS if 'all' in topics else topics
     
-    log_file = log_dir / f'assignment_generation_{datetime.now().strftime("%Y%m%d_%H%M%S")}.log'
-    file_handler = logging.FileHandler(log_file, encoding='utf-8')
-    file_handler.setLevel(logging.DEBUG)
-    
-    formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
-    file_handler.setFormatter(formatter)
-    logger.addHandler(file_handler)
-
-async def generate_assignments(topic_id: str, topic_name: str) -> dict:
-    """특정 토픽의 과제 생성"""
-    llm = ChatOpenAI(model_name="gpt-4", temperature=0.7)
-    
-    prompt = f"""당신은 Python 교육 전문가입니다. {topic_name} 주제의 과제를 생성해주세요.
-
-다음 형식의 JSON으로 작성해주세요:
-{{
-    "assignments": [
-        {{
-            "id": 1,
-            "type": "concept",
-            "question": "개념 이해를 확인하는 문제",
-            "choices": ["보기1", "보기2", "보기3", "보기4"],
-            "correct_answer": 정답번호,
-            "explanation": "정답 설명",
-            "hint": "오답시 힌트"
-        }},
-        {{
-            "id": 2,
-            "type": "implementation",
-            "question": "실제 구현 문제",
-            "constraints": ["제약사항1", "제약사항2"],
-            "test_cases": [
-                {{"input": "입력값", "output": "기대값"}},
-                {{"input": "입력값2", "output": "기대값2"}}
-            ],
-            "sample_solution": "예시 답안 코드",
-            "hints": ["힌트1", "힌트2"]
-        }}
-    ]
-}}
-
-주의사항:
-1. 실제 현업에서 마주할 수 있는 상황을 반영해주세요
-2. 명확하고 이해하기 쉬운 설명을 제공해주세요
-3. 단계적으로 접근할 수 있는 힌트를 제공해주세요
-4. 테스트 케이스는 기본/경계/예외 상황을 포함해주세요
-5. 반드시 유효한 JSON 형식으로 작성해주세요"""
-
-    try:
-        response = await llm.ainvoke(prompt)
-        logger.debug(f"Raw response for {topic_id}:\n{response.content}")
-        
-        # JSON 파싱 시도
+    for topic in topics_to_generate:
+        print(f"\n=== {topic} 과제 생성 시작 ===")
         try:
-            return json.loads(response.content)
-        except json.JSONDecodeError as e:
-            logger.error(f"JSON 파싱 오류 ({topic_id}): {str(e)}\n응답 내용:\n{response.content}")
-            raise
+            # 현재 작업 디렉토리 기준으로 content_dir 설정
+            if os.path.basename(os.getcwd()) == 'courses':
+                base_dir = Path(os.getcwd()).parent
+            else:
+                base_dir = Path(os.getcwd())
             
-    except Exception as e:
-        logger.error(f"과제 생성 중 오류 발생 ({topic_id}): {str(e)}")
-        raise
-
-async def main():
-    setup_logging()
-    logger.info("과제 생성 시작")
-    
-    # 진행 상황 파일 경로
-    progress_file = Path(__file__).parent / 'generation_progress.json'
-    
-    # 이전 진행 상황 로드
-    completed_topics = set()
-    if progress_file.exists():
-        with open(progress_file, 'r', encoding='utf-8') as f:
-            completed_topics = set(json.load(f))
-    
-    # course_list.json에서 토픽 목록 로드
-    course_list_path = Path(__file__).parent.parent / 'data' / 'course_list.json'
-    with open(course_list_path, 'r', encoding='utf-8') as f:
-        topics = json.load(f)['python']['topics']
-    
-    for topic in topics:
-        if topic['id'] in completed_topics:
-            logger.info(f"Skipping {topic['name']} (already completed)")
-            continue
+            content_dir = base_dir / 'courses' / 'data' / 'topics' / topic / 'content'
+            content_dir.mkdir(parents=True, exist_ok=True)
             
-        try:
-            logger.info(f"Generating assignments for {topic['name']}...")
+            llm = AssignmentLLM(api_key)
+            if assignment_types:
+                llm.assignment_types = assignment_types
+            await llm.generate(topic)
+            print(f"✅ {topic} 과제 생성 완료")
             
-            # 과제 생성
-            assignments = await generate_assignments(
-                topic_id=topic['id'],
-                topic_name=topic['name']
-            )
-            
-            # 과제 저장
-            output_dir = Path(__file__).parent.parent / 'data' / 'topics' / topic['id'] / 'content'
-            output_dir.mkdir(parents=True, exist_ok=True)
-            
-            with open(output_dir / 'assignment.json', 'w', encoding='utf-8') as f:
-                json.dump(assignments, f, ensure_ascii=False, indent=2)
-            
-            # 진행 상황 업데이트
-            completed_topics.add(topic['id'])
-            with open(progress_file, 'w', encoding='utf-8') as f:
-                json.dump(list(completed_topics), f)
+            # 파일 생성 확인
+            for file_name in ['assignment.html', 'assignment.json', 'assignment_answers.json']:
+                file_path = content_dir / file_name
+                if file_path.exists():
+                    print(f"- {file_name} 생성됨 ({file_path.stat().st_size:,} bytes)")
                 
-            logger.info(f"✓ Generated {len(assignments['assignments'])} assignments for {topic['name']}")
-            print(f"✓ Generated {len(assignments['assignments'])} assignments for {topic['name']}")
-            
         except Exception as e:
-            logger.error(f"Failed to generate assignments for {topic['name']}: {str(e)}")
-            print(f"❌ Failed to generate assignments for {topic['name']}")
-            continue
+            print(f"❌ {topic} 과제 생성 중 오류 발생: {str(e)}")
+            import traceback
+            traceback.print_exc()
 
 if __name__ == '__main__':
-    asyncio.run(main()) 
+    parser = argparse.ArgumentParser(description='과제 생성 스크립트')
+    parser.add_argument('topics', nargs='+', help='생성할 토픽 ID 목록 또는 "all"')
+    parser.add_argument('--types', nargs='+', help='생성할 과제 유형 목록')
+    args = parser.parse_args()
+    
+    asyncio.run(generate_assignment(args.topics, args.types)) 

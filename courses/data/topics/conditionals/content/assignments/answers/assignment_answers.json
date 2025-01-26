@@ -1,0 +1,103 @@
+{
+  "assignments": [
+    {
+      "id": 1,
+      "type": "concept_basic",
+      "correct_answer": "2",
+      "hint": "조건문은 프로그램이 어떤 조건을 충족할 때만 특정 코드를 실행하도록 할 때 사용됩니다."
+    },
+    {
+      "id": 2,
+      "type": "concept_application",
+      "correct_answer": "1",
+      "hint": "조건문은 특정 조건이 참(True)일 때만 실행되는 코드를 작성할 때 사용합니다. 이 경우, '만약 총 구매 금액이 100달러를 넘으면'이라는 조건을 코드로 표현해야 합니다."
+    },
+    {
+      "id": 3,
+      "type": "concept_analysis",
+      "correct_answer": "1",
+      "hint": "이 조건문은 temperature 변수가 25보다 클 때 메시지를 출력합니다."
+    },
+    {
+      "id": 4,
+      "type": "concept_debug",
+      "correct_answer": "1",
+      "hint": "준비 중입니다."
+    },
+    {
+      "id": 5,
+      "type": "metaphor",
+      "correct_answer": "2",
+      "hint": "조건문은 '만약... 그렇다면...'의 형태로 특정 조건에 따라 다른 행동을 하도록 지시합니다."
+    },
+    {
+      "id": 6,
+      "type": "theory_concept",
+      "correct_answer": "2",
+      "hint": "코드에서는 커피의 가격을 확인하여 5000원 이상일 경우에만 특정 조건을 충족하는 '고급 커피' 스티커를 할당하고 있습니다. 5000원 미만이면 다른 조건의 '일반 커피' 스티커를 할당합니다."
+    },
+    {
+      "id": 7,
+      "type": "concept_synthesis",
+      "correct_answer": "1",
+      "hint": "준비 중입니다."
+    },
+    {
+      "id": 8,
+      "type": "implementation_playground",
+      "test_cases": [
+        {
+          "input": "age = 18\nif age >= 18:\n    print('You are an adult.')\nelse:\n    print('You are a minor.')",
+          "output": "You are an adult."
+        },
+        {
+          "input": "age = 16\nif age >= 18:\n    print('You are an adult.')\nelse:\n    print('You are a minor.')",
+          "output": "You are a minor."
+        },
+        {
+          "input": "age = 18\nif age > 18:\n    print('You are an adult.')\nelse:\n    print('You are a teenager.')",
+          "output": "You are a teenager."
+        },
+        {
+          "input": "age = 20\nif age > 18:\n    print('You are an adult.')\nelse:\n    print('You are a teenager.')",
+          "output": "You are an adult."
+        }
+      ],
+      "hint": "이 코드에서 'age' 변수는 사용자의 나이를 나타냅니다. 'if' 문은 주어진 조건이 참(True)일 때 코드 블록을 실행합니다. 'else' 문은 'if' 문의 조건이 거짓(False)일 때 실행됩니다. 'age'의 값을 변경하여 조건문이 어떻게 다른 결과를 나타내는지 확인해보세요. '>= 18'은 '18 이상'을 의미하며, '> 18'은 '18 초과'를 의미합니다."
+    },
+    {
+      "id": 9,
+      "type": "implementation_modify",
+      "test_cases": [
+        {
+          "input": "age = 20\nif ________:\n    status = '성년'\nelse:\n    status = '미성년'\nprint(status)",
+          "output": "성년"
+        },
+        {
+          "input": "age = 17\nif ________:\n    status = '성년'\nelse:\n    status = '미성년'\nprint(status)",
+          "output": "미성년"
+        }
+      ],
+      "hint": "if 문의 빈 부분에는 나이가 19세 이상일 조건을 검사하는 코드가 들어가야 합니다. 예를 들어, 'age >= 19'와 같은 형태로 작성할 수 있습니다."
+    },
+    {
+      "id": 10,
+      "type": "implementation_creative",
+      "test_cases": [
+        {
+          "input": "if door_handle == 'gold':\n    open_door('treasure')\nelse:\n    open_door('monster')",
+          "output": "보물 방으로 가는 문이 열립니다."
+        },
+        {
+          "input": "if door_handle != 'gold':\n    open_door('monster')\nelse:\n    open_door('treasure')",
+          "output": "보물 방으로 가는 문이 열립니다."
+        }
+      ],
+      "hint": "힌트: 이 문제에서 당신은 다음 변수와 함수를 사용할 수 있습니다.\n- 변수 'door_handle': 문자열 타입으로, 문의 손잡이 색깔을 나타냅니다. 'gold' 또는 'silver' 값 중 하나를 가질 수 있습니다.\n- 함수 'open_door(room_type)': 'treasure' 또는 'monster' 문자열 인자를 받아 해당 방을 열게 하는 함수입니다.\n- 코드를 작성할 때, 먼저 'door_handle' 변수의 값이 'gold'인지 확인하는 조건문을 작성하고, 그 결과에 따라 'open_door' 함수를 호출하면 됩니다. 'gold'일 경우 'treasure'를 인자로 주고, 그렇지 않을 경우 'monster'를 인자로 주어야 합니다."
+    }
+  ],
+  "metadata": {
+    "version": 1,
+    "created_at": "2025-01-26T06:23:38.628861"
+  }
+}

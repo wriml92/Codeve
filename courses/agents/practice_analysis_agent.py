@@ -204,7 +204,7 @@ class PracticeAnalysisAgent(BaseAgent):
 
     def _load_theory_content(self, topic_id: str) -> str:
         """이론 내용 로드"""
-        theory_file = self.data_dir / topic_id / 'content' / 'theory.html'
+        theory_file = self.data_dir / topic_id / 'content' / 'theory' / 'theory.html'
         if theory_file.exists():
             with open(theory_file, 'r', encoding='utf-8') as f:
                 soup = BeautifulSoup(f, 'html.parser')
@@ -213,7 +213,7 @@ class PracticeAnalysisAgent(BaseAgent):
 
     def _load_practice_content(self, topic_id: str) -> str:
         """실습 내용 로드"""
-        practice_file = self.data_dir / topic_id / 'content' / 'practice.html'
+        practice_file = self.data_dir / topic_id / 'content' / 'practice' / 'practice.html'
         try:
             if practice_file.exists():
                 with open(practice_file, 'r', encoding='utf-8') as f:
@@ -342,14 +342,23 @@ class PracticeAnalysisAgent(BaseAgent):
 
     def _save_analysis_result(self, topic_id: str, result: Dict[str, Any]) -> None:
         """분석 결과 저장
-
-        저장된 분석 결과는 특정 주제 ID를 기준으로 파일 시스템의 "current/analysis" 디렉토리에 저장됩니다.
-        파일 경로 구조는 `data/topics/<topic_id>/current/analysis/practice_analysis.json`입니다.
+        
+        저장된 분석 결과는 특정 주제 ID를 기준으로 파일 시스템의 "content/analysis" 디렉토리에 저장됩니다.
+        파일 경로 구조는 `data/topics/<topic_id>/content/analysis/practice_analysis.json`입니다.
         이 함수는 디렉토리가 존재하지 않을 경우 생성하며, 결과를 JSON 파일로 저장합니다.
         """
-        analysis_dir = self.data_dir / topic_id / 'current' / 'analysis'
+        analysis_dir = self.data_dir / topic_id / 'content' / 'analysis'
         analysis_dir.mkdir(parents=True, exist_ok=True)
         
         analysis_file = analysis_dir / 'practice_analysis.json'
         with open(analysis_file, 'w', encoding='utf-8') as f:
             json.dump(result, f, indent=2, ensure_ascii=False, sort_keys=True)
+
+    async def save_analysis(self, topic_id: str, analysis_data: Dict[str, Any]) -> None:
+        """분석 결과 저장"""
+        analysis_dir = self.data_dir / topic_id / 'content' / 'analysis'
+        analysis_dir.mkdir(parents=True, exist_ok=True)
+        
+        analysis_file = analysis_dir / 'practice_analysis.json'
+        with open(analysis_file, 'w', encoding='utf-8') as f:
+            json.dump(analysis_data, f, ensure_ascii=False, indent=2)

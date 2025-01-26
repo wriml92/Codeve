@@ -1,0 +1,158 @@
+{
+  "assignments": [
+    {
+      "id": 1,
+      "type": "concept_basic",
+      "content": "조건문(conditionals)의 정의는 무엇인가요?",
+      "choices": [
+        "프로그램이 데이터를 저장하기 위해 사용하는 변수(variables)",
+        "프로그램의 실행 흐름을 제어하기 위해 특정 조건에 따라 다른 코드를 실행하는 구문",
+        "프로그램 코드를 반복해서 실행하는 루프(loops)",
+        "프로그램에서 발생할 수 있는 오류를 처리하는 코드"
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 2,
+      "type": "concept_application",
+      "content": "당신은 온라인 쇼핑몰의 할인 프로모션을 위한 코드를 작성하고 있습니다. 만약 사용자의 총 구매 금액이 100달러를 넘으면, 10% 할인을 적용하고 싶습니다. 이 상황에서, 사용자가 120달러를 결제할 때, 할인을 적용하기 위해 어떤 조건문을 사용해야 할까요?",
+      "choices": [
+        "if total_purchase > 100:\n    discount = 0.10",
+        "if total_purchase < 100:\n    discount = 0.10",
+        "if total_purchase == 100:\n    discount = 0.10",
+        "discount = 0.10 if total_purchase > 100 else 0"
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 3,
+      "type": "concept_analysis",
+      "content": "다음 코드를 실행하면 어떤 결과가 출력될까요?<br><br><code>temperature = 30<br>if temperature > 25:<br>&nbsp;&nbsp;&nbsp;&nbsp;print('It's hot outside!')</code>",
+      "choices": [
+        "It's hot outside!",
+        "'It's hot outside!'",
+        "temperature > 25",
+        "Nothing is printed"
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 4,
+      "type": "concept_debug",
+      "content": "문제를 준비 중입니다.",
+      "choices": [
+        "준비 중",
+        "준비 중",
+        "준비 중",
+        "준비 중"
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 5,
+      "type": "metaphor",
+      "content": "당신이 레시피에 따라 케이크를 만들고 있다면, 프로그래밍에서 '조건문'과 가장 유사한 단계는 무엇일까요?",
+      "choices": [
+        "오븐을 예열할 때 정확한 온도로 설정하는 것",
+        "만약 계란이 충분하지 않다면, 가까운 슈퍼마켓에서 계란을 사오는 것",
+        "시판하는 케이크 믹스 대신 직접 재료를 혼합하는 것",
+        "케이크를 오븐에 넣고 일정 시간 기다리는 것"
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 6,
+      "type": "theory_concept",
+      "content": "당신은 카페에서 커피를 주문하려고 합니다. 만약 주문한 커피의 가격이 5000원 이상이면 '고급 커피'라는 스티커를 받을 수 있습니다.<br><br><code>coffee_price = 4500<br>if coffee_price >= 5000:<br>&nbsp;&nbsp;sticker = '고급 커피'<br>else:<br>&nbsp;&nbsp;sticker = '일반 커피'</code><br><br>위 코드는 실생활의 어떤 상황과 가장 비슷할까요?",
+      "choices": [
+        "커피 가격에 상관없이 모든 커피에 '고급 커피' 스티커를 붙여 준다",
+        "5000원 미만의 커피를 구매할 때는 '일반 커피' 스티커를 받는다",
+        "모든 커피에 '일반 커피' 스티커를 붙여 준다",
+        "커피를 구매하지 않아도 무조건 '고급 커피' 스티커를 받는다"
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 7,
+      "type": "concept_synthesis",
+      "content": "문제를 준비 중입니다.",
+      "choices": [
+        "준비 중",
+        "준비 중",
+        "준비 중",
+        "준비 중"
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 8,
+      "type": "implementation_playground",
+      "content": "아래 주어진 코드는 사용자의 나이에 따라 다른 메시지를 출력하는 프로그램입니다. 코드를 실행해보고, 'age' 변수의 값을 변경하여 출력되는 메시지가 어떻게 바뀌는지 확인해보세요.",
+      "choices": null,
+      "test_cases": [
+        {
+          "input": "age = 18\nif age >= 18:\n    print('You are an adult.')\nelse:\n    print('You are a minor.')",
+          "output": "You are an adult."
+        },
+        {
+          "input": "age = 16\nif age >= 18:\n    print('You are an adult.')\nelse:\n    print('You are a minor.')",
+          "output": "You are a minor."
+        },
+        {
+          "input": "age = 18\nif age > 18:\n    print('You are an adult.')\nelse:\n    print('You are a teenager.')",
+          "output": "You are a teenager."
+        },
+        {
+          "input": "age = 20\nif age > 18:\n    print('You are an adult.')\nelse:\n    print('You are a teenager.')",
+          "output": "You are an adult."
+        }
+      ],
+      "constraints": null
+    },
+    {
+      "id": 9,
+      "type": "implementation_modify",
+      "content": "다음 코드는 사용자의 나이를 입력받아 '성년' 또는 '미성년'으로 분류하는 프로그램입니다. 빈 부분을 채워 프로그램을 완성해주세요.",
+      "choices": null,
+      "test_cases": [
+        {
+          "input": "age = 20\nif ________:\n    status = '성년'\nelse:\n    status = '미성년'\nprint(status)",
+          "output": "성년"
+        },
+        {
+          "input": "age = 17\nif ________:\n    status = '성년'\nelse:\n    status = '미성년'\nprint(status)",
+          "output": "미성년"
+        }
+      ],
+      "constraints": null
+    },
+    {
+      "id": 10,
+      "type": "implementation_creative",
+      "content": "당신은 '마법사의 탑' 게임을 하고 있습니다. 게임에서 당신의 캐릭터는 방 안에 있고, 방에는 두 개의 문이 있습니다. 한 문은 보물을 가득 담은 방으로 향하고, 다른 문은 괴물이 있는 방으로 향합니다. 당신은 주문서에 적힌 힌트를 통해 안전한 문을 찾아야 합니다. 힌트에는 '안전한 문은 금색 손잡이를 가지고 있습니다' 라고 적혀 있습니다. 주어진 변수를 이용하여 안전한 문을 선택하는 코드를 작성하세요.",
+      "choices": null,
+      "test_cases": [
+        {
+          "input": "if door_handle == 'gold':\n    open_door('treasure')\nelse:\n    open_door('monster')",
+          "output": "보물 방으로 가는 문이 열립니다."
+        },
+        {
+          "input": "if door_handle != 'gold':\n    open_door('monster')\nelse:\n    open_door('treasure')",
+          "output": "보물 방으로 가는 문이 열립니다."
+        }
+      ],
+      "constraints": null
+    }
+  ],
+  "metadata": {
+    "version": 1,
+    "created_at": "2025-01-26T06:23:38.629776"
+  }
+}

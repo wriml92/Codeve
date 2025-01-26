@@ -1,0 +1,142 @@
+{
+  "assignments": [
+    {
+      "id": 1,
+      "type": "concept_basic",
+      "content": "프로그래밍에서 '예외(exception)'의 정의는 무엇인가요?",
+      "choices": [
+        "코드 실행 중에 프로그램이 정상적으로 처리할 수 없는 상황 또는 이벤트",
+        "프로그램의 실행 속도를 빠르게 해주는 도구",
+        "함수나 메서드에서 반환되어야 하는 결과값",
+        "코드를 작성하는 프로그래밍 언어 자체"
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 2,
+      "type": "concept_application",
+      "content": "당신은 파이썬에서 사용자로부터 입력 받은 나이를 정수로 변환하는 프로그램을 작성하고 있습니다. 사용자가 나이 대신 문자열 '스물다섯'과 같은 값을 입력했을 때 프로그램이 오류를 내지 않고, '잘못된 입력입니다'라고 알려주려면 어떻게 해야 할까요?",
+      "choices": [
+        "age = int(input('나이를 입력하세요: '))",
+        "try:\n    age = int(input('나이를 입력하세요: '))\nexcept ValueError:\n    print('잘못된 입력입니다')",
+        "if type(input('나이를 입력하세요: ')) == int:\n    print('올바른 입력입니다')\nelse:\n    print('잘못된 입력입니다')",
+        "age = input('나이를 입력하세요: ')\nif age.isdigit():\n    age = int(age)"
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 3,
+      "type": "concept_analysis",
+      "content": "다음 코드를 실행하면 어떤 결과가 출력될까요?<br><br><code>numbers = [1, 2, 3]<br>print(numbers[3])</code>",
+      "choices": [
+        "4",
+        "IndexError: list index out of range",
+        "None",
+        "3"
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 4,
+      "type": "concept_debug",
+      "content": "다음 코드에서 발생하는 오류는 무엇일까요?<br><br><code>number = 10<br>print(numbr)</code>",
+      "choices": [
+        "SyntaxError",
+        "NameError",
+        "TypeError",
+        "ValueError"
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 5,
+      "type": "metaphor",
+      "content": "당신이 레스토랑에서 식사를 주문했을 때, 요리사가 실수로 잘못된 요리를 만들었다고 가정해 봅시다. 이 상황에서 요리사의 실수를 프로그래밍의 '예외(exception)'에 비유할 수 있습니다. 이때, 레스토랑 직원이 취할 수 있는 가장 적절한 '예외 처리(exception handling)'는 무엇일까요?",
+      "choices": [
+        "요리사가 실수를 인정하지 않고, 손님에게 잘못된 요리를 먹으라고 강요한다.",
+        "레스토랑 직원이 실수를 발견하고, 올바른 요리를 준비하여 손님에게 제공한다.",
+        "직원이 실수를 발견하고도 아무런 조치를 취하지 않아, 손님은 결국 아무것도 먹지 못한다.",
+        "모든 요리사가 실수를 했다고 가정하고, 레스토랑을 폐쇄한다."
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 6,
+      "type": "theory_concept",
+      "content": "당신은 쿠키를 굽기 위해 레시피대로 밀가루를 계량컵으로 재고 있습니다. 그런데 계량컵이 꽉 차서 더 이상 밀가루를 담을 수 없는 상황입니다.<br><br><code>flour_needed = 500<br>cup_capacity = 250<br>flour_in_cup = cup_capacity<br>if flour_needed > cup_capacity:<br>&nbsp;&nbsp;raise ValueError('계량컵이 너무 작습니다!')</code><br><br>위 코드의 결과는 실생활에서 무엇과 같을까요?",
+      "choices": [
+        "계량컵에 밀가루가 딱 맞게 담겨서 쿠키 반죽을 만드는 상황",
+        "계량컵이 넘치기 전에 필요한 밀가루를 모두 담을 수 있는 상황",
+        "계량컵에 너무 많은 밀가루를 담아서 넘치는 상황",
+        "적당한 양의 밀가루를 다른 그릇에 옮겨 담는 상황"
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 7,
+      "type": "concept_synthesis",
+      "content": "다음 코드는 파일을 열고 내용을 읽어 화면에 출력한 다음 파일을 닫습니다.<br><br><code>try:<br>&nbsp;&nbsp;f = open('my_file.txt', 'r')<br>&nbsp;&nbsp;print(f.read())<br>finally:<br>&nbsp;&nbsp;f.close()</code><br><br>이 코드에서 사용된 개념들의 올바른 설명은 무엇일까요?",
+      "choices": [
+        "try 블록은 예외가 발생할 가능성이 있는 코드를 실행하고, finally 블록은 예외 발생 여부와 관계없이 항상 실행되어 자원을 해제하는 코드입니다.",
+        "try 블록은 파일을 항상 닫기 위한 명령이며, finally 블록은 예외가 발생했을 때만 실행되는 코드입니다.",
+        "finally 블록은 파일을 여는 코드를 포함하고, try 블록은 예외 발생 여부와 관계없이 실행되어 파일을 닫는 코드입니다.",
+        "try와 finally 블록은 선택적으로 사용할 수 있는 코드 블록이며, 둘 다 파일을 닫는 코드로 사용될 수 있습니다."
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 8,
+      "type": "implementation_playground",
+      "content": "문제를 준비 중입니다.",
+      "choices": null,
+      "test_cases": [
+        {
+          "input": "",
+          "output": ""
+        }
+      ],
+      "constraints": null
+    },
+    {
+      "id": 9,
+      "type": "implementation_modify",
+      "content": "문제를 준비 중입니다.",
+      "choices": null,
+      "test_cases": [
+        {
+          "input": "",
+          "output": ""
+        }
+      ],
+      "constraints": null
+    },
+    {
+      "id": 10,
+      "type": "implementation_creative",
+      "content": "당신은 마법사가 되어 마법 주문을 외워 마법을 사용합니다. 마법 주문을 잘못 외우면 '주문 실패'라는 메시지가 출력되는 예외 상황을 처리해야 합니다. 마법 주문을 외우는 함수 `cast_spell(spell)`이 있으며, 주문이 올바르면 '주문 성공'을, 주문이 잘못되면 예외가 발생합니다. 예외를 처리하여 올바르지 않은 주문일 때 '주문 실패'를 출력하는 코드를 작성하세요.",
+      "choices": null,
+      "test_cases": [
+        {
+          "input": "try:\n    cast_spell('아바다 케다브라')\nexcept SpellError:\n    print('주문 실패')",
+          "output": "주문 성공"
+        },
+        {
+          "input": "try:\n    cast_spell('오누이 발리')\nexcept SpellError:\n    print('주문 실패')",
+          "output": "주문 실패"
+        }
+      ],
+      "constraints": null
+    }
+  ],
+  "metadata": {
+    "version": 1,
+    "created_at": "2025-01-26T06:30:01.609194"
+  }
+}

@@ -1,0 +1,158 @@
+{
+  "assignments": [
+    {
+      "id": 1,
+      "type": "concept_basic",
+      "content": "문제를 준비 중입니다.",
+      "choices": [
+        "준비 중",
+        "준비 중",
+        "준비 중",
+        "준비 중"
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 2,
+      "type": "concept_application",
+      "content": "당신은 파이썬으로 'Hello, World!' 메시지를 5번 화면에 출력하고자 합니다. 반복문을 사용하지 않고 일일이 코드를 작성할 수도 있지만, 효율적으로 이 작업을 수행하려면 어떻게 해야 할까요?",
+      "choices": [
+        "print('Hello, World!')를 5번 복사하여 붙여넣기 합니다.",
+        "for i in range(5):\n    print('Hello, World!')",
+        "while True:\n    print('Hello, World!')",
+        "def print_hello_world_five_times():\n    for i in range(5):\n        print('Hello, World!')\nprint_hello_world_five_times()"
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 3,
+      "type": "concept_analysis",
+      "content": "다음 코드를 실행하면 어떤 결과가 출력될까요?<br><br><code>for i in range(3):\n    print(i)</code>",
+      "choices": [
+        "1 2 3",
+        "0 1 2",
+        "1 2",
+        "0 1 2 3"
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 4,
+      "type": "concept_debug",
+      "content": "다음 코드에서 발생하는 오류는 무엇일까요?<br><br><code>for i in range(5)<br>&nbsp;&nbsp;print(i)</code>",
+      "choices": [
+        "range() 함수의 사용 방법이 잘못되었습니다.",
+        "print() 함수가 잘못되었습니다.",
+        "for 문에 콜론(:)이 누락되었습니다.",
+        "변수 i를 정의하지 않았습니다."
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 5,
+      "type": "metaphor",
+      "content": "프로그래밍에서 '루프(loop)'는 어떤 작업을 반복적으로 수행하라는 지시와 가장 비슷한 일상 활동은 무엇일까요?",
+      "choices": [
+        "책 한 권을 처음부터 끝까지 한 번만 읽기",
+        "식당에서 메뉴를 보고 음식을 한 번만 주문하기",
+        "운동할 때 정해진 횟수만큼 덤벨을 들어올리기",
+        "한 번만 알람을 설정해서 일어나기"
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 6,
+      "type": "theory_concept",
+      "content": "운동을 하는 동안 매 운동 세션 후 1분간 휴식을 취하는 것을 습관으로 삼았습니다. 이것을 5번 반복하려고 합니다.<br><br><code>for i in range(5):<br>    rest_for_a_minute()<br>    do_next_exercise()</code><br><br>이 코드의 결과는 실생활에서 무엇과 같을까요?",
+      "choices": [
+        "운동 세션을 5번 하고 나서 한 번만 1분간 쉬는 것",
+        "운동과 휴식 없이 5분 동안 계속 운동하는 것",
+        "운동 세션 사이에 1분간 휴식하면서 총 5번의 운동 세션을 완료하는 것",
+        "5분 동안 계속 쉬는 것"
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 7,
+      "type": "concept_synthesis",
+      "content": "문제를 준비 중입니다.",
+      "choices": [
+        "준비 중",
+        "준비 중",
+        "준비 중",
+        "준비 중"
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 8,
+      "type": "implementation_playground",
+      "content": "다음 코드는 for 루프를 사용하여 별(*) 문자로 사각형을 그리는 코드입니다. 코드를 실행하고 결과를 관찰해보세요. 그런 다음, 사각형의 크기를 바꿔보기 위해 'size' 변수의 값을 변경해보세요. 예를 들어, 'size'를 3, 5, 7로 변경하면서 각각의 결과가 어떻게 달라지는지 확인해보세요.",
+      "choices": null,
+      "test_cases": [
+        {
+          "input": "size = 4\nfor i in range(size):\n    for j in range(size):\n        print('*', end=' ')\n    print()",
+          "output": "* * * *\n* * * *\n* * * *\n* * * *"
+        },
+        {
+          "input": "size = 3\nfor i in range(size):\n    for j in range(size):\n        print('*', end=' ')\n    print()",
+          "output": "* * *\n* * *\n* * *"
+        },
+        {
+          "input": "size = 5\nfor i in range(size):\n    for j in range(size):\n        print('*', end=' ')\n    print()",
+          "output": "* * * * *\n* * * * *\n* * * * *\n* * * * *\n* * * * *"
+        },
+        {
+          "input": "size = 7\nfor i in range(size):\n    for j in range(size):\n        print('*', end=' ')\n    print()",
+          "output": "* * * * * * *\n* * * * * * *\n* * * * * * *\n* * * * * * *\n* * * * * * *\n* * * * * * *\n* * * * * * *"
+        }
+      ],
+      "constraints": null
+    },
+    {
+      "id": 9,
+      "type": "implementation_modify",
+      "content": "다음 코드의 빈 부분을 채워서 1부터 5까지의 숫자를 출력하는 프로그램을 완성해보세요. 단, 여러분은 반복문을 사용하여 숫자를 출력해야 합니다. 주어진 변수 count를 이용하세요.",
+      "choices": null,
+      "test_cases": [
+        {
+          "input": "count = 0\nwhile count < 5:\n    count = count + 1\n    print(____)",
+          "output": "1\n2\n3\n4\n5\n"
+        },
+        {
+          "input": "count = 0\nwhile count < 10:\n    count = count + 1\n    if count <= 5:\n        print(____)",
+          "output": "1\n2\n3\n4\n5\n"
+        }
+      ],
+      "constraints": null
+    },
+    {
+      "id": 10,
+      "type": "implementation_creative",
+      "content": "당신은 방금 새로운 요리 게임을 시작했습니다! 게임의 첫 미션으로, 당신은 레스토랑에서 5명의 손님에게 각각 딸기 파이를 제공해야 합니다. 각 손님에게 파이를 제공하는 'servePie()' 함수가 있으며, 이 함수는 호출될 때마다 '손님 #번호: 딸기 파이를 받았습니다!'라고 출력합니다. 당신의 목표는 단 3줄의 코드를 사용하여 모든 손님에게 파이를 제공하는 것입니다.",
+      "choices": null,
+      "test_cases": [
+        {
+          "input": "for i in range(1, 6):\n    servePie(i)",
+          "output": "손님 #1: 딸기 파이를 받았습니다!\n손님 #2: 딸기 파이를 받았습니다!\n손님 #3: 딸기 파이를 받았습니다!\n손님 #4: 딸기 파이를 받았습니다!\n손님 #5: 딸기 파이를 받았습니다!"
+        },
+        {
+          "input": "i = 1\nwhile i <= 5:\n    servePie(i)\n    i += 1",
+          "output": "손님 #1: 딸기 파이를 받았습니다!\n손님 #2: 딸기 파이를 받았습니다!\n손님 #3: 딸기 파이를 받았습니다!\n손님 #4: 딸기 파이를 받았습니다!\n손님 #5: 딸기 파이를 받았습니다!"
+        }
+      ],
+      "constraints": null
+    }
+  ],
+  "metadata": {
+    "version": 1,
+    "created_at": "2025-01-26T06:24:56.318519"
+  }
+}

@@ -5,59 +5,81 @@ Python 교육 플랫폼 CLI 도구
 과제 생성, 데이터 관리, 통계 확인 등 다양한 관리 작업을 수행할 수 있습니다.
 
 주요 기능:
-1. 과제 관리
-   - 새로운 과제 생성
-   - 기존 과제 수정
-   - 과제 삭제
-   - 과제 조회
+1. 콘텐츠 생성 (generate)
+   - 이론 내용 생성: python cli.py generate --type theory --topic <topic_id>
+   - 실습 내용 생성: python cli.py generate --type practice --topic <topic_id>
+   - 과제 내용 생성: python cli.py generate --type assignment --topic <topic_id>
+   - 모든 내용 생성: python cli.py generate --type all --topic <topic_id>
+   - 강제 재생성: --force 또는 -f 옵션 추가
 
-2. 통계 관리
-   - 제출 현황 확인
-   - 정답률 통계
-   - 학습자 진도 확인
+2. 과제 관리 (assignment)
+   - 새로운 과제 생성: python cli.py assignment create <topic_id>
+   - 과제 목록 조회: python cli.py assignment list
+   - 과제 삭제: python cli.py assignment delete <topic_id>
 
-3. 데이터 관리
-   - 토픽 데이터 백업
-   - 통계 데이터 초기화
-   - 데이터 정합성 검증
+3. 통계 관리 (stats)
+   - 제출 현황 확인: python cli.py stats show <topic_id>
+   - 통계 초기화: python cli.py stats reset
 
-사용 방법:
-1. 과제 관리:
-   python cli.py assignment create <topic_id>
-   python cli.py assignment list
-   python cli.py assignment delete <topic_id>
+4. 데이터 관리 (data)
+   - 데이터 백업: python cli.py data backup
+   - 데이터 검증: python cli.py data verify
 
-2. 통계 확인:
-   python cli.py stats show <topic_id>
-   python cli.py stats reset
+사용 가능한 토픽 ID:
+- input_output
+- print
+- variables
+- strings
+- lists
+- tuples
+- dictionaries
+- conditionals
+- loops
+- functions
+- classes
+- modules
+- exceptions
+- files
 
-3. 데이터 관리:
-   python cli.py data backup
-   python cli.py data verify
+생성되는 파일 위치:
+1. 이론 내용: /courses/data/topics/<topic_id>/content/theory/theory.html
+2. 실습 내용: /courses/data/topics/<topic_id>/content/practice/practice.html
+3. 과제 내용: 
+   - /courses/data/topics/<topic_id>/content/assignments/data/assignment.json
+   - /courses/data/topics/<topic_id>/content/assignments/answers/assignment_answers.json
+   - /courses/data/topics/<topic_id>/content/assignments/ui/assignment.html
 
-참고:
-- 모든 명령은 courses 디렉토리에서 실행해야 함
-- 관리자 권한이 필요한 작업이 있을 수 있음
+주의사항:
+- OpenAI API 키가 .env 파일에 OPENAI_API_KEY로 설정되어 있어야 함
+- 모든 명령은 courses/scripts 디렉토리에서 실행해야 함
+- 생성된 콘텐츠는 검토 후 사용 권장
+- 대규모 생성 시 API 비용 고려 필요
 """
 
 import os
-import django
+import sys
+from pathlib import Path
+
+# 프로젝트 루트 디렉토리를 Python 경로에 추가
+project_root = str(Path(__file__).parent.parent.parent)
+sys.path.insert(0, project_root)
 
 # Django 설정 초기화
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Codeve.settings')
+
+import django
 django.setup()
 
 import click
-from pathlib import Path
-import asyncio
+import asyncio  # asyncio import 추가
 from typing import List
-from courses.llm import ContentGenerator  # ContentGenerator로 통합
+from courses.llm import ContentGenerator
 from courses.llm.theory_llm import TheoryLLM
 from courses.llm.practice_llm import PracticeLLM
 from courses.llm.assignment_llm import AssignmentLLM
+from courses.config.constants import TOPICS
 from courses.llm.reflection_llm import ReflectionLLM
 import json
-from courses.config.constants import TOPICS  # views.py 대신 config/constants.py에서 import
 
 @click.group()
 def cli():

@@ -189,7 +189,102 @@ class CodeSubmissionAnalyzer:
             model_name="gpt-4",
             temperature=0.3
         )
+        self.python_keywords = {
+            'False', 'None', 'True', 'and', 'as', 'assert', 'async', 'await', 
+            'break', 'class', 'continue', 'def', 'del', 'elif', 'else', 'except', 
+            'finally', 'for', 'from', 'global', 'if', 'import', 'in', 'is', 'lambda', 
+            'nonlocal', 'not', 'or', 'pass', 'raise', 'return', 'try', 'while', 'with', 'yield'
+        }
         
+    def _check_syntax(self, code: str) -> Dict:
+        """Python 문법 및 스타일 검사"""
+        try:
+            # 1. 기본 문법 검사
+            ast.parse(code)
+            
+            # 2. 들여쓰기 검사
+            lines = code.split('\n')
+            for i, line in enumerate(lines, 1):
+                if line.strip() and not line.startswith((' ', '\t')) and ':' not in line:
+                    if any(line.strip().startswith(kw) for kw in ['def', 'class', 'if', 'else', 'elif', 'for', 'while', 'try', 'except', 'finally']):
+                        return {
+                            'is_valid': False,
+                            'error': f'잘못된 들여쓰기: 라인 {i}',
+                            'line': i
+                        }
+            
+            # 3. 괄호 매칭 검사
+            stack = []
+            brackets = {'(': ')', '[': ']', '{': '}'}
+            for i, char in enumerate(code):
+                if char in '([{':
+                    stack.append(char)
+                elif char in ')]}':
+                    if not stack or brackets[stack.pop()] != char:
+                        return {
+                            'is_valid': False,
+                            'error': f'괄호가 올바르게 매칭되지 않았습니다: 위치 {i}',
+                            'offset': i
+                        }
+            if stack:
+                return {
+                    'is_valid': False,
+                    'error': '괄호가 올바르게 닫히지 않았습니다'
+                }
+            
+            # 4. 기본적인 코드 스타일 검사
+            style_issues = []
+            
+            # 4.1 라인 길이 검사
+            for i, line in enumerate(lines, 1):
+                if len(line) > 79:  # PEP 8 권장사항
+                    style_issues.append(f'라인 {i}가 너무 깁니다 (79자 제한)')
+            
+            # 4.2 공백 검사
+            for i, line in enumerate(lines, 1):
+                # 연산자 주변 공백
+                for op in ['=', '+', '-', '*', '/', '//', '%', '**', '+=', '-=', '*=', '/=']:
+                    if op in line and not line.strip().startswith('#'):
+                        if f' {op} ' not in line and op in line:
+                            style_issues.append(f'라인 {i}: 연산자 {op} 주변에 공백이 필요합니다')
+                
+                # 콤마 후 공백
+                if ',' in line and not line.strip().startswith('#'):
+                    if ',  ' in line:
+                        style_issues.append(f'라인 {i}: 콤마 뒤에 한 개의 공백만 사용하세요')
+                    elif ',' in line and not ', ' in line and not line.strip().endswith(','):
+                        style_issues.append(f'라인 {i}: 콤마 뒤에 공백이 필요합니다')
+            
+            # 4.3 명명 규칙 검사
+            tree = ast.parse(code)
+            for node in ast.walk(tree):
+                if isinstance(node, ast.Name):
+                    # 변수명 검사
+                    if not node.id.islower() and '_' not in node.id:
+                        style_issues.append(f'변수명 {node.id}는 소문자와 밑줄을 사용해야 합니다')
+                elif isinstance(node, ast.FunctionDef):
+                    # 함수명 검사
+                    if not node.name.islower() and '_' not in node.name:
+                        style_issues.append(f'함수명 {node.name}는 소문자와 밑줄을 사용해야 합니다')
+            
+            return {
+                'is_valid': True,
+                'style_issues': style_issues if style_issues else None
+            }
+            
+        except SyntaxError as e:
+            return {
+                'is_valid': False,
+                'error': str(e),
+                'line': e.lineno,
+                'offset': e.offset
+            }
+        except Exception as e:
+            return {
+                'is_valid': False,
+                'error': str(e)
+            }
+
     async def analyze_submission(self, 
                                submitted_code: str,
                                test_cases: List[Dict],
@@ -207,13 +302,18 @@ class CodeSubmissionAnalyzer:
                     error_type='syntax'
                 )
 
+            # 스타일 이슈가 있는 경우 피드백에 포함
+            style_feedback = ""
+            if syntax_check.get('style_issues'):
+                style_feedback = "\n\n코드 스타일 개선 제안:\n" + "\n".join(syntax_check['style_issues'])
+
             # 2. 테스트 케이스 실행
             test_results = await self._run_test_cases(submitted_code, test_cases)
             if not test_results['all_passed']:
                 return CodeAnalysisResult(
                     is_correct=False,
                     score=test_results['pass_rate'] * 50,
-                    feedback=f"일부 테스트 케이스가 실패했습니다: {test_results['failed_cases']}",
+                    feedback=f"일부 테스트 케이스가 실패했습니다: {test_results['failed_cases']}{style_feedback}",
                     error_type='test_failure'
                 )
 
@@ -225,8 +325,12 @@ class CodeSubmissionAnalyzer:
                 topic_id=topic_id
             )
 
+            # 스타일 피드백 추가
+            if style_feedback:
+                analysis_result['feedback'] += style_feedback
+
             return CodeAnalysisResult(
-                is_correct=analysis_result['is_acceptable'],
+                is_correct=analysis_result['is_correct'],
                 score=analysis_result['score'],
                 feedback=analysis_result['feedback'],
                 suggestions=analysis_result.get('suggestions', [])
@@ -239,19 +343,6 @@ class CodeSubmissionAnalyzer:
                 feedback=f"코드 분석 중 오류가 발생했습니다: {str(e)}",
                 error_type='system_error'
             )
-
-    def _check_syntax(self, code: str) -> Dict:
-        """기본 문법 검사"""
-        try:
-            ast.parse(code)
-            return {'is_valid': True}
-        except SyntaxError as e:
-            return {
-                'is_valid': False,
-                'error': str(e),
-                'line': e.lineno,
-                'offset': e.offset
-            }
 
     async def _run_test_cases(self, code: str, test_cases: List[Dict]) -> Dict:
         """테스트 케이스 실행"""
@@ -334,11 +425,19 @@ class CodeSubmissionAnalyzer:
         return json.loads(response.content)
 
     def _compare_outputs(self, result: str, expected: str) -> bool:
-        """결과 비교 (융통성 있게)"""
-        # 공백, 대소문자 무시
-        result = str(result).strip().lower()
-        expected = str(expected).strip().lower()
+        """결과 비교 (초보자를 위한 유연한 비교)"""
+        # 기본 전처리
+        result = str(result).strip()
+        expected = str(expected).strip()
         
+        # 완전 일치하면 바로 True 반환
+        if result == expected:
+            return True
+            
+        # 대소문자 무시하고 비교
+        if result.lower() == expected.lower():
+            return True
+            
         # 숫자의 경우 실수/정수 차이 무시
         if result.replace('.0', '') == expected.replace('.0', ''):
             return True
@@ -347,7 +446,21 @@ class CodeSubmissionAnalyzer:
         if result.strip('"\'') == expected.strip('"\''):
             return True
             
-        return result == expected
+        # 공백 차이 무시 (연속된 공백을 하나로)
+        if ' '.join(result.split()) == ' '.join(expected.split()):
+            return True
+            
+        # 문장부호 차이 무시 (.과 ! 정도만)
+        result_normalized = result.replace('!', '.').replace('?', '.')
+        expected_normalized = expected.replace('!', '.').replace('?', '.')
+        if result_normalized == expected_normalized:
+            return True
+            
+        # 줄바꿈 차이 무시
+        if result.replace('\n', ' ') == expected.replace('\n', ' '):
+            return True
+            
+        return False
 
     async def _safe_execute(self, code: str, input_data: str) -> str:
         """안전한 환경에서 코드 실행"""
@@ -385,6 +498,56 @@ class CodeSubmissionAnalyzer:
             
         except Exception as e:
             raise Exception(f"코드 실행 중 오류 발생: {str(e)}")
+
+    async def analyze_code_analysis(self, submitted_analysis: str, code_to_analyze: str, points_to_consider: List[str], expected_points: List[str]) -> CodeAnalysisResult:
+        """코드 분석 답안 평가"""
+        try:
+            # LLM을 사용한 분석 평가
+            prompt = f"""다음 코드에 대한 학습자의 분석을 평가해주세요.
+
+분석할 코드:
+```python
+{code_to_analyze}
+```
+
+고려해야 할 점:
+{chr(10).join([f"- {point}" for point in points_to_consider])}
+
+학습자의 분석:
+{submitted_analysis}
+
+기대하는 분석 포인트:
+{chr(10).join([f"- {point}" for point in expected_points])}
+
+다음을 평가해주세요:
+1. 학습자가 주요 포인트를 얼마나 잘 파악했는지
+2. 분석의 정확성과 깊이
+3. 개선이 필요한 부분
+
+응답 형식:
+{{
+    "score": 0-100,
+    "feedback": "구체적인 피드백",
+    "suggestions": ["개선 제안1", "개선 제안2"]
+}}"""
+
+            response = await self.llm.agenerate(prompt)
+            analysis = json.loads(response.content)
+
+            return CodeAnalysisResult(
+                is_correct=analysis['score'] >= 70,
+                score=analysis['score'],
+                feedback=analysis['feedback'],
+                suggestions=analysis.get('suggestions', [])
+            )
+
+        except Exception as e:
+            return CodeAnalysisResult(
+                is_correct=False,
+                score=0,
+                feedback=f"분석 평가 중 오류가 발생했습니다: {str(e)}",
+                error_type='system_error'
+            )
 
 class AssignmentGenerator:
     def __init__(self):
@@ -478,12 +641,6 @@ PROMPTS = {
     'concept': """
     {topic_name} 주제에 대한 개념 이해 문제를 생성해주세요.
     
-    특별 주의사항:
-    - input_output 토픽의 경우, 오직 input()과 print() 함수만 다룹니다.
-    - input() 함수: 사용자로부터 키보드 입력을 받는 함수
-    - print() 함수: 콘솔에 출력하는 함수
-    - 파일 입출력(file I/O)이나 파일 관련 내용은 절대 포함하지 않습니다.
-    
     다음 형식으로 작성:
     {
         "question": "문제 내용",
@@ -498,10 +655,7 @@ PROMPTS = {
     {topic_name} 주제의 구현 문제를 생성해주세요.
     
     특별 주의사항:
-    - input_output 토픽의 경우, 오직 input()과 print() 함수만 사용하는 프로그램을 만드는 문제를 출제합니다.
-    - input() 함수로 사용자의 키보드 입력을 받고, print() 함수로 콘솔에 출력하는 간단한 프로그램이어야 합니다.
-    - 파일 입출력(file I/O)이나 파일 관련 내용은 절대 포함하지 않습니다.
-    - 예시 주제: 사용자 이름 입력받아 인사하기, 숫자 입력받아 계산 결과 출력하기 등
+    - input_output 토픽의 경우, 
     
     다음 형식으로 작성:
     {

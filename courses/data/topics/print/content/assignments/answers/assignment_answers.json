@@ -1,0 +1,95 @@
+{
+  "assignments": [
+    {
+      "id": 1,
+      "type": "concept_basic",
+      "correct_answer": "3",
+      "hint": "print 함수는 프로그램에서 메시지를 '출력'할 때 사용됩니다."
+    },
+    {
+      "id": 2,
+      "type": "concept_application",
+      "correct_answer": "2",
+      "hint": "파이썬에서는 'print()' 함수를 사용하여 화면에 텍스트를 출력할 수 있습니다. 출력하고자 하는 텍스트는 괄호 안에 따옴표로 묶어서 넣어줍니다."
+    },
+    {
+      "id": 3,
+      "type": "concept_analysis",
+      "correct_answer": "3",
+      "hint": "print 함수는 괄호 안에 있는 변수의 값을 화면에 출력합니다."
+    },
+    {
+      "id": 4,
+      "type": "concept_debug",
+      "correct_answer": "2",
+      "hint": "Python은 대소문자를 구분하는 언어입니다. 내장 함수의 이름을 정확히 사용해야 합니다."
+    },
+    {
+      "id": 5,
+      "type": "metaphor",
+      "correct_answer": "4",
+      "hint": "print 명령어는 사용자에게 정보를 '보여주는' 역할을 합니다."
+    },
+    {
+      "id": 6,
+      "type": "theory_concept",
+      "correct_answer": "2",
+      "hint": "이 코드는 변수를 사용해 특정 메시지를 출력합니다. 실생활에서 이는 주문을 하는 것에 해당하며, 코드에서 'print' 함수는 종업원에게 주문 내용을 말하는 행동과 유사합니다."
+    },
+    {
+      "id": 7,
+      "type": "concept_synthesis",
+      "correct_answer": "1",
+      "hint": "변수는 데이터를 저장하는 공간이며, 'print' 함수는 저장된 데이터를 화면에 출력하는 데 사용됩니다. 이 코드에서 'message'는 변수로 사용되고, 'print'는 변수에 저장된 값을 출력하는 함수입니다."
+    },
+    {
+      "id": 8,
+      "type": "implementation_playground",
+      "test_cases": [
+        {
+          "input": "message = 'Hello, World!'\nprint(message)",
+          "output": "Hello, World!"
+        },
+        {
+          "input": "message = '안녕하세요, 파이썬!'\nprint(message)",
+          "output": "안녕하세요, 파이썬!"
+        }
+      ],
+      "hint": "이 코드는 'print' 함수를 사용하여 화면에 메시지를 출력합니다. 'message' 변수에 저장된 텍스트가 'print' 함수에 의해 화면에 나타나게 됩니다. 코드의 'message' 변수 값을 바꿔 다른 문장이나 단어로 변경하면, 실행 결과도 그에 따라 달라질 것입니다."
+    },
+    {
+      "id": 9,
+      "type": "implementation_modify",
+      "test_cases": [
+        {
+          "input": "name = input('이름을 입력해주세요: ')\nprint('환영합니다, ' + ___)",
+          "output": "이름을 입력해주세요: 홍길동\n환영합니다, 홍길동"
+        },
+        {
+          "input": "name = input('Enter your name: ')\nprint('Welcome, ' + ___)",
+          "output": "Enter your name: Alice\nWelcome, Alice"
+        }
+      ],
+      "hint": "빈칸에 들어갈 코드는 변수명을 사용합니다. 예를 들어, 변수명이 'name'이라면 빈칸에는 'name'이 들어갈 수 있습니다."
+    },
+    {
+      "id": 10,
+      "type": "implementation_creative",
+      "test_cases": [
+        {
+          "input": "print(magic_spell)\nprint('반짝!')",
+          "output": "Abracadabra\n반짝!"
+        },
+        {
+          "input": "print(magic_spell + ', 반짝!')",
+          "output": "Abracadabra, 반짝!"
+        }
+      ],
+      "hint": "힌트:\n- 'print' 함수를 사용하여 변수와 문자열을 출력할 수 있습니다.\n- 변수 'magic_spell'에 저장된 주문을 먼저 출력합니다.\n- 주문을 출력한 다음, 마법진이 활성화되었다는 표시를 출력하기 위해 '반짝!'이라는 문자열을 출력합니다.\n- 코드 작성 순서는 먼저 'magic_spell' 변수를 출력하고, 그 다음에 '반짝!'을 출력하는 것입니다."
+    }
+  ],
+  "metadata": {
+    "version": 1,
+    "created_at": "2025-01-26T06:16:15.293589"
+  }
+}

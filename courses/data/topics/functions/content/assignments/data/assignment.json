@@ -1,0 +1,158 @@
+{
+  "assignments": [
+    {
+      "id": 1,
+      "type": "concept_basic",
+      "content": "함수(function)의 정의는 무엇인가요?",
+      "choices": [
+        "데이터를 저장하기 위한 명명된 공간",
+        "프로그램의 실행을 중지시키는 명령어",
+        "특정 작업을 수행하는 코드의 집합",
+        "프로그램 내에서 발생하는 오류나 예외를 처리하는 구문"
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 2,
+      "type": "concept_application",
+      "content": "당신은 파이썬으로 작성하는 프로그램에서 여러 사용자의 이름과 이메일을 관리해야 합니다. 프로그램에서 한 사용자의 정보를 입력하고, 이 정보를 활용하여 환영 이메일을 보내는 기능을 구현하려고 합니다. 어떻게 해야 할까요?",
+      "choices": [
+        "각 사용자의 이름과 이메일을 변수로 저장하고, 이를 직접 이메일 보내는 코드에 삽입합니다.",
+        "사용자의 이름과 이메일을 매개변수로 받는 함수를 작성하고, 이 함수 내에서 환영 이메일을 보내는 코드를 실행합니다.",
+        "사용자의 이름과 이메일을 전역 변수로 선언하고, 프로그램 전체에서 직접 접근하여 이메일을 보냅니다.",
+        "프로그램 시작 시 사용자의 이름과 이메일을 입력 받아서, 바로 이메일을 보내는 코드를 실행합니다."
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 3,
+      "type": "concept_analysis",
+      "content": "다음 코드를 실행하면 어떤 결과가 출력될까요?<br><br><code>def greet(name):\n    return 'Hello, ' + name + '!'\nprint(greet('Alice'))</code>",
+      "choices": [
+        "Hello, Alice!",
+        "greet('Alice')",
+        "'Hello, ' + name + '!'",
+        "Hello, name!"
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 4,
+      "type": "concept_debug",
+      "content": "다음 코드에서 발생하는 오류는 무엇일까요?<br><br><code>def greeting(name):<br>&nbsp;&nbsp;return 'Hello, ' + name<br>print(greet('Alice'))</code>",
+      "choices": [
+        "함수 이름이 잘못되었습니다",
+        "함수에 전달된 인자의 개수가 잘못되었습니다",
+        "문자열 연결에 사용된 '+' 연산자가 올바르지 않습니다",
+        "변수 'name'이 정의되지 않았습니다"
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 5,
+      "type": "metaphor",
+      "content": "함수는 특정 작업을 수행하는 코드의 집합입니다. 다음 중 함수의 개념에 가장 잘 부합하는 일상 생활의 예시는 무엇입니까?",
+      "choices": [
+        "커피 머신에서 원하는 버튼을 눌러 커피를 추출하는 과정",
+        "커피콩을 수확하는 농부의 일과",
+        "수퍼마켓에서 다양한 종류의 커피콩을 구매하는 행위",
+        "커피숍의 인테리어를 감상하는 경험"
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 6,
+      "type": "theory_concept",
+      "content": "당신은 레시피에 따라 케이크를 만들기 위해 계란, 밀가루, 설탕을 사용하는 양을 계산하고 있습니다.<br><br><code>def make_cake(eggs, flour, sugar):<br>    return eggs * 2 + flour * 100 + sugar * 50<br>cake = make_cake(2, 3, 2)</code><br><br>위 코드는 실생활에서 무엇과 가장 비슷할까요?",
+      "choices": [
+        "레시피에 따라 계란 2개, 밀가루 3컵, 설탕 2컵을 사용하여 케이크를 만드는 과정",
+        "마트에서 계란 2판, 밀가루 3봉지, 설탕 2봉지를 구매하는 상황",
+        "케이크를 가게에서 주문하는 과정",
+        "계란, 밀가루, 설탕의 가격을 합산하여 총 비용을 계산하는 상황"
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 7,
+      "type": "concept_synthesis",
+      "content": "사용자의 이름을 인사와 함께 출력하는 함수가 있습니다.<br><br><code>def greet(name):<br>&nbsp;&nbsp;&nbsp;return 'Hello, ' + name + '!'<br>message = greet('Alice')<br>print(message)</code><br><br>이 코드에서 사용된 개념들의 올바른 설명은 무엇일까요?",
+      "choices": [
+        "함수 'greet'는 매개변수 'name'을 받아 문자열을 반환하고, 이 문자열은 'Alice'라는 인자를 사용하여 생성된다.",
+        "'greet'은 내장 함수이며, 'Alice'는 변수 이름이다.",
+        "변수 'message'는 함수 'greet'를 호출하지 않고도 'Hello, Alice!' 값을 갖는다.",
+        "함수 'greet'는 자동으로 'Alice'라는 값을 출력한다."
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 8,
+      "type": "implementation_playground",
+      "content": "다음 제공된 코드는 'hello'라는 단어를 출력하는 간단한 함수 'print_hello'를 정의하고 실행하는 코드입니다. 코드를 실행한 후에, 'hello'를 다른 인사말로 변경해보세요. 예를 들어, 'hi'나 'greetings'으로 바꿔서 실행해보고 결과가 어떻게 바뀌는지 관찰해보세요.",
+      "choices": null,
+      "test_cases": [
+        {
+          "input": "def print_hello():\n    print('hello')\n\n# 함수를 호출합니다.\nprint_hello()",
+          "output": "hello"
+        },
+        {
+          "input": "def print_hello():\n    print('hi')\n\n# 함수를 호출합니다.\nprint_hello()",
+          "output": "hi"
+        },
+        {
+          "input": "def print_hello():\n    print('greetings')\n\n# 함수를 호출합니다.\nprint_hello()",
+          "output": "greetings"
+        }
+      ],
+      "constraints": null
+    },
+    {
+      "id": 9,
+      "type": "implementation_modify",
+      "content": "다음 코드는 사용자가 입력한 두 숫자를 더하는 간단한 함수를 포함하고 있습니다. 빈 부분을 채워 `add_numbers` 함수를 완성해보세요. 이 함수는 두 매개변수 `a`와 `b`를 받아서 더한 값을 반환해야 합니다.",
+      "choices": null,
+      "test_cases": [
+        {
+          "input": "def add_numbers(a, b):\n    return _____\n\n# 예시 사용\nprint(add_numbers(3, 4))",
+          "output": "7"
+        },
+        {
+          "input": "def add_numbers(a, b):\n    return _____\n\n# 다른 예시\nprint(add_numbers(-1, 1))",
+          "output": "0"
+        }
+      ],
+      "constraints": null
+    },
+    {
+      "id": 10,
+      "type": "implementation_creative",
+      "content": "당신은 새로운 카페를 개업했고, 고객들이 자신만의 커피를 만들 수 있도록 하고 싶어합니다. 각 고객이 선택한 재료를 기반으로 커피를 조합하는 함수를 작성해보세요. 커피는 에스프레소, 우유, 시럽 중 고객이 선택한 재료를 조합하여 만들 수 있습니다. 각 재료를 추가하는 함수를 호출하여 고객의 커피를 만드는 코드를 작성하세요.",
+      "choices": null,
+      "test_cases": [
+        {
+          "input": "make_coffee('에스프레소')\nadd_milk()\nadd_syrup('바닐라')",
+          "output": "당신의 커피: 에스프레소, 우유, 바닐라 시럽"
+        },
+        {
+          "input": "make_coffee('에스프레소')\nadd_syrup('카라멜')",
+          "output": "당신의 커피: 에스프레소, 카라멜 시럽"
+        },
+        {
+          "input": "make_coffee('에스프레소')\nadd_milk()",
+          "output": "당신의 커피: 에스프레소, 우유"
+        }
+      ],
+      "constraints": null
+    }
+  ],
+  "metadata": {
+    "version": 1,
+    "created_at": "2025-01-26T06:26:10.557818"
+  }
+}

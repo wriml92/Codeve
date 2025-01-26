@@ -1,0 +1,97 @@
+<div class="space-y-8">
+    <!-- 1. 개념 소개 섹션 -->
+    <section class="mb-8">
+        <h2 class="text-lg font-semibold text-black-600 mb-3">개념 소개: 파일 입출력(File I/O)</h2>
+        <p class="text-gray-800 leading-relaxed">
+            여러분, 책을 읽을 때는 어떻게 하나요? 책을 열고, 글자들을 읽어나가죠. 그리고 필요하다면, 노트에 중요한 부분을 적어둡니다. 이런 일련의 과정을 프로그래밍에서도 해야 합니다. 그것이 바로 <b>파일 입출력(File I/O)</b>입니다. <br> <br> 
+            파일 입출력은 컴퓨터의 파일을 읽거나(write) 또는 쓰는(read) 작업을 의미합니다. 파일을 <span style='color: #0066cc;'>읽기(read)</span>란 파일의 내용을 불러오는 것이고, 파일에 <span style='color: #0066cc;'>쓰기(write)</span>란 파일에 데이터를 저장하는 것을 말합니다. 이렇게 파일 입출력을 통해 원하는 정보를 가져오거나 저장할 수 있습니다.<br><br> 
+            한번 본 영화를 다시 볼 때, 처음부터 봐야하는 것처럼, 프로그램도 실행할 때마다 모든 정보를 새로 만들어야 합니다. 이럴 때 파일 입출력을 사용하면, 프로그램이 종료되더라도 데이터를 파일로 저장해두었다가 다시 불러올 수 있습니다. 이렇게 저장된 파일은 다른 프로그램에서도 사용할 수 있으므로, 데이터를 공유하거나 재사용하는데 매우 유용합니다.
+        </p>
+    </section>
+
+    <!-- 2. 실생활 비유 섹션 -->
+    <section class="mb-8">
+        <h2 class="text-lg font-semibold text-black-600 mb-3">비유로 이해하기</h2>
+        <p class="text-gray-800 leading-relaxed">
+            파일 입출력을 이해하는 데 도움이 될만한 비유를 몇 가지 생각해봤어요.<br><br>
+            첫 번째는, '사서'에 비유해볼 수 있습니다. 사서는 책을 분류하고, 누군가 그 책을 찾을 때 제공해주죠. 이는 프로그램이 파일 입출력을 통해 데이터를 불러오고(읽기) 저장하는(쓰기) 과정과 유사합니다.<br><br>
+            두 번째 비유는 '편지 쓰기'입니다. 편지를 쓰면서 생각을 정리하고, 그 편지를 다른 사람에게 보내 정보를 전달하죠. 이처럼 프로그램도 파일에 데이터를 쓰고(정보를 정리하고), 필요할 때 그 파일을 읽어(편지를 받아) 정보를 불러옵니다. 
+        </p>
+        <div class="bg-gray-900 rounded-lg p-4 mt-4">
+            <pre class="text-white font-mono text-sm">
+# 이 코드는 'hello.txt'라는 파일을 생성하고, 그 안에 'Hello, World!'라는 문자열을 씁니다(write).
+file = open('hello.txt', 'w') # 'w'는 write를 의미합니다.
+file.write('Hello, World!') # 문자열을 파일에 씁니다.
+file.close() # 파일을 닫아줍니다.
+
+# 이 코드는 'hello.txt'라는 파일을 열어서 그 내용을 읽어옵니다(read).
+file = open('hello.txt', 'r') # 'r'은 read를 의미합니다.
+print(file.read()) # 파일의 내용을 읽어와서 출력합니다.
+file.close() # 파일을 닫아줍니다.
+            </pre>
+            <p class="text-green-400 mt-2"># 실행 결과: Hello, World!</p>
+        </div>
+    </section>
+
+    <!-- 3. 실생활 응용 섹션 -->
+    <section class="mb-8">
+        <h2 class="text-lg font-semibold text-black-600 mb-3">실생활에서의 응용</h2>
+        <p class="text-gray-800 leading-relaxed">
+            파일 입출력은 프로그래밍에서 매우 중요한 개념입니다. 실생활에서도 이를 응용할 수 있는 다양한 상황이 있습니다. 예를 들어, 여러분이 블로그를 운영하고 있다면 글을 작성하고 저장하고(쓰기), 나중에 다시 그 글을 불러와서(읽기) 수정하거나 업데이트할 수 있죠.<br><br> 
+            또한, 여러분이 어떤 게임을 만들었다고 생각해봅시다. 게임을 플레이한 결과나 점수를 파일에 저장하고, 플레이어가 다시 게임에 접속했을 때 그 파일을 불러와서 플레이어의 이전 기록을 보여줄 수 있겠습니다.
+        </p>
+    </section>
+
+    <!-- 4. 핵심 포인트 섹션 -->
+    <section class="mb-8">
+        <h2 class="text-lg font-semibold text-black-600 mb-3">핵심 포인트</h2>
+        <div class="space-y-4">
+            <div class="key-point bg-gray-50 border-l-4 border-blue-500 p-4">
+                <b>파일 입출력(File I/O)</b>은 프로그램이 파일을 읽거나 쓰는 작업을 의미합니다. '읽기'는 파일의 내용을 불러오는 것이고, '쓰기'는 파일에 데이터를 저장하는 것을 말합니다.<br>
+                <pre class="bg-gray-200 p-2 rounded">
+# 파일을 열어서 쓰기
+file = open('hello.txt', 'w') 
+file.write('Hello, World!')
+file.close()
+
+# 파일을 열어서 읽기
+file = open('hello.txt', 'r') 
+print(file.read())
+file.close()
+                </pre>
+                <p class="text-green-400 mt-2"># 실행 결과: Hello, World!</p>
+            </div>
+            <div class="key-point bg-gray-50 border-l-4 border-blue-500 p-4">
+                파일 입출력은 데이터를 영구적으로 저장하기 위해 사용됩니다. 프로그램이 종료되더라도 파일에 저장된 데이터는 사라지지 않습니다. 파일에 데이터를 저장하고 불러오는 방식으로 데이터를 재사용하거나 공유할 수 있습니다. 
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. 주의사항 섹션 -->
+    <section class="mb-8">
+        <h2 class="text-lg font-semibold mb-3">주의사항</h2>
+        <ul class="list-decimal list-inside space-y-4">
+            <li>
+                <div class="mb-2">파일을 열었으면 꼭 닫아주세요. 파일을 닫지 않으면 데이터 손실이 일어날 수 있습니다.</div>
+                <div class="space-y-2">
+                    <div class="bg-red-50 p-3 rounded-lg border-l-4 border-red-500">
+                        <div class="text-red-600 font-medium mb-1">❌ 잘못된 예시:</div>
+                        <pre class="bg-white p-2 rounded">
+file = open('hello.txt', 'w')
+file.write('Hello, World!')
+# file.close()를 깜빡하고 작성하지 않았습니다.
+                        </pre>
+                    </div>
+                    <div class="bg-green-50 p-3 rounded-lg border-l-4 border-green-500">
+                        <div class="text-green-600 font-medium mb-1">✅ 올바른 예시:</div>
+                        <pre class="bg-white p-2 rounded">
+file = open('hello.txt', 'w')
+file.write('Hello, World!')
+file.close() # 파일을 꼭 닫아줍니다.
+                        </pre>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </section>
+</div>

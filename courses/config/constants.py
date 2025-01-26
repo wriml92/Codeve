@@ -1,6 +1,7 @@
 # Python 코스의 토픽 목록
 TOPICS = [
     {'id': 'input_output', 'name': '입출력'},
+    {'id': 'print', 'name': 'print() 함수'},
     {'id': 'variables', 'name': '변수'},
     {'id': 'strings', 'name': '문자열'},
     {'id': 'lists', 'name': '리스트'},

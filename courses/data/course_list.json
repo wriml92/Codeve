@@ -4,7 +4,7 @@
     "topics": [
       {
         "id": "input_output",
-        "name": "입출력",
+        "name": "입력과 출력",
         "order": 1
       },
       {
@@ -66,6 +66,11 @@
         "id": "files",
         "name": "파일 입출력",
         "order": 13
+      },
+      {
+        "id": "print",
+        "name": "print() 함수",
+        "order": 14
       }
     ],
     "description": "Python 프로그래밍의 기초를 배웁니다."
