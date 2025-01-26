@@ -5,6 +5,8 @@ from datetime import datetime
 import yaml  # config 파일 로드를 위해 추가
 import asyncio
 import shutil
+from dotenv import load_dotenv
+import os
 
 # LLM 클래스들 import
 from .theory_llm import TheoryLLM
@@ -18,9 +20,16 @@ class ContentGenerator:
         self.course_list_path = self.base_dir / 'data' / 'course_list.json'
         self.data_dir = self.base_dir / 'data' / 'topics'
         self.config = self.load_config()
+        
+        # .env 파일에서 API 키 로드
+        load_dotenv()
+        api_key = os.getenv('OPENAI_API_KEY')
+        if not api_key:
+            raise ValueError("OPENAI_API_KEY가 .env 파일에 설정되어 있지 않습니다.")
+            
         self.theory_llm = TheoryLLM()
         self.practice_llm = PracticeLLM()
-        self.assignment_llm = AssignmentLLM()
+        self.assignment_llm = AssignmentLLM(api_key)
 
     def load_config(self) -> Dict:
         """설정 파일 로드"""
@@ -58,20 +67,25 @@ class ContentGenerator:
             }
 
     async def generate_topic(self, topic_id: str, content_type: str = 'all', force: bool = False):
-        """단일 토픽 콘텐츠 생성"""
+        """특정 토픽의 콘텐츠 생성"""
         try:
+            # 디렉토리 구조 생성
             topic_dir = self.data_dir / topic_id
             content_dir = topic_dir / 'content'
+            theory_dir = content_dir / 'theory'
+            practice_dir = content_dir / 'practice'
+            assignments_dir = content_dir / 'assignments'
             
-            # content 디렉토리만 생성
-            content_dir.mkdir(parents=True, exist_ok=True)
+            # 필요한 모든 디렉토리 생성
+            for directory in [theory_dir, practice_dir, assignments_dir / 'data', assignments_dir / 'answers', assignments_dir / 'ui']:
+                directory.mkdir(parents=True, exist_ok=True)
             
             if content_type in ['all', 'theory']:
                 # 이론 내용 생성
                 theory_content = await self.theory_llm.generate(topic_id)
                 
-                # content 디렉토리에 저장
-                theory_file = content_dir / 'theory.html'
+                # theory.html 파일 저장
+                theory_file = theory_dir / 'theory.html'
                 with open(theory_file, 'w', encoding='utf-8') as f:
                     f.write(theory_content)
                 
@@ -81,16 +95,10 @@ class ContentGenerator:
                 # practice 내용 생성
                 practice_content = await self.practice_llm.generate(topic_id)
                 
-                # content 디렉토리에 저장
-                practice_file = content_dir / 'practice.json'
+                # practice.html 파일 저장
+                practice_file = practice_dir / 'practice.html'
                 with open(practice_file, 'w', encoding='utf-8') as f:
-                    json.dump({
-                        'content': practice_content,
-                        'metadata': {
-                            'created_at': datetime.now().isoformat(),
-                            'version': 1
-                        }
-                    }, f, indent=2, ensure_ascii=False)
+                    f.write(practice_content)
                 
                 print(f"✅ {topic_id} practice 내용 생성 완료")
             
@@ -98,19 +106,17 @@ class ContentGenerator:
                 # assignment 내용 생성
                 assignment_content = await self.assignment_llm.generate(topic_id)
                 
-                # content 디렉토리에 저장
-                assignment_file = content_dir / 'assignment.json'
-                with open(assignment_file, 'w', encoding='utf-8') as f:
-                    json.dump({
-                        'content': assignment_content,
-                        'metadata': {
-                            'created_at': datetime.now().isoformat(),
-                            'version': 1
-                        }
-                    }, f, indent=2, ensure_ascii=False)
+                # assignment 파일들 저장
+                if isinstance(assignment_content, dict):
+                    if 'content' in assignment_content:
+                        with open(assignments_dir / 'ui' / 'assignment.html', 'w', encoding='utf-8') as f:
+                            f.write(assignment_content['content'])
+                    if 'metadata' in assignment_content:
+                        with open(assignments_dir / 'data' / 'metadata.json', 'w', encoding='utf-8') as f:
+                            json.dump(assignment_content['metadata'], f, indent=2, ensure_ascii=False)
                 
                 print(f"✅ {topic_id} assignment 내용 생성 완료")
-
+            
         except Exception as e:
             print(f"❌ {topic_id} 생성 중 오류 발생: {str(e)}")
             raise
@@ -216,11 +222,13 @@ class ContentGenerator:
     def get_content_path(self, topic_id: str, content_type: str) -> Path:
         """콘텐츠 파일 경로 반환"""
         topic_dir = self.data_dir / topic_id
+        content_dir = topic_dir / 'content'
         
-        # version.json 읽기
-        with open(topic_dir / 'version.json', 'r', encoding='utf-8') as f:
-            version_info = json.load(f)
+        # 콘텐츠 타입별 경로 매핑
+        type_paths = {
+            'theory': content_dir / 'theory' / 'theory.html',
+            'practice': content_dir / 'practice' / 'practice.json',
+            'assignment': content_dir / 'assignments' / 'ui' / 'assignment.html'
+        }
         
-        # 현재 버전의 파일 경로 반환
-        content_path = version_info['content'][content_type]['path']
-        return topic_dir / content_path
+        return type_paths[content_type]

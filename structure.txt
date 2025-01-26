@@ -7,11 +7,15 @@ Codeve/
 │   ├── serializers.py    # 사용자 데이터 직렬화
 │   └── urls.py           # accounts 관련 URL 라우팅
 │
-├── courses/              # 강좌 및 학습 관리
-│   ├── templates/courses/ # 강좌 페이지 템플릿
-│   ├── models.py         # Course, Lesson, Quiz 모델
-│   ├── views.py          # 강좌 CRUD 및 퀴즈 관련 뷰
-│   ├── serializers.py    # 강좌/학습 데이터 직렬화
+├── courses/              # 이론, 실습, 과제, 회고 관리
+│   ├── agents/           # 실습의 이미지 분석 에이전트, 과제의 피드백과 이해도분석 에이전트
+│   ├── data/             # 이론, 실습, 과제, 회고 자료
+│   ├── llm/              # 이론, 실습, 과제, 회고 자료 생성 모델
+│   ├── scripts/          # 이론, 실습, 과제, 회고 자료 개별 생성 스크립트 (자동화 스크립트 포함)
+│   ├── templates/courses/ # 이론, 실습, 과제, 회고 페이지 템플릿
+│   ├── models.py         # 이론, 실습, 과제, 회고 모델
+│   ├── views.py          # 이론, 실습, 과제, 회고 뷰
+│   ├── serializers.py    # 이론, 실습, 과제, 회고 데이터 직렬화
 │   └── urls.py           # courses 관련 URL 라우팅
 │
 ├── roadmaps/             # 학습 경로 관리

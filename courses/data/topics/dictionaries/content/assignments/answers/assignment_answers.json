@@ -1,0 +1,103 @@
+{
+  "assignments": [
+    {
+      "id": 1,
+      "type": "concept_basic",
+      "correct_answer": "3",
+      "hint": "dictionary는 키(key)와 그에 대응하는 값(value)을 한 쌍으로 갖는 데이터 구조입니다."
+    },
+    {
+      "id": 2,
+      "type": "concept_application",
+      "correct_answer": "3",
+      "hint": "파이썬에서 키와 값을 연관지어 저장할 수 있는 자료구조는 딕셔너리(dictionary)입니다. 딕셔너리는 중괄호({})를 사용하며, 각 항목은 키:값 형태로 나타납니다."
+    },
+    {
+      "id": 3,
+      "type": "concept_analysis",
+      "correct_answer": "2",
+      "hint": "딕셔너리에서 키를 사용하여 값을 얻을 수 있습니다."
+    },
+    {
+      "id": 4,
+      "type": "concept_debug",
+      "correct_answer": "3",
+      "hint": "Python 사전(dictionary)에서 키를 사용해 값을 얻을 때, 사용하는 키가 사전에 없으면 KeyError가 발생합니다. 'Dave'는 favorite_colors 사전에 정의되어 있지 않습니다."
+    },
+    {
+      "id": 5,
+      "type": "metaphor",
+      "correct_answer": "3",
+      "hint": "각 항목에는 고유한 식별자가 있고, 이를 통해 해당 항목을 찾을 수 있습니다."
+    },
+    {
+      "id": 6,
+      "type": "theory_concept",
+      "correct_answer": "1",
+      "hint": "이 코드는 'books'라는 사전(dictionary)에서 특정 키('The Alchemist')에 대한 값을 조회하는 동작을 나타냅니다. 실생활에서는 특정 책의 대출 가능 여부를 확인할 때 이와 유사한 과정을 거칩니다."
+    },
+    {
+      "id": 7,
+      "type": "concept_synthesis",
+      "correct_answer": "1",
+      "hint": "준비 중입니다."
+    },
+    {
+      "id": 8,
+      "type": "implementation_playground",
+      "test_cases": [
+        {
+          "input": "book = {'title': 'The Little Prince', 'author': 'Antoine de Saint-Exupéry', 'published': 1943}\nprint(book)",
+          "output": "{'title': 'The Little Prince', 'author': 'Antoine de Saint-Exupéry', 'published': 1943}"
+        },
+        {
+          "input": "book['title'] = 'Animal Farm'\nbook['author'] = 'George Orwell'\nbook['published'] = 1945\nprint(book)",
+          "output": "{'title': 'Animal Farm', 'author': 'George Orwell', 'published': 1945}"
+        },
+        {
+          "input": "book['pages'] = 112\nprint(book)",
+          "output": "{'title': 'Animal Farm', 'author': 'George Orwell', 'published': 1945, 'pages': 112}"
+        },
+        {
+          "input": "del book['published']\nprint(book)",
+          "output": "{'title': 'Animal Farm', 'author': 'George Orwell', 'pages': 112}"
+        }
+      ],
+      "hint": "사전에서 키는 각 값(value)에 대한 고유한 식별자입니다. 키를 이용해 값을 할당(assign)하거나 변경할 수 있습니다. 또한 키를 이용해 값을 제거(del)할 수도 있습니다. 코드를 조작하여 책의 정보를 어떻게 추가, 변경, 삭제하는지 관찰해보세요."
+    },
+    {
+      "id": 9,
+      "type": "implementation_modify",
+      "test_cases": [
+        {
+          "input": "user_hobbies = {}\nuser_name = 'Alice'\nhobby = 'Painting'\n# 여기에 코드를 작성하세요\nprint(user_hobbies)",
+          "output": "{'Alice': 'Painting'}"
+        },
+        {
+          "input": "user_hobbies = {}\nuser_name = 'Bob'\nhobby = 'Cooking'\n# 여기에 코드를 작성하세요\nprint(user_hobbies)",
+          "output": "{'Bob': 'Cooking'}"
+        }
+      ],
+      "hint": "딕셔너리에 새로운 항목을 추가하려면 'dictionary[key] = value' 형태를 사용하세요. 예를 들어, 'my_dict['new_key'] = 'new_value''."
+    },
+    {
+      "id": 10,
+      "type": "implementation_creative",
+      "test_cases": [
+        {
+          "input": "fruit_prices = {'apple': 100, 'banana': 80, 'cherry': 120}\norder = ['apple', 'banana']\nprint(sum([fruit_prices[fruit] for fruit in order]))",
+          "output": "180"
+        },
+        {
+          "input": "fruit_prices = {'apple': 100, 'banana': 80, 'cherry': 120}\norder = ['cherry', 'cherry', 'apple']\nprint(sum([fruit_prices[fruit] for fruit in order]))",
+          "output": "340"
+        }
+      ],
+      "hint": "힌트:\n- 변수 fruit_prices는 각 과일의 가격을 담고 있는 사전입니다.\n- 변수 order는 고객이 주문한 과일 목록을 담고 있는 리스트입니다.\n- 리스트 컴프리헨션(list comprehension)을 사용하여 주문 리스트에 있는 과일의 가격을 fruit_prices 사전에서 찾아서 합을 구하세요.\n- sum() 함수를 사용하여 리스트에 저장된 모든 가격의 총합을 계산하세요.\n- 코드 작성 순서: 주문 리스트를 순회하며 각 과일의 가격을 찾아 합을 구하고, sum() 함수로 총합을 계산한 뒤 출력하세요."
+    }
+  ],
+  "metadata": {
+    "version": 1,
+    "created_at": "2025-01-26T06:22:23.946395"
+  }
+}

@@ -1,0 +1,154 @@
+{
+  "assignments": [
+    {
+      "id": 1,
+      "type": "concept_basic",
+      "content": "프로그래밍에서 변수의 정의는 무엇인가요?",
+      "choices": [
+        "코드의 길이를 줄이기 위한 도구",
+        "데이터를 저장하거나 참조하기 위한 메모리 공간에 붙여진 이름",
+        "프로그램의 오류를 수정하는 과정",
+        "프로그램의 실행 속도를 빠르게 하는 기술"
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 2,
+      "type": "concept_application",
+      "content": "문제를 준비 중입니다.",
+      "choices": [
+        "준비 중",
+        "준비 중",
+        "준비 중",
+        "준비 중"
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 3,
+      "type": "concept_analysis",
+      "content": "다음 코드를 실행하면 콘솔에 어떤 결과가 출력될까요?<br><br><code>apple = 10<br>banana = apple * 2<br>print(banana)</code>",
+      "choices": [
+        "apple20",
+        "20",
+        "banana",
+        "1020"
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 4,
+      "type": "concept_debug",
+      "content": "다음 코드에서 발생하는 오류는 무엇일까요?<br><br><code>number = 10<br>print(numbr)</code>",
+      "choices": [
+        "변수 'number'가 정의되지 않았습니다",
+        "print 함수의 사용법이 잘못되었습니다",
+        "변수명 'numbr'의 철자가 잘못되었습니다",
+        "'number'는 문자열이 아니므로 인용 부호가 필요합니다"
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 5,
+      "type": "metaphor",
+      "content": "프로그래밍에서의 '변수(variables)'는 어떤 일상생활의 상황과 가장 비슷한가요?",
+      "choices": [
+        "우체국 사서함에서 당신의 주소로 온 편지들을 보관하는 공간",
+        "하늘에 항상 고정된 위치에 있는 별",
+        "종이에 인쇄된 고정된 전화번호 목록",
+        "음악 CD에 녹음된 변경할 수 없는 노래들"
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 6,
+      "type": "theory_concept",
+      "content": "당신은 카페에서 친구들과 커피를 마시기로 했습니다. 각자가 원하는 커피의 수량을 파이썬 코드로 표현해봅시다.<br><br><code>americano = 4000<br>latte = 4500<br>americano_count = 2<br>latte_count = 1<br>total_cost = americano * americano_count + latte * latte_count</code><br><br>이 코드의 결과는 실생활에서 무엇과 같을까요?",
+      "choices": [
+        "친구들과 커피를 주문하고 각자의 커피 가격을 더한 총액을 계산하는 상황",
+        "카페에서 판매되는 모든 커피의 종류를 나열하는 목록",
+        "카페 메뉴에 있는 커피의 평균 가격을 계산하는 방법",
+        "커피를 마시며 친구들과 나누는 대화의 내용을 정리하는 것"
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 7,
+      "type": "concept_synthesis",
+      "content": "다음 코드는 사용자의 이름과 나이를 저장합니다.<br><br><code>name = 'Alice'<br>age = 30<br>print(name, 'is', age, 'years old')</code><br><br>이 코드에서 사용된 개념들의 올바른 설명은 무엇일까요?",
+      "choices": [
+        "'name'과 'age'는 함수이며, 'print'는 변수의 값을 출력하는 데 사용된다.",
+        "'name'은 문자열 변수이고, 'age'는 정수 변수이며, 'print' 함수는 변수의 값을 출력한다.",
+        "'name'은 정수 변수이고, 'age'는 문자열 변수이며, 'print'는 변수를 선언하는 데 사용된다.",
+        "'name'과 'age'는 리스트이며, 'print'는 리스트의 요소를 결합하여 출력하는 데 사용된다."
+      ],
+      "test_cases": null,
+      "constraints": null
+    },
+    {
+      "id": 8,
+      "type": "implementation_playground",
+      "content": "아래의 간단한 파이썬 코드를 실행해보세요. 그런 다음에, 변수 'greeting'과 'name'의 값을 바꿔 다른 인사말을 출력해보세요. 코드를 조금씩 수정하면서 출력 결과가 어떻게 바뀌는지 관찰해보세요.",
+      "choices": null,
+      "test_cases": [
+        {
+          "input": "greeting = 'Hello'\nname = 'Alice'\nprint(greeting + ', ' + name + '!')",
+          "output": "Hello, Alice!"
+        },
+        {
+          "input": "greeting = 'Good morning'\nname = 'Bob'\nprint(greeting + ', ' + name + '!')",
+          "output": "Good morning, Bob!"
+        },
+        {
+          "input": "greeting = 'How are you doing'\nname = 'Charlie'\nprint(greeting + ', ' + name + '?')",
+          "output": "How are you doing, Charlie?"
+        }
+      ],
+      "constraints": null
+    },
+    {
+      "id": 9,
+      "type": "implementation_modify",
+      "content": "아래 코드는 사용자의 이름과 나이를 출력하는 간단한 프로그램입니다. 빈 부분을 채워 프로그램을 완성해보세요.",
+      "choices": null,
+      "test_cases": [
+        {
+          "input": "name = 'Alice'\nage = 25\nprint('Hello, my name is ___ and I am ___ years old.')",
+          "output": "Hello, my name is Alice and I am 25 years old."
+        },
+        {
+          "input": "name = 'Bob'\nage = 30\nprint('Hello, my name is ___ and I am ___ years old.')",
+          "output": "Hello, my name is Bob and I am 30 years old."
+        }
+      ],
+      "constraints": null
+    },
+    {
+      "id": 10,
+      "type": "implementation_creative",
+      "content": "오늘은 당신이 새로운 카페를 개업하는 날입니다! 카페의 첫 손님을 맞이하기 위해, 당신은 간단한 카페 메뉴판을 만들기로 결정했습니다. 메뉴에는 커피와 케이크 2가지만 있습니다. 커피의 가격은 3달러, 케이크의 가격은 5달러로 설정하고 손님의 주문에 따라 총 가격을 계산하는 코드를 작성해보세요.",
+      "choices": null,
+      "test_cases": [
+        {
+          "input": "coffee = 2\ncake = 1\ntotal_price = coffee * 3 + cake * 5\nprint(total_price)",
+          "output": "11"
+        },
+        {
+          "input": "coffee = 0\ncake = 3\ntotal_price = coffee * 3 + cake * 5\nprint(total_price)",
+          "output": "15"
+        }
+      ],
+      "constraints": null
+    }
+  ],
+  "metadata": {
+    "version": 1,
+    "created_at": "2025-01-26T06:17:26.078289"
+  }
+}

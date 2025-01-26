@@ -3,6 +3,7 @@
 rules:
 `# 기본 원칙
 - 내가 묻는 질문에 즉시 답변하고, 필요시 상세 설명을 추가로 제공
+- Windows 환경과 MacOS 환경을 초반엔 같이 제공 
 - 캐주얼하고 간결한 표현 사용
 - 항상 한국어로 대답
 - 실제 코드나 구체적인 설명 제공 (추상적인 설명 지양)
@@ -65,7 +66,7 @@ rules:
 
 
 ## AI/검색
-- OpenAI GPT API (기사 요약)
+- OpenAI GPT API (이론, 실습, 과제 생성)
 - LangChain 0.1.0 (AI 통합)
 - SQLite (개발) / PostgreSQL (배포)
 - Redis (캐싱, 세션)

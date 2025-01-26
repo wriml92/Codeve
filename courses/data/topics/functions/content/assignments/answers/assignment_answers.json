@@ -1,0 +1,103 @@
+{
+  "assignments": [
+    {
+      "id": 1,
+      "type": "concept_basic",
+      "correct_answer": "3",
+      "hint": "함수는 특정 작업을 수행하도록 설계된 코드의 블록이며, 필요할 때 여러 번 호출하여 사용할 수 있습니다."
+    },
+    {
+      "id": 2,
+      "type": "concept_application",
+      "correct_answer": "2",
+      "hint": "함수는 특정 작업을 수행하는 코드의 묶음입니다. 매개변수를 통해 다양한 입력에 대응할 수 있으며, 코드의 재사용성을 높여 줍니다."
+    },
+    {
+      "id": 3,
+      "type": "concept_analysis",
+      "correct_answer": "1",
+      "hint": "함수 'greet'는 인자 'name'을 받아 문자열을 반환합니다. 'print' 함수는 'greet' 함수의 결과를 출력합니다."
+    },
+    {
+      "id": 4,
+      "type": "concept_debug",
+      "correct_answer": "1",
+      "hint": "함수를 호출할 때 사용한 이름과 선언했을 때의 이름을 잘 비교해 보세요. 프로그래밍에서 정확한 이름 사용은 매우 중요합니다."
+    },
+    {
+      "id": 5,
+      "type": "metaphor",
+      "correct_answer": "1",
+      "hint": "함수는 입력을 받아 처리 후 결과를 내놓는 과정과 비슷합니다."
+    },
+    {
+      "id": 6,
+      "type": "theory_concept",
+      "correct_answer": "1",
+      "hint": "이 코드는 재료의 양을 결정하는 'make_cake'라는 함수를 정의하고 있으며, 계란, 밀가루, 설탕을 각각의 양에 따라 조합하여 케이크를 만드는 과정을 표현하고 있습니다."
+    },
+    {
+      "id": 7,
+      "type": "concept_synthesis",
+      "correct_answer": "1",
+      "hint": "함수 'greet'는 사용자로부터 입력을 받아 처리하는 매개변수 'name'을 가지고 있으며, 'Alice'는 이 함수에 전달되는 인자입니다. 'message'는 'greet' 함수의 반환 값을 저장하는 변수입니다."
+    },
+    {
+      "id": 8,
+      "type": "implementation_playground",
+      "test_cases": [
+        {
+          "input": "def print_hello():\n    print('hello')\n\n# 함수를 호출합니다.\nprint_hello()",
+          "output": "hello"
+        },
+        {
+          "input": "def print_hello():\n    print('hi')\n\n# 함수를 호출합니다.\nprint_hello()",
+          "output": "hi"
+        },
+        {
+          "input": "def print_hello():\n    print('greetings')\n\n# 함수를 호출합니다.\nprint_hello()",
+          "output": "greetings"
+        }
+      ],
+      "hint": "이 코드에서 'def print_hello():'는 'print_hello'라는 이름의 함수를 정의합니다. 'print'는 괄호 안에 있는 메시지를 화면에 출력하는 파이썬 내장 함수입니다. 'print_hello()'는 정의된 함수를 호출하여 실행하는 코드입니다. 함수 내부의 'print' 함수에 전달되는 문자열을 변경하면, 함수가 호출될 때 출력되는 메시지가 바뀌게 됩니다."
+    },
+    {
+      "id": 9,
+      "type": "implementation_modify",
+      "test_cases": [
+        {
+          "input": "def add_numbers(a, b):\n    return _____\n\n# 예시 사용\nprint(add_numbers(3, 4))",
+          "output": "7"
+        },
+        {
+          "input": "def add_numbers(a, b):\n    return _____\n\n# 다른 예시\nprint(add_numbers(-1, 1))",
+          "output": "0"
+        }
+      ],
+      "hint": "빈 부분에는 `a`와 `b`를 더하는 연산자 '+'를 사용하면 됩니다. 예를 들어, 빈 부분을 `a + b`로 채우세요."
+    },
+    {
+      "id": 10,
+      "type": "implementation_creative",
+      "test_cases": [
+        {
+          "input": "make_coffee('에스프레소')\nadd_milk()\nadd_syrup('바닐라')",
+          "output": "당신의 커피: 에스프레소, 우유, 바닐라 시럽"
+        },
+        {
+          "input": "make_coffee('에스프레소')\nadd_syrup('카라멜')",
+          "output": "당신의 커피: 에스프레소, 카라멜 시럽"
+        },
+        {
+          "input": "make_coffee('에스프레소')\nadd_milk()",
+          "output": "당신의 커피: 에스프레소, 우유"
+        }
+      ],
+      "hint": "힌트 내용: \n- 사용할 수 있는 함수: make_coffee(base), add_milk(), add_syrup(flavor)\n- make_coffee(base): 기본 커피를 만드는 함수로, '에스프레소'를 인자로 받습니다.\n- add_milk(): 커피에 우유를 추가하는 함수입니다. 인자가 필요하지 않습니다.\n- add_syrup(flavor): 커피에 시럽을 추가하는 함수로, '바닐라'나 '카라멜'과 같은 맛의 시럽을 인자로 받습니다.\n- 코드 작성 순서: 먼저 make_coffee 함수로 커피의 기본을 만들고, 그 다음 add_milk 또는 add_syrup 함수를 호출하여 추가 재료를 넣으세요."
+    }
+  ],
+  "metadata": {
+    "version": 1,
+    "created_at": "2025-01-26T06:26:10.556386"
+  }
+}

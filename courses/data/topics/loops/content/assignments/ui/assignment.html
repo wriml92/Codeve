@@ -1,0 +1,353 @@
+<div class="space-y-8">
+                <div class="bg-white rounded-lg p-6 shadow-md">
+                    <h3 class="text-lg font-semibold mb-4">문제를 준비 중입니다.</h3>
+                    <form class="space-y-4">
+                        <div class="flex items-center space-x-2 my-2">
+                                <input type="radio" name="assignment1_answer" value="1" class="form-radio">
+                                <label>준비 중</label>
+                            </div><div class="flex items-center space-x-2 my-2">
+                                <input type="radio" name="assignment1_answer" value="2" class="form-radio">
+                                <label>준비 중</label>
+                            </div><div class="flex items-center space-x-2 my-2">
+                                <input type="radio" name="assignment1_answer" value="3" class="form-radio">
+                                <label>준비 중</label>
+                            </div><div class="flex items-center space-x-2 my-2">
+                                <input type="radio" name="assignment1_answer" value="4" class="form-radio">
+                                <label>준비 중</label>
+                            </div>
+                    </form>
+                    <button onclick="submitAssignment(1, 'concept_basic')"
+                        class="mt-6 w-full px-6 py-3 bg-gradient-to-r from-amber-500 to-yellow-400 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 hover:from-amber-600 hover:to-yellow-500 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        문제 제출하기
+                    </button>
+                    <div id="result1" class="mt-4 hidden">
+                        <div class="p-4 rounded-lg"></div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg p-6 shadow-md">
+                    <h3 class="text-lg font-semibold mb-4">당신은 파이썬으로 'Hello, World!' 메시지를 5번 화면에 출력하고자 합니다. 반복문을 사용하지 않고 일일이 코드를 작성할 수도 있지만, 효율적으로 이 작업을 수행하려면 어떻게 해야 할까요?</h3>
+                    <form class="space-y-4">
+                        <div class="flex items-center space-x-2 my-2">
+                                <input type="radio" name="assignment2_answer" value="1" class="form-radio">
+                                <label>print('Hello, World!')를 5번 복사하여 붙여넣기 합니다.</label>
+                            </div><div class="flex items-center space-x-2 my-2">
+                                <input type="radio" name="assignment2_answer" value="2" class="form-radio">
+                                <label>for i in range(5):
+    print('Hello, World!')</label>
+                            </div><div class="flex items-center space-x-2 my-2">
+                                <input type="radio" name="assignment2_answer" value="3" class="form-radio">
+                                <label>while True:
+    print('Hello, World!')</label>
+                            </div><div class="flex items-center space-x-2 my-2">
+                                <input type="radio" name="assignment2_answer" value="4" class="form-radio">
+                                <label>def print_hello_world_five_times():
+    for i in range(5):
+        print('Hello, World!')
+print_hello_world_five_times()</label>
+                            </div>
+                    </form>
+                    <button onclick="submitAssignment(2, 'concept_application')"
+                        class="mt-6 w-full px-6 py-3 bg-gradient-to-r from-amber-500 to-yellow-400 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 hover:from-amber-600 hover:to-yellow-500 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        문제 제출하기
+                    </button>
+                    <div id="result2" class="mt-4 hidden">
+                        <div class="p-4 rounded-lg"></div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg p-6 shadow-md">
+                    <h3 class="text-lg font-semibold mb-4">다음 코드를 실행하면 어떤 결과가 출력될까요?<br><br><code>for i in range(3):
+    print(i)</code></h3>
+                    <form class="space-y-4">
+                        <div class="flex items-center space-x-2 my-2">
+                                <input type="radio" name="assignment3_answer" value="1" class="form-radio">
+                                <label>1 2 3</label>
+                            </div><div class="flex items-center space-x-2 my-2">
+                                <input type="radio" name="assignment3_answer" value="2" class="form-radio">
+                                <label>0 1 2</label>
+                            </div><div class="flex items-center space-x-2 my-2">
+                                <input type="radio" name="assignment3_answer" value="3" class="form-radio">
+                                <label>1 2</label>
+                            </div><div class="flex items-center space-x-2 my-2">
+                                <input type="radio" name="assignment3_answer" value="4" class="form-radio">
+                                <label>0 1 2 3</label>
+                            </div>
+                    </form>
+                    <button onclick="submitAssignment(3, 'concept_analysis')"
+                        class="mt-6 w-full px-6 py-3 bg-gradient-to-r from-amber-500 to-yellow-400 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 hover:from-amber-600 hover:to-yellow-500 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        문제 제출하기
+                    </button>
+                    <div id="result3" class="mt-4 hidden">
+                        <div class="p-4 rounded-lg"></div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg p-6 shadow-md">
+                    <h3 class="text-lg font-semibold mb-4">다음 코드에서 발생하는 오류는 무엇일까요?<br><br><code>for i in range(5)<br>&nbsp;&nbsp;print(i)</code></h3>
+                    <form class="space-y-4">
+                        <div class="flex items-center space-x-2 my-2">
+                                <input type="radio" name="assignment4_answer" value="1" class="form-radio">
+                                <label>range() 함수의 사용 방법이 잘못되었습니다.</label>
+                            </div><div class="flex items-center space-x-2 my-2">
+                                <input type="radio" name="assignment4_answer" value="2" class="form-radio">
+                                <label>print() 함수가 잘못되었습니다.</label>
+                            </div><div class="flex items-center space-x-2 my-2">
+                                <input type="radio" name="assignment4_answer" value="3" class="form-radio">
+                                <label>for 문에 콜론(:)이 누락되었습니다.</label>
+                            </div><div class="flex items-center space-x-2 my-2">
+                                <input type="radio" name="assignment4_answer" value="4" class="form-radio">
+                                <label>변수 i를 정의하지 않았습니다.</label>
+                            </div>
+                    </form>
+                    <button onclick="submitAssignment(4, 'concept_debug')"
+                        class="mt-6 w-full px-6 py-3 bg-gradient-to-r from-amber-500 to-yellow-400 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 hover:from-amber-600 hover:to-yellow-500 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        문제 제출하기
+                    </button>
+                    <div id="result4" class="mt-4 hidden">
+                        <div class="p-4 rounded-lg"></div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg p-6 shadow-md">
+                    <h3 class="text-lg font-semibold mb-4">프로그래밍에서 '루프(loop)'는 어떤 작업을 반복적으로 수행하라는 지시와 가장 비슷한 일상 활동은 무엇일까요?</h3>
+                    <form class="space-y-4">
+                        <div class="flex items-center space-x-2 my-2">
+                                <input type="radio" name="assignment5_answer" value="1" class="form-radio">
+                                <label>책 한 권을 처음부터 끝까지 한 번만 읽기</label>
+                            </div><div class="flex items-center space-x-2 my-2">
+                                <input type="radio" name="assignment5_answer" value="2" class="form-radio">
+                                <label>식당에서 메뉴를 보고 음식을 한 번만 주문하기</label>
+                            </div><div class="flex items-center space-x-2 my-2">
+                                <input type="radio" name="assignment5_answer" value="3" class="form-radio">
+                                <label>운동할 때 정해진 횟수만큼 덤벨을 들어올리기</label>
+                            </div><div class="flex items-center space-x-2 my-2">
+                                <input type="radio" name="assignment5_answer" value="4" class="form-radio">
+                                <label>한 번만 알람을 설정해서 일어나기</label>
+                            </div>
+                    </form>
+                    <button onclick="submitAssignment(5, 'metaphor')"
+                        class="mt-6 w-full px-6 py-3 bg-gradient-to-r from-amber-500 to-yellow-400 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 hover:from-amber-600 hover:to-yellow-500 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        문제 제출하기
+                    </button>
+                    <div id="result5" class="mt-4 hidden">
+                        <div class="p-4 rounded-lg"></div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg p-6 shadow-md">
+                    <h3 class="text-lg font-semibold mb-4">운동을 하는 동안 매 운동 세션 후 1분간 휴식을 취하는 것을 습관으로 삼았습니다. 이것을 5번 반복하려고 합니다.<br><br><code>for i in range(5):<br>    rest_for_a_minute()<br>    do_next_exercise()</code><br><br>이 코드의 결과는 실생활에서 무엇과 같을까요?</h3>
+                    <form class="space-y-4">
+                        <div class="flex items-center space-x-2 my-2">
+                                <input type="radio" name="assignment6_answer" value="1" class="form-radio">
+                                <label>운동 세션을 5번 하고 나서 한 번만 1분간 쉬는 것</label>
+                            </div><div class="flex items-center space-x-2 my-2">
+                                <input type="radio" name="assignment6_answer" value="2" class="form-radio">
+                                <label>운동과 휴식 없이 5분 동안 계속 운동하는 것</label>
+                            </div><div class="flex items-center space-x-2 my-2">
+                                <input type="radio" name="assignment6_answer" value="3" class="form-radio">
+                                <label>운동 세션 사이에 1분간 휴식하면서 총 5번의 운동 세션을 완료하는 것</label>
+                            </div><div class="flex items-center space-x-2 my-2">
+                                <input type="radio" name="assignment6_answer" value="4" class="form-radio">
+                                <label>5분 동안 계속 쉬는 것</label>
+                            </div>
+                    </form>
+                    <button onclick="submitAssignment(6, 'theory_concept')"
+                        class="mt-6 w-full px-6 py-3 bg-gradient-to-r from-amber-500 to-yellow-400 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 hover:from-amber-600 hover:to-yellow-500 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        문제 제출하기
+                    </button>
+                    <div id="result6" class="mt-4 hidden">
+                        <div class="p-4 rounded-lg"></div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg p-6 shadow-md">
+                    <h3 class="text-lg font-semibold mb-4">문제를 준비 중입니다.</h3>
+                    <form class="space-y-4">
+                        <div class="flex items-center space-x-2 my-2">
+                                <input type="radio" name="assignment7_answer" value="1" class="form-radio">
+                                <label>준비 중</label>
+                            </div><div class="flex items-center space-x-2 my-2">
+                                <input type="radio" name="assignment7_answer" value="2" class="form-radio">
+                                <label>준비 중</label>
+                            </div><div class="flex items-center space-x-2 my-2">
+                                <input type="radio" name="assignment7_answer" value="3" class="form-radio">
+                                <label>준비 중</label>
+                            </div><div class="flex items-center space-x-2 my-2">
+                                <input type="radio" name="assignment7_answer" value="4" class="form-radio">
+                                <label>준비 중</label>
+                            </div>
+                    </form>
+                    <button onclick="submitAssignment(7, 'concept_synthesis')"
+                        class="mt-6 w-full px-6 py-3 bg-gradient-to-r from-amber-500 to-yellow-400 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 hover:from-amber-600 hover:to-yellow-500 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        문제 제출하기
+                    </button>
+                    <div id="result7" class="mt-4 hidden">
+                        <div class="p-4 rounded-lg"></div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg p-6 shadow-md">
+                    <h3 class="text-lg font-semibold mb-4">다음 코드는 for 루프를 사용하여 별(*) 문자로 사각형을 그리는 코드입니다. 코드를 실행하고 결과를 관찰해보세요. 그런 다음, 사각형의 크기를 바꿔보기 위해 'size' 변수의 값을 변경해보세요. 예를 들어, 'size'를 3, 5, 7로 변경하면서 각각의 결과가 어떻게 달라지는지 확인해보세요.</h3>
+                    <div class="space-y-4">
+                        <div class="bg-gray-50 p-4 rounded">
+                            <h4 class="font-medium mb-2">테스트 케이스:</h4>
+                            <div class="my-2">
+                                    <p class="text-sm text-gray-600">입력: size = 4
+for i in range(size):
+    for j in range(size):
+        print('*', end=' ')
+    print()</p>
+                                    <p class="text-sm text-gray-600">출력: * * * *
+* * * *
+* * * *
+* * * *</p>
+                                </div><div class="my-2">
+                                    <p class="text-sm text-gray-600">입력: size = 3
+for i in range(size):
+    for j in range(size):
+        print('*', end=' ')
+    print()</p>
+                                    <p class="text-sm text-gray-600">출력: * * *
+* * *
+* * *</p>
+                                </div><div class="my-2">
+                                    <p class="text-sm text-gray-600">입력: size = 5
+for i in range(size):
+    for j in range(size):
+        print('*', end=' ')
+    print()</p>
+                                    <p class="text-sm text-gray-600">출력: * * * * *
+* * * * *
+* * * * *
+* * * * *
+* * * * *</p>
+                                </div><div class="my-2">
+                                    <p class="text-sm text-gray-600">입력: size = 7
+for i in range(size):
+    for j in range(size):
+        print('*', end=' ')
+    print()</p>
+                                    <p class="text-sm text-gray-600">출력: * * * * * * *
+* * * * * * *
+* * * * * * *
+* * * * * * *
+* * * * * * *
+* * * * * * *
+* * * * * * *</p>
+                                </div>
+                        </div>
+                        <div class="mt-4">
+                            <div id="editor8" class="code-editor h-32 border rounded"></div>
+                        </div>
+                        <button onclick="submitAssignment(8, 'implementation_playground')"
+                            class="mt-6 w-full px-6 py-3 bg-gradient-to-r from-amber-500 to-yellow-400 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 hover:from-amber-600 hover:to-yellow-500 flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            코드 제출하기
+                        </button>
+                        <div id="result8" class="mt-4 hidden">
+                            <div class="p-4 rounded-lg"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg p-6 shadow-md">
+                    <h3 class="text-lg font-semibold mb-4">다음 코드의 빈 부분을 채워서 1부터 5까지의 숫자를 출력하는 프로그램을 완성해보세요. 단, 여러분은 반복문을 사용하여 숫자를 출력해야 합니다. 주어진 변수 count를 이용하세요.</h3>
+                    <div class="space-y-4">
+                        <div class="bg-gray-50 p-4 rounded">
+                            <h4 class="font-medium mb-2">테스트 케이스:</h4>
+                            <div class="my-2">
+                                    <p class="text-sm text-gray-600">입력: count = 0
+while count < 5:
+    count = count + 1
+    print(____)</p>
+                                    <p class="text-sm text-gray-600">출력: 1
+2
+3
+4
+5
+</p>
+                                </div><div class="my-2">
+                                    <p class="text-sm text-gray-600">입력: count = 0
+while count < 10:
+    count = count + 1
+    if count <= 5:
+        print(____)</p>
+                                    <p class="text-sm text-gray-600">출력: 1
+2
+3
+4
+5
+</p>
+                                </div>
+                        </div>
+                        <div class="mt-4">
+                            <div id="editor9" class="code-editor h-32 border rounded"></div>
+                        </div>
+                        <button onclick="submitAssignment(9, 'implementation_modify')"
+                            class="mt-6 w-full px-6 py-3 bg-gradient-to-r from-amber-500 to-yellow-400 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 hover:from-amber-600 hover:to-yellow-500 flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            코드 제출하기
+                        </button>
+                        <div id="result9" class="mt-4 hidden">
+                            <div class="p-4 rounded-lg"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg p-6 shadow-md">
+                    <h3 class="text-lg font-semibold mb-4">당신은 방금 새로운 요리 게임을 시작했습니다! 게임의 첫 미션으로, 당신은 레스토랑에서 5명의 손님에게 각각 딸기 파이를 제공해야 합니다. 각 손님에게 파이를 제공하는 'servePie()' 함수가 있으며, 이 함수는 호출될 때마다 '손님 #번호: 딸기 파이를 받았습니다!'라고 출력합니다. 당신의 목표는 단 3줄의 코드를 사용하여 모든 손님에게 파이를 제공하는 것입니다.</h3>
+                    <div class="space-y-4">
+                        <div class="bg-gray-50 p-4 rounded">
+                            <h4 class="font-medium mb-2">테스트 케이스:</h4>
+                            <div class="my-2">
+                                    <p class="text-sm text-gray-600">입력: for i in range(1, 6):
+    servePie(i)</p>
+                                    <p class="text-sm text-gray-600">출력: 손님 #1: 딸기 파이를 받았습니다!
+손님 #2: 딸기 파이를 받았습니다!
+손님 #3: 딸기 파이를 받았습니다!
+손님 #4: 딸기 파이를 받았습니다!
+손님 #5: 딸기 파이를 받았습니다!</p>
+                                </div><div class="my-2">
+                                    <p class="text-sm text-gray-600">입력: i = 1
+while i <= 5:
+    servePie(i)
+    i += 1</p>
+                                    <p class="text-sm text-gray-600">출력: 손님 #1: 딸기 파이를 받았습니다!
+손님 #2: 딸기 파이를 받았습니다!
+손님 #3: 딸기 파이를 받았습니다!
+손님 #4: 딸기 파이를 받았습니다!
+손님 #5: 딸기 파이를 받았습니다!</p>
+                                </div>
+                        </div>
+                        <div class="mt-4">
+                            <div id="editor10" class="code-editor h-32 border rounded"></div>
+                        </div>
+                        <button onclick="submitAssignment(10, 'implementation_creative')"
+                            class="mt-6 w-full px-6 py-3 bg-gradient-to-r from-amber-500 to-yellow-400 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 hover:from-amber-600 hover:to-yellow-500 flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            코드 제출하기
+                        </button>
+                        <div id="result10" class="mt-4 hidden">
+                            <div class="p-4 rounded-lg"></div>
+                        </div>
+                    </div>
+                </div></div>

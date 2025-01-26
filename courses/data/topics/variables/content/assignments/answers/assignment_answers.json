@@ -1,0 +1,99 @@
+{
+  "assignments": [
+    {
+      "id": 1,
+      "type": "concept_basic",
+      "correct_answer": "2",
+      "hint": "변수는 값을 저장할 수 있는 메모리 위치에 부여된 식별자입니다."
+    },
+    {
+      "id": 2,
+      "type": "concept_application",
+      "correct_answer": "1",
+      "hint": "준비 중입니다."
+    },
+    {
+      "id": 3,
+      "type": "concept_analysis",
+      "correct_answer": "2",
+      "hint": "변수 'banana'는 'apple' 변수의 값에 2를 곱한 결과를 가지고 있습니다."
+    },
+    {
+      "id": 4,
+      "type": "concept_debug",
+      "correct_answer": "3",
+      "hint": "변수를 사용할 때는 처음 정의한 이름과 정확히 일치하게 사용해야 합니다. 코드에서 변수를 호출할 때 철자를 잘못 쓴 경우, 해당 변수를 찾을 수 없어 오류가 발생합니다."
+    },
+    {
+      "id": 5,
+      "type": "metaphor",
+      "correct_answer": "1",
+      "hint": "변수는 값이 저장되고 변경될 수 있는 '공간'이나 '컨테이너'와 유사합니다."
+    },
+    {
+      "id": 6,
+      "type": "theory_concept",
+      "correct_answer": "1",
+      "hint": "이 코드에서는 변수 'americano'와 'latte'가 각 커피의 가격을, 'americano_count'와 'latte_count'는 주문할 커피의 수량을 나타내며, 'total_cost'는 주문한 커피의 총 가격을 계산합니다."
+    },
+    {
+      "id": 7,
+      "type": "concept_synthesis",
+      "correct_answer": "2",
+      "hint": "'name' 변수는 사용자의 이름을 문자열 형태로 저장하고, 'age' 변수는 사용자의 나이를 숫자 형태로 저장합니다. 'print' 함수는 저장된 변수 값을 출력하는 데 사용됩니다. 변수는 데이터를 저장하는 공간이며, 변수의 자료형에 따라 저장할 수 있는 데이터의 종류가 결정됩니다."
+    },
+    {
+      "id": 8,
+      "type": "implementation_playground",
+      "test_cases": [
+        {
+          "input": "greeting = 'Hello'\nname = 'Alice'\nprint(greeting + ', ' + name + '!')",
+          "output": "Hello, Alice!"
+        },
+        {
+          "input": "greeting = 'Good morning'\nname = 'Bob'\nprint(greeting + ', ' + name + '!')",
+          "output": "Good morning, Bob!"
+        },
+        {
+          "input": "greeting = 'How are you doing'\nname = 'Charlie'\nprint(greeting + ', ' + name + '?')",
+          "output": "How are you doing, Charlie?"
+        }
+      ],
+      "hint": "변수 'greeting'은 인사말을 저장하고, 변수 'name'은 이름을 저장합니다. 'print' 함수는 괄호 안의 내용을 화면에 출력합니다. 문자열을 '+' 기호로 연결하면, 연결된 문자열이 순서대로 합쳐져서 출력됩니다. 값을 변경하고 싶을 때는 변수에 새 값을 할당하면 됩니다."
+    },
+    {
+      "id": 9,
+      "type": "implementation_modify",
+      "test_cases": [
+        {
+          "input": "name = 'Alice'\nage = 25\nprint('Hello, my name is ___ and I am ___ years old.')",
+          "output": "Hello, my name is Alice and I am 25 years old."
+        },
+        {
+          "input": "name = 'Bob'\nage = 30\nprint('Hello, my name is ___ and I am ___ years old.')",
+          "output": "Hello, my name is Bob and I am 30 years old."
+        }
+      ],
+      "hint": "빈 칸에 들어갈 내용으로는 변수를 문자열 안에 포함시키는 방법이 필요합니다. 파이썬에서는 문자열 포맷팅을 사용하여 변수의 값을 문자열 안에 넣을 수 있습니다. 예를 들어, 'Hello, my name is {} and I am {} years old.'.format(name, age)와 같이 사용할 수 있습니다."
+    },
+    {
+      "id": 10,
+      "type": "implementation_creative",
+      "test_cases": [
+        {
+          "input": "coffee = 2\ncake = 1\ntotal_price = coffee * 3 + cake * 5\nprint(total_price)",
+          "output": "11"
+        },
+        {
+          "input": "coffee = 0\ncake = 3\ntotal_price = coffee * 3 + cake * 5\nprint(total_price)",
+          "output": "15"
+        }
+      ],
+      "hint": "힌트: 변수를 사용하여 각 메뉴의 개수를 나타내고, 가격을 곱한 다음, 둘을 더하여 총 가격을 계산합니다.\n- coffee: 손님에게 판매한 커피의 수\n- cake: 손님에게 판매한 케이크의 수\n- total_price: 계산된 총 가격\n코드 작성 순서:\n1. coffee 변수에 판매한 커피의 수를 할당하세요.\n2. cake 변수에 판매한 케이크의 수를 할당하세요.\n3. total_price를 계산하여 커피와 케이크의 총 가격을 구하세요.\n4. print 함수를 사용하여 total_price를 출력하세요."
+    }
+  ],
+  "metadata": {
+    "version": 1,
+    "created_at": "2025-01-26T06:17:26.076196"
+  }
+}

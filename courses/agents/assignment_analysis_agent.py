@@ -1,3 +1,4 @@
+'과제 분석 에이전트'
 from typing import Dict, Any, List
 import json
 from pathlib import Path
@@ -145,6 +146,28 @@ class AssignmentAnalysisAgent(BaseAgent):
     async def analyze(self, assignment_type: str, answer: str, assignment_id: int, topic_id: str, user_id: str) -> Dict[str, Any]:
         """과제 답안 분석"""
         try:
+            # 파라미터 검증
+            if not all([assignment_type, answer, assignment_id, topic_id, user_id]):
+                missing_params = []
+                if not assignment_type: missing_params.append('assignment_type')
+                if not answer: missing_params.append('answer')
+                if not assignment_id: missing_params.append('assignment_id')
+                if not topic_id: missing_params.append('topic_id')
+                if not user_id: missing_params.append('user_id')
+                return {
+                    'correct': False,
+                    'message': f'필수 파라미터가 누락되었습니다: {", ".join(missing_params)}'
+                }
+
+            # assignment_id를 정수로 변환
+            try:
+                assignment_id = int(assignment_id)
+            except (TypeError, ValueError):
+                return {
+                    'correct': False,
+                    'message': 'assignment_id는 정수여야 합니다.'
+                }
+
             # 제출 횟수 제한 확인
             attempt_check = self._check_attempt_limit(user_id, topic_id, assignment_id)
             if not attempt_check['allowed']:
@@ -178,7 +201,7 @@ class AssignmentAnalysisAgent(BaseAgent):
     async def _analyze_with_llm(self, assignment_type: str, answer: str, assignment: Dict) -> Dict[str, Any]:
         """LLM을 사용한 답안 분석"""
         try:
-            if assignment_type in ['concept', 'theory_concept', 'metaphor']:
+            if assignment_type in ['concept_basic', 'concept_application', 'concept_analysis', 'concept_debug', 'metaphor', 'theory_concept', 'concept_synthesis']:
                 prompt = f"""# 과제 정보
 문제 유형: {assignment_type}
 문제 내용: {assignment['content']}
@@ -191,7 +214,7 @@ class AssignmentAnalysisAgent(BaseAgent):
 3. 학습자의 이해도를 평가해주세요.
 4. 추가 학습이 필요한 부분이 있다면 제안해주세요."""
 
-            elif assignment_type in ['implementation_basic', 'implementation_advanced']:
+            elif assignment_type in ['implementation_playground', 'implementation_modify', 'implementation_creative']:
                 test_cases_str = "\n".join([
                     f"입력: {tc['input']}, 예상 출력: {tc['output']}"
                     for tc in assignment['test_cases']
@@ -225,7 +248,7 @@ class AssignmentAnalysisAgent(BaseAgent):
             analysis = str(response.content)
             
             # 객관식 문제의 경우 정답 여부 직접 비교
-            if assignment_type in ['concept', 'theory_concept', 'metaphor']:
+            if assignment_type in ['concept_basic', 'concept_application', 'concept_analysis', 'concept_debug', 'metaphor', 'theory_concept', 'concept_synthesis']:
                 is_correct = answer == assignment['correct_answer']
             else:
                 # 구현 문제의 경우 테스트 케이스 실행
@@ -240,7 +263,7 @@ class AssignmentAnalysisAgent(BaseAgent):
                 'correct': is_correct,
                 'message': analysis,
                 'feedback': f"{encouragement}\n\n{analysis}\n\n{improvement if not is_correct else ''}",
-                'test_results': test_results if assignment_type in ['implementation_basic', 'implementation_advanced'] else None
+                'test_results': test_results if assignment_type in ['implementation_playground', 'implementation_modify', 'implementation_creative'] else None
             }
 
         except Exception as e:

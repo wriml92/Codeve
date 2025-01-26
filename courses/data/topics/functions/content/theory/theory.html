@@ -1,0 +1,95 @@
+<div class="space-y-8">
+    <!-- 1. 개념 소개 섹션 -->
+    <section class="mb-8">
+        <h2 class="text-lg font-semibold text-black-600 mb-3">개념 소개</h2>
+        <p class="text-gray-800 leading-relaxed">
+            여러분, 이번에는 파이썬에서 <b>함수(functions)</b>에 대해 알아보도록 할게요. 
+            함수를 이해하는 가장 쉬운 방법은 생각보다 일상생활에서 매우 친숙한 것인데요, 바로 '요리 레시피'라고 생각하면 됩니다. 
+            요리 레시피처럼 함수는 특정 작업을 수행하기 위해 필요한 단계들을 정리한 것입니다. 
+            즉, 함수는 특정 작업을 수행하는 일련의 코드를 포함하며, 이 작업을 여러 번 수행하고 싶을 때마다 함수를 '호출(call)'하여 사용합니다.
+            왜 함수가 필요할까요? 예를 들어, 여러분이 수백 번 이상 반복되는 복잡한 작업을 수행해야 한다고 상상해봅시다. 
+            함수가 없다면 그 작업을 매번 수동으로 코딩해야 하겠죠. 하지만 함수를 사용하면 그 작업을 한 번만 코딩하고, 필요할 때마다 함수를 호출하기만 하면 됩니다. 
+            코딩을 더 간결하고, 효율적이며, 가독성 좋게 만드는 데에 함수는 큰 역할을 합니다.
+        </p>
+    </section>
+
+    <!-- 2. 실생활 비유 섹션 -->
+    <section class="mb-8">
+        <h2 class="text-lg font-semibold text-black-600 mb-3">비유</h2>
+        <p class="text-gray-800 leading-relaxed">
+            함수를 이해하는 데 도움이 될 만한 비유를 몇 가지 더 들어볼게요. 첫 번째는 '자판기' 입니다. 
+            자판기는 동전을 넣고 버튼을 누르면 음료수를 제공하는 기능을 가지고 있죠. 
+            이것을 함수와 비교해보면, 동전 넣는 행동이 함수에 값을 전달하는 '인자(argument)'가 되고, 버튼을 누르는 행동이 함수를 호출하는 것입니다. 
+            그리고 자판기가 음료수를 내놓는 것이 함수의 결과를 반환(return)하는 것이에요.
+        </p>
+        <div class="bg-gray-900 rounded-lg p-4 mt-4">
+            <pre class="text-white font-mono text-sm">
+# 음료수 자판기 함수를 정의합니다.
+def vending_machine(coin):
+    if coin == 500:
+        return "콜라"
+    elif coin == 1000:
+        return "사이다"
+    else:
+        return "알맞은 동전을 넣어주세요."
+
+# 함수를 호출해서 음료수를 받습니다.
+drink = vending_machine(500)
+print(drink)
+            </pre>
+            <p class="text-green-400 mt-2"># 실행 결과: 콜라</p>
+        </div>
+    </section>
+
+    <!-- 3. 실생활 응용 섹션 -->
+    <section class="mb-8">
+        <h2 class="text-lg font-semibold text-black-600 mb-3">실생활 응용</h2>
+        <p class="text-gray-800 leading-relaxed">
+            함수는 여러분이 컴퓨터 과제를 할 때, 게임을 만들 때, 심지어는 SNS 포스팅을 자동화할 때도 유용하게 사용될 수 있습니다. 
+            예를 들어, 여러분이 학교 과제로 평균 점수를 계산해야 하는 상황이 있다고 가정해봅시다. 
+            이럴 때 함수를 사용하면 점수를 입력하면 평균 점수를 바로 계산해주는 프로그램을 만들 수 있습니다. 
+            게임을 만들 때도, 캐릭터가 이동하거나 점프하는 등의 동작을 함수로 만들어 놓으면 게임 코드 작성이 훨씬 간편해집니다.
+        </p>
+    </section>
+
+    <!-- 4. 핵심 포인트 섹션 -->
+    <section class="mb-8">
+        <h2 class="text-lg font-semibold text-black-600 mb-3">핵심 포인트</h2>
+        <div class="space-y-4">
+            <div class="key-point bg-gray-50 border-l-4 border-blue-500 p-4">
+                함수는 특정 작업을 수행하는 일련의 코드를 포함하며, 이 작업을 여러 번 수행하고 싶을 때마다 함수를 '호출(call)'하여 사용합니다.
+            </div>
+            <div class="key-point bg-gray-50 border-l-4 border-blue-500 p-4">
+                함수를 사용하면 코딩을 더 간결하고, 효율적이며, 가독성 좋게 만들 수 있습니다.
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. 주의사항 섹션 -->
+    <section class="mb-8">
+        <h2 class="text-lg font-semibold mb-3">주의사항</h2>
+        <ul class="list-decimal list-inside space-y-4">
+            <li>
+                <div class="mb-2">함수를 정의할 때 입력값을 제대로 설정하지 않으면 오류가 발생합니다.</div>
+                <div class="space-y-2">
+                    <div class="bg-red-50 p-3 rounded-lg border-l-4 border-red-500">
+                        <div class="text-red-600 font-medium mb-1">❌ 잘못된 예시:</div>
+                        <pre class="bg-white p-2 rounded">
+def greeting():
+    print("Hello, " + name)
+greeting("John")
+                        </pre>
+                    </div>
+                    <div class="bg-green-50 p-3 rounded-lg border-l-4 border-green-500">
+                        <div class="text-green-600 font-medium mb-1">✅ 올바른 예시:</div>
+                        <pre class="bg-white p-2 rounded">
+def greeting(name):
+    print("Hello, " + name)
+greeting("John")
+                        </pre>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </section>
+</div>

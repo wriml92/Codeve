@@ -1,0 +1,87 @@
+{
+  "assignments": [
+    {
+      "id": 1,
+      "type": "concept_basic",
+      "correct_answer": "1",
+      "hint": "예외는 프로그램 실행 도중에 발생하는 예상치 못한 이벤트로, 프로그램의 정상적인 흐름을 방해합니다."
+    },
+    {
+      "id": 2,
+      "type": "concept_application",
+      "correct_answer": "2",
+      "hint": "예외 처리를 사용하면 프로그램 실행 중 예외적인 상황이 발생했을 때 오류를 방지하고 적절한 메시지를 출력할 수 있습니다. 파이썬에서는 try-except 블록을 사용하여 예외를 처리합니다."
+    },
+    {
+      "id": 3,
+      "type": "concept_analysis",
+      "correct_answer": "2",
+      "hint": "리스트의 인덱스는 0부터 시작합니다. 리스트의 길이보다 큰 인덱스를 조회하면 에러가 발생합니다."
+    },
+    {
+      "id": 4,
+      "type": "concept_debug",
+      "correct_answer": "2",
+      "hint": "오류 메시지는 변수가 정의되지 않았을 때 발생합니다. 코드를 살펴보면, 변수의 이름을 잘못 적었는지 확인하세요."
+    },
+    {
+      "id": 5,
+      "type": "metaphor",
+      "correct_answer": "2",
+      "hint": "예외 처리는 프로그램이 예외 상황을 발견했을 때 적절한 조치를 취하여 프로그램이 계속 실행될 수 있도록 하는 것입니다."
+    },
+    {
+      "id": 6,
+      "type": "theory_concept",
+      "correct_answer": "3",
+      "hint": "코드의 'raise ValueError' 부분은 계량컵의 용량이 필요한 밀가루 양보다 작을 때 발생하는 예외(에러)를 나타냅니다. 이는 계량컵이 너무 작아서 필요한 모든 밀가루를 담을 수 없는 상황과 비슷합니다."
+    },
+    {
+      "id": 7,
+      "type": "concept_synthesis",
+      "correct_answer": "1",
+      "hint": "try 블록은 예외를 처리하려는 코드를 포함하는데 사용되며, finally 블록은 예외의 발생과 상관없이 실행되어야 하는 '정리(clean-up)' 코드를 포함합니다. finally 블록은 주로 자원을 해제하거나 필요한 종료 작업을 수행하는 데 사용됩니다."
+    },
+    {
+      "id": 8,
+      "type": "implementation_playground",
+      "test_cases": [
+        {
+          "input": "",
+          "output": ""
+        }
+      ],
+      "hint": "준비 중입니다."
+    },
+    {
+      "id": 9,
+      "type": "implementation_modify",
+      "test_cases": [
+        {
+          "input": "",
+          "output": ""
+        }
+      ],
+      "hint": "준비 중입니다."
+    },
+    {
+      "id": 10,
+      "type": "implementation_creative",
+      "test_cases": [
+        {
+          "input": "try:\n    cast_spell('아바다 케다브라')\nexcept SpellError:\n    print('주문 실패')",
+          "output": "주문 성공"
+        },
+        {
+          "input": "try:\n    cast_spell('오누이 발리')\nexcept SpellError:\n    print('주문 실패')",
+          "output": "주문 실패"
+        }
+      ],
+      "hint": "힌트: 사용할 수 있는 함수와 예외는 `cast_spell(spell)`과 `SpellError`입니다. `cast_spell` 함수는 주문을 인자로 받아서 주문이 올바르면 '주문 성공'을, 잘못되면 `SpellError` 예외를 발생시킵니다. 코드를 작성할 때는 먼저 `try` 블록 안에 `cast_spell` 함수를 호출하는 코드를 작성하고, `except SpellError` 블록 안에 '주문 실패'를 출력하는 코드를 작성하세요."
+    }
+  ],
+  "metadata": {
+    "version": 1,
+    "created_at": "2025-01-26T06:30:01.607810"
+  }
+}

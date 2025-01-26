@@ -1,0 +1,304 @@
+<div class="space-y-8">
+                <div class="bg-white rounded-lg p-6 shadow-md">
+                    <h3 class="text-lg font-semibold mb-4">컴퓨터 과학에서 '입출력(input/output)'의 정의는 무엇인가요?</h3>
+                    <form class="space-y-4">
+                        <div class="flex items-center space-x-2 my-2">
+                                <input type="radio" name="assignment1_answer" value="1" class="form-radio">
+                                <label>프로그램이 실행되는 동안 발생하는 오류를 처리하는 과정</label>
+                            </div><div class="flex items-center space-x-2 my-2">
+                                <input type="radio" name="assignment1_answer" value="2" class="form-radio">
+                                <label>데이터를 저장하는 장치 또는 메모리 영역</label>
+                            </div><div class="flex items-center space-x-2 my-2">
+                                <input type="radio" name="assignment1_answer" value="3" class="form-radio">
+                                <label>사용자나 다른 시스템으로부터 데이터를 받아들이고, 결과를 전달하는 과정</label>
+                            </div><div class="flex items-center space-x-2 my-2">
+                                <input type="radio" name="assignment1_answer" value="4" class="form-radio">
+                                <label>프로그램의 소스 코드를 컴퓨터가 이해할 수 있는 기계어로 변환하는 과정</label>
+                            </div>
+                    </form>
+                    <button onclick="submitAssignment(1, 'concept_basic')"
+                        class="mt-6 w-full px-6 py-3 bg-gradient-to-r from-amber-500 to-yellow-400 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 hover:from-amber-600 hover:to-yellow-500 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        문제 제출하기
+                    </button>
+                    <div id="result1" class="mt-4 hidden">
+                        <div class="p-4 rounded-lg"></div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg p-6 shadow-md">
+                    <h3 class="text-lg font-semibold mb-4">당신은 파이썬을 사용하여 콘솔에서 사용자로부터 이름을 입력받고 이를 화면에 출력하는 간단한 프로그램을 작성하고 있습니다. 사용자의 이름을 입력받기 위해서 어떻게 해야 할까요?</h3>
+                    <form class="space-y-4">
+                        <div class="flex items-center space-x-2 my-2">
+                                <input type="radio" name="assignment2_answer" value="1" class="form-radio">
+                                <label>name = input('Enter your name: ')</label>
+                            </div><div class="flex items-center space-x-2 my-2">
+                                <input type="radio" name="assignment2_answer" value="2" class="form-radio">
+                                <label>print('Enter your name: ')</label>
+                            </div><div class="flex items-center space-x-2 my-2">
+                                <input type="radio" name="assignment2_answer" value="3" class="form-radio">
+                                <label>name = 'Enter your name: '</label>
+                            </div><div class="flex items-center space-x-2 my-2">
+                                <input type="radio" name="assignment2_answer" value="4" class="form-radio">
+                                <label>input = 'Enter your name: '</label>
+                            </div>
+                    </form>
+                    <button onclick="submitAssignment(2, 'concept_application')"
+                        class="mt-6 w-full px-6 py-3 bg-gradient-to-r from-amber-500 to-yellow-400 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 hover:from-amber-600 hover:to-yellow-500 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        문제 제출하기
+                    </button>
+                    <div id="result2" class="mt-4 hidden">
+                        <div class="p-4 rounded-lg"></div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg p-6 shadow-md">
+                    <h3 class="text-lg font-semibold mb-4">다음 코드를 실행하면 어떤 결과가 출력될까요?<br><br><code>name = 'Alice'<br>print('Hello, ' + name + '!')</code></h3>
+                    <form class="space-y-4">
+                        <div class="flex items-center space-x-2 my-2">
+                                <input type="radio" name="assignment3_answer" value="1" class="form-radio">
+                                <label>Hello Alice!</label>
+                            </div><div class="flex items-center space-x-2 my-2">
+                                <input type="radio" name="assignment3_answer" value="2" class="form-radio">
+                                <label>Hello, Alice</label>
+                            </div><div class="flex items-center space-x-2 my-2">
+                                <input type="radio" name="assignment3_answer" value="3" class="form-radio">
+                                <label>Hello, Alice!</label>
+                            </div><div class="flex items-center space-x-2 my-2">
+                                <input type="radio" name="assignment3_answer" value="4" class="form-radio">
+                                <label>Alice, Hello!</label>
+                            </div>
+                    </form>
+                    <button onclick="submitAssignment(3, 'concept_analysis')"
+                        class="mt-6 w-full px-6 py-3 bg-gradient-to-r from-amber-500 to-yellow-400 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 hover:from-amber-600 hover:to-yellow-500 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        문제 제출하기
+                    </button>
+                    <div id="result3" class="mt-4 hidden">
+                        <div class="p-4 rounded-lg"></div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg p-6 shadow-md">
+                    <h3 class="text-lg font-semibold mb-4">다음 코드에서 발생하는 오류는 무엇일까요?<br><br><code>print('당신의 이름은: ' + name)</code></h3>
+                    <form class="space-y-4">
+                        <div class="flex items-center space-x-2 my-2">
+                                <input type="radio" name="assignment4_answer" value="1" class="form-radio">
+                                <label>name 변수가 정의되지 않았습니다</label>
+                            </div><div class="flex items-center space-x-2 my-2">
+                                <input type="radio" name="assignment4_answer" value="2" class="form-radio">
+                                <label>print 함수의 괄호가 닫히지 않았습니다</label>
+                            </div><div class="flex items-center space-x-2 my-2">
+                                <input type="radio" name="assignment4_answer" value="3" class="form-radio">
+                                <label>문자열 연결에 사용된 + 기호가 잘못되었습니다</label>
+                            </div><div class="flex items-center space-x-2 my-2">
+                                <input type="radio" name="assignment4_answer" value="4" class="form-radio">
+                                <label>문자열에 단일따옴표(')가 아닌 이중따옴표(")를 사용해야 합니다</label>
+                            </div>
+                    </form>
+                    <button onclick="submitAssignment(4, 'concept_debug')"
+                        class="mt-6 w-full px-6 py-3 bg-gradient-to-r from-amber-500 to-yellow-400 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 hover:from-amber-600 hover:to-yellow-500 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        문제 제출하기
+                    </button>
+                    <div id="result4" class="mt-4 hidden">
+                        <div class="p-4 rounded-lg"></div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg p-6 shadow-md">
+                    <h3 class="text-lg font-semibold mb-4">컴퓨터 프로그램의 '입력(input)'과 '출력(output)' 과정을 일상에서의 어떤 상황으로 가장 잘 비유할 수 있을까요?</h3>
+                    <form class="space-y-4">
+                        <div class="flex items-center space-x-2 my-2">
+                                <input type="radio" name="assignment5_answer" value="1" class="form-radio">
+                                <label>책을 읽으면서 내용을 이해하는 과정</label>
+                            </div><div class="flex items-center space-x-2 my-2">
+                                <input type="radio" name="assignment5_answer" value="2" class="form-radio">
+                                <label>음식 재료를 넣고 레시피에 따라 요리하는 과정</label>
+                            </div><div class="flex items-center space-x-2 my-2">
+                                <input type="radio" name="assignment5_answer" value="3" class="form-radio">
+                                <label>가게에서 물건을 고르고 결제하는 과정</label>
+                            </div><div class="flex items-center space-x-2 my-2">
+                                <input type="radio" name="assignment5_answer" value="4" class="form-radio">
+                                <label>음악을 듣고 감정이 변화하는 과정</label>
+                            </div>
+                    </form>
+                    <button onclick="submitAssignment(5, 'metaphor')"
+                        class="mt-6 w-full px-6 py-3 bg-gradient-to-r from-amber-500 to-yellow-400 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 hover:from-amber-600 hover:to-yellow-500 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        문제 제출하기
+                    </button>
+                    <div id="result5" class="mt-4 hidden">
+                        <div class="p-4 rounded-lg"></div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg p-6 shadow-md">
+                    <h3 class="text-lg font-semibold mb-4">당신은 레몬에이드 스탠드를 운영하고 있고, 각 고객이 주문한 레몬에이드의 양을 계산해야 합니다. 한 컵의 레몬에이드 가격은 1500원입니다.<br><br><code>lemonade_price = 1500<br>customer_order = 2<br>total_cost = lemonade_price * customer_order</code><br><br>위 코드의 결과는 실생활에서 무엇과 같을까요?</h3>
+                    <form class="space-y-4">
+                        <div class="flex items-center space-x-2 my-2">
+                                <input type="radio" name="assignment6_answer" value="1" class="form-radio">
+                                <label>레몬에이드 2컵을 주문한 고객에게 3000원을 청구합니다.</label>
+                            </div><div class="flex items-center space-x-2 my-2">
+                                <input type="radio" name="assignment6_answer" value="2" class="form-radio">
+                                <label>레몬에이드 1컵당 가격이 3000원으로 책정됩니다.</label>
+                            </div><div class="flex items-center space-x-2 my-2">
+                                <input type="radio" name="assignment6_answer" value="3" class="form-radio">
+                                <label>고객이 레몬에이드 2컵을 주문하지만 1컵만 지불합니다.</label>
+                            </div><div class="flex items-center space-x-2 my-2">
+                                <input type="radio" name="assignment6_answer" value="4" class="form-radio">
+                                <label>레몬에이드를 팔기 위해 3000원의 투자를 합니다.</label>
+                            </div>
+                    </form>
+                    <button onclick="submitAssignment(6, 'theory_concept')"
+                        class="mt-6 w-full px-6 py-3 bg-gradient-to-r from-amber-500 to-yellow-400 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 hover:from-amber-600 hover:to-yellow-500 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        문제 제출하기
+                    </button>
+                    <div id="result6" class="mt-4 hidden">
+                        <div class="p-4 rounded-lg"></div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg p-6 shadow-md">
+                    <h3 class="text-lg font-semibold mb-4">사용자로부터 이름을 입력받아 인사말을 출력하는 프로그램을 작성했습니다.<br><br><code>name = input('Enter your name: ')<br>print('Hello, ' + name + '!')</code><br><br>이 코드에서 사용된 개념들의 올바른 설명은 무엇일까요?</h3>
+                    <form class="space-y-4">
+                        <div class="flex items-center space-x-2 my-2">
+                                <input type="radio" name="assignment7_answer" value="1" class="form-radio">
+                                <label>input 함수는 사용자의 입력을 받아 변수에 저장하고, print 함수는 저장된 값을 연결하여 출력한다.</label>
+                            </div><div class="flex items-center space-x-2 my-2">
+                                <input type="radio" name="assignment7_answer" value="2" class="form-radio">
+                                <label>input 함수는 프로그램의 출력을 생성하고, print 함수는 사용자로부터 데이터를 요청한다.</label>
+                            </div><div class="flex items-center space-x-2 my-2">
+                                <input type="radio" name="assignment7_answer" value="3" class="form-radio">
+                                <label>print 함수는 사용자의 입력을 받아 변수에 저장하고, input 함수는 저장된 값을 연결하여 출력한다.</label>
+                            </div><div class="flex items-center space-x-2 my-2">
+                                <input type="radio" name="assignment7_answer" value="4" class="form-radio">
+                                <label>input 함수와 print 함수 모두 프로그램의 데이터를 처리하지 않고 단순히 텍스트를 화면에 출력한다.</label>
+                            </div>
+                    </form>
+                    <button onclick="submitAssignment(7, 'concept_synthesis')"
+                        class="mt-6 w-full px-6 py-3 bg-gradient-to-r from-amber-500 to-yellow-400 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 hover:from-amber-600 hover:to-yellow-500 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        문제 제출하기
+                    </button>
+                    <div id="result7" class="mt-4 hidden">
+                        <div class="p-4 rounded-lg"></div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg p-6 shadow-md">
+                    <h3 class="text-lg font-semibold mb-4">아래에 제공된 Python 코드를 실행해보세요. 이 코드는 'Hello, World!' 라는 메시지를 세 번 출력합니다. 코드를 실행한 후, 반복 횟수를 변경하고, 출력되는 메시지를 수정하여 결과가 어떻게 바뀌는지 관찰해보세요.</h3>
+                    <div class="space-y-4">
+                        <div class="bg-gray-50 p-4 rounded">
+                            <h4 class="font-medium mb-2">테스트 케이스:</h4>
+                            <div class="my-2">
+                                    <p class="text-sm text-gray-600">입력: for i in range(3):
+    print('Hello, World!')</p>
+                                    <p class="text-sm text-gray-600">출력: Hello, World!
+Hello, World!
+Hello, World!</p>
+                                </div><div class="my-2">
+                                    <p class="text-sm text-gray-600">입력: for i in range(5):
+    print('안녕하세요!')</p>
+                                    <p class="text-sm text-gray-600">출력: 안녕하세요!
+안녕하세요!
+안녕하세요!
+안녕하세요!
+안녕하세요!</p>
+                                </div><div class="my-2">
+                                    <p class="text-sm text-gray-600">입력: for i in range(1):
+    print('First Program')</p>
+                                    <p class="text-sm text-gray-600">출력: First Program</p>
+                                </div>
+                        </div>
+                        <div class="mt-4">
+                            <div id="editor8" class="code-editor h-32 border rounded"></div>
+                        </div>
+                        <button onclick="submitAssignment(8, 'implementation_playground')"
+                            class="mt-6 w-full px-6 py-3 bg-gradient-to-r from-amber-500 to-yellow-400 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 hover:from-amber-600 hover:to-yellow-500 flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            코드 제출하기
+                        </button>
+                        <div id="result8" class="mt-4 hidden">
+                            <div class="p-4 rounded-lg"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg p-6 shadow-md">
+                    <h3 class="text-lg font-semibold mb-4">아래 코드는 사용자로부터 이름과 나이를 입력받아 환영 메시지를 출력하는 프로그램입니다. 하지만 코드에는 일부분이 누락되어 있어서 완성하지 못했습니다. 빈 부분을 채워 프로그램을 완성해보세요.</h3>
+                    <div class="space-y-4">
+                        <div class="bg-gray-50 p-4 rounded">
+                            <h4 class="font-medium mb-2">테스트 케이스:</h4>
+                            <div class="my-2">
+                                    <p class="text-sm text-gray-600">입력: name = input('Enter your name: ')
+age = input('Enter your age: ')
+print(f'Welcome, ___(1)____! You are ___(2)____ years old.')</p>
+                                    <p class="text-sm text-gray-600">출력: Enter your name: Alice
+Enter your age: 23
+Welcome, Alice! You are 23 years old.</p>
+                                </div><div class="my-2">
+                                    <p class="text-sm text-gray-600">입력: name = input('Enter your name: ')
+age = input('Enter your age: ')
+print(f'Hello, ___(1)____! Next year, you will be ___(2)____.')</p>
+                                    <p class="text-sm text-gray-600">출력: Enter your name: Bob
+Enter your age: 30
+Hello, Bob! Next year, you will be 31.</p>
+                                </div>
+                        </div>
+                        <div class="mt-4">
+                            <div id="editor9" class="code-editor h-32 border rounded"></div>
+                        </div>
+                        <button onclick="submitAssignment(9, 'implementation_modify')"
+                            class="mt-6 w-full px-6 py-3 bg-gradient-to-r from-amber-500 to-yellow-400 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 hover:from-amber-600 hover:to-yellow-500 flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            코드 제출하기
+                        </button>
+                        <div id="result9" class="mt-4 hidden">
+                            <div class="p-4 rounded-lg"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg p-6 shadow-md">
+                    <h3 class="text-lg font-semibold mb-4">당신은 '코드 카페'의 바리스타가 되었습니다. 카페에서는 손님들의 주문을 코드로 받아 커피를 제조합니다. 손님이 '아메리카노'를 주문했다면, 그에 맞는 커피를 만들어내는 코드를 작성해보세요. 커피 제조기(machine)에는 'addEspresso()'와 'addWater()'라는 함수가 있으며, 아메리카노를 만들기 위해서는 에스프레소 한 번에 물을 두 번 추가해야 합니다. 코드를 성공적으로 작성하면, 커피 제조기가 '아메리카노 완성!'이라고 알려줄 것입니다.</h3>
+                    <div class="space-y-4">
+                        <div class="bg-gray-50 p-4 rounded">
+                            <h4 class="font-medium mb-2">테스트 케이스:</h4>
+                            <div class="my-2">
+                                    <p class="text-sm text-gray-600">입력: addEspresso()
+addWater()
+addWater()</p>
+                                    <p class="text-sm text-gray-600">출력: 아메리카노 완성!</p>
+                                </div><div class="my-2">
+                                    <p class="text-sm text-gray-600">입력: addEspresso()
+addWater()</p>
+                                    <p class="text-sm text-gray-600">출력: 아메리카노 미완성!</p>
+                                </div>
+                        </div>
+                        <div class="mt-4">
+                            <div id="editor10" class="code-editor h-32 border rounded"></div>
+                        </div>
+                        <button onclick="submitAssignment(10, 'implementation_creative')"
+                            class="mt-6 w-full px-6 py-3 bg-gradient-to-r from-amber-500 to-yellow-400 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 hover:from-amber-600 hover:to-yellow-500 flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            코드 제출하기
+                        </button>
+                        <div id="result10" class="mt-4 hidden">
+                            <div class="p-4 rounded-lg"></div>
+                        </div>
+                    </div>
+                </div></div>

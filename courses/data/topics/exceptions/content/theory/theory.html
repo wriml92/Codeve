@@ -1,0 +1,93 @@
+<div class="space-y-8">
+    <!-- 1. 개념 소개 섹션 -->
+    <section class="mb-8">
+        <h2 class="text-lg font-semibold text-black-600 mb-3">개념 소개</h2>
+        <p class="text-gray-800 leading-relaxed">
+            상상해봅시다. 당신이 소방관이라고 생각해보세요. 소방관이 불을 끄는 것처럼, 프로그래머도 프로그램에서 발생할 수 있는 문제를 미리 예상하고 대비해야 합니다. 그러한 문제들을 예외(Exception)라고 부릅니다. 
+            <br><br>
+            예외(Exception)란 프로그램이 실행되는 동안 발생할 수 있는 오류를 말합니다. 프로그램이 잘못된 데이터를 사용하려고 하거나, 존재하지 않는 파일을 열려고 할 때와 같이 예기치 않는 상황이 발생하면, 파이썬은 이를 '예외'라고 인식하고 프로그램의 실행을 중단시킵니다.
+            <br><br>
+            예외처리(Exception Handling)란 이런 예외가 발생했을 때 프로그램의 실행을 중단시키지 않고, 문제를 해결하거나 무시하고 계속 실행하도록 만드는 방법을 말합니다. 이를 통해 소프트웨어의 안정성과 신뢰성을 높일 수 있습니다.
+            <br><br>
+            예를 들어, 당신이 ATM기를 사용하여 계좌에서 돈을 인출하려고 할 때, 만약 계좌에 돈이 충분하지 않다면, ATM기는 오류 메시지를 보여주고 다른 행동을 하도록 유도합니다. 이것이 바로 예외처리의 일상생활 예시입니다.
+        </p>
+    </section>
+
+    <!-- 2. 실생활 비유 섹션 -->
+    <section class="mb-8">
+        <h2 class="text-lg font-semibold text-black-600 mb-3">비유</h2>
+        <p class="text-gray-800 leading-relaxed">
+            예외처리를 이해하는 데 도움이 될 비유를 몇 가지 제시해 보겠습니다:
+            <br><br>
+            1. <b>소방안전 시스템</b>: 예외처리는 건물의 소방 시스템과 유사합니다. 불이 발생하면, 스프링클러가 작동하고, 알람이 울리며, 사람들이 안전하게 대피할 수 있도록 안내합니다. 이처럼 예외처리도 프로그램에서 문제가 발생했을 때 적절한 조치를 취하고, 프로그램이 안전하게 계속 실행될 수 있도록 돕습니다.
+            <br><br>
+            2. <b>안전벨트</b>: 예외처리는 운전 중에 차량에 문제가 발생했을 때 안전벨트가 운전자를 보호하는 것과 같습니다. 예외처리를 통해 프로그램은 예상치 못한 상황으로부터 보호받을 수 있습니다.
+        </p>
+        <div class="bg-gray-900 rounded-lg p-4 mt-4">
+            <pre class="text-white font-mono text-sm">
+try:
+    x = int(input("Enter a number: "))
+except ValueError:
+    print("That's not a valid number!")
+</pre>
+            <p class="text-green-400 mt-2"># 실행 결과: 에러가 발생하면 그에 따른 메시지를 출력합니다.</p>
+        </div>
+    </section>
+
+    <!-- 3. 실생활 응용 섹션 -->
+    <section class="mb-8">
+        <h2 class="text-lg font-semibold text-black-600 mb-3">실생활 응용</h2>
+        <p class="text-gray-800 leading-relaxed">
+            예외처리는 여러분이 작성하는 모든 프로그램에서 중요한 역할을 합니다. 사용자로부터 입력을 받는 간단한 프로그램에서부터, 대규모 데이터를 처리하는 복잡한 시스템까지, 예외처리는 프로그램이 예상치 못한 상황에 대처하고 안정적으로 실행되도록 돕습니다.
+            <br><br>
+            예를 들어, SNS 앱을 만들고 있다고 가정해봅시다. 사용자가 사진을 업로드하려고 할 때, 파일이 너무 크거나 지원하지 않는 형식일 수 있습니다. 이런 경우, 앱은 예외처리를 통해 사용자에게 적절한 메시지를 보여주고, 다른 파일을 선택하도록 안내할 수 있습니다.
+        </p>
+    </section>
+
+    <!-- 4. 핵심 포인트 섹션 -->
+    <section class="mb-8">
+        <h2 class="text-lg font-semibold text-black-600 mb-3">핵심 포인트</h2>
+        <div class="space-y-4">
+            <div class="key-point bg-gray-50 border-l-4 border-blue-500 p-4">
+                예외(Exception)는 프로그램 실행 중에 발생할 수 있는 오류를 말합니다.
+            </div>
+            <div class="key-point bg-gray-50 border-l-4 border-blue-500 p-4">
+                예외처리(Exception Handling)는 예외가 발생했을 때 프로그램의 실행을 계속할 수 있도록 돕는 방법입니다.
+            </div>
+            <div class="key-point bg-gray-50 border-l-4 border-blue-500 p-4">
+                파이썬에서는 try-except 구문을 사용하여 예외를 처리합니다.
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. 주의사항 섹션 -->
+    <section class="mb-8">
+        <h2 class="text-lg font-semibold text-black-600 mb-3">주의사항</h2>
+        <ul class="list-decimal list-inside space-y-4">
+            <li>
+                <div class="mb-2">예외처리는 프로그램에서 발생할 수 있는 모든 종류의 오류를 대비하는 것이 아니라, 예상 가능한 오류만을 대비하는 것입니다. 예상하지 못한 오류가 발생하면, 그것은 버그로 간주되어 별도의 디버깅 과정을 통해 수정되어야 합니다.</div>
+                <div class="space-y-2">
+                    <div class="bg-red-50 p-3 rounded-lg border-l-4 border-red-500">
+                        <div class="text-red-600 font-medium mb-1">❌ 잘못된 예시:</div>
+                        <pre class="bg-white p-2 rounded">
+try:
+    # 예상치 못한 오류가 발생하는 코드
+    something_complex()
+except:
+    pass  # 예외를 아무런 처리 없이 무시함
+</pre>
+                    </div>
+                    <div class="bg-green-50 p-3 rounded-lg border-l-4 border-green-500">
+                        <div class="text-green-600 font-medium mb-1">✅ 올바른 예시:</div>
+                        <pre class="bg-white p-2 rounded">
+try:
+    something_complex()
+except ExpectedError as e:  # 예상 가능한 오류만을 처리함
+    handle_error(e)  # 오류를 적절하게 처리함
+</pre>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </section>
+</div>

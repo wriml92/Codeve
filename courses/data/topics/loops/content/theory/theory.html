@@ -1,0 +1,79 @@
+<div class="space-y-8">
+    <!-- 1. 개념 소개 섹션 -->
+    <section class="mb-8">
+        <h2 class="text-lg font-semibold text-black-600 mb-3">개념 소개: 루프 (Loops)</h2>
+        <p class="text-gray-800 leading-relaxed">
+            루프를 이해하기 쉬운 예로 생각해보세요. 당신이 운동을 할 때, 같은 동작을 여러 번 반복하곤 하죠? 예를 들어, 스쿼트를 10회, 푸시업을 20회 하는 등의 반복적인 동작이 바로 <b>루프</b>와 같습니다.<br>
+            프로그래밍에서 <span style='color: #0066cc;'>루프 (loop)</span>는 특정 코드 블록을 반복적으로 실행하는 것을 의미합니다. 이 코드 블록은 한 번만 실행될 수도 있고, 여러 번 실행될 수도 있습니다. 또한, 특정 조건에 따라 실행 횟수를 동적으로 변경할 수도 있습니다.<br>
+            루프는 반복적인 작업을 쉽게 처리하기 위해 사용됩니다. 예를 들어, 1부터 100까지의 모든 숫자를 출력하려면 숫자를 직접 모두 입력하지 않고, 루프를 사용하여 쉽게 처리할 수 있습니다.<br>
+            루프에 대해 처음 들었다면 "코드를 반복한다는 게 정확히 무슨 뜻인가요?", "왜 루프를 사용해야 하나요?", "루프는 어떻게 작동하나요?"와 같은 의문을 가질 수 있습니다. 이 섹션에서는 이러한 의문들을 차근차근 해결해 나갈 것입니다.
+        </p>
+    </section>
+
+    <!-- 2. 실생활 비유 섹션 -->
+    <section class="mb-8">
+        <h2 class="text-lg font-semibold text-black-600 mb-3">비유</h2>
+        <p class="text-gray-800 leading-relaxed">
+            먼저, 루프를 <b>운동</b>에 비유해보겠습니다. 당신이 운동을 할 때, 스쿼트를 10회 반복하는 것을 생각해보세요. 이는 "스쿼트를 한 번 하라는 명령"을 10번 반복하는 것과 같습니다. 이처럼 루프는 같은 명령을 여러 번 실행합니다.<br>
+            또 다른 비유로는 <b>알람 시계</b>를 들 수 있습니다. 매일 아침 7시에 알람이 울리도록 설정하면, 이는 "아침 7시에 알람을 울려라"는 명령을 매일 반복하는 것입니다. 이처럼 루프는 이전에 설정한 조건에 따라 명령을 반복적으로 수행합니다.<br>
+            마지막으로, <b>커피 머신</b>을 생각해보세요. 여러분이 버튼을 누르면 커피 머신은 설정된 프로세스를 반복하여 커피를 만듭니다. 이와 마찬가지로 루프는 설정된 프로세스를 반복하여 원하는 결과를 만들어냅니다.
+        </p>
+        <div class="bg-gray-900 rounded-lg p-4 mt-4">
+            <pre class="text-white font-mono text-sm">
+# 간단한 루프 예제
+for i in range(5):
+    print("Hello, world!")
+            </pre>
+            <p class="text-green-400 mt-2"># 실행 결과: Hello, world! 가 5번 출력됩니다.</p>
+        </div>
+    </section>
+
+    <!-- 3. 실생활 응용 섹션 -->
+    <section class="mb-8">
+        <h2 class="text-lg font-semibold text-black-600 mb-3">실생활 응용</h2>
+        <p class="text-gray-800 leading-relaxed">
+            루프는 실생활에서도 다양하게 응용될 수 있습니다. 예를 들어, 단어장 앱을 만든다고 가정해봅시다. 단어장에 있는 각 단어를 사용자에게 보여주고, 뜻을 입력하게 하려면 루프를 사용해 단어를 하나씩 가져와 처리하면 됩니다.<br>
+            또한, 게임에서도 루프는 매우 중요한 역할을 합니다. 게임 캐릭터가 계속 움직이도록 하려면, 캐릭터의 움직임을 계속 업데이트하는 루프가 필요합니다.<br>
+            마지막으로, SNS나 메시징 앱에서 새로운 메시지를 확인하거나 알림을 받는 것도 루프를 통해 가능합니다. 앱은 일정한 간격으로 새로운 메시지가 있는지 확인하는 루프를 실행하고, 새로운 메시지가 있으면 사용자에게 알립니다.
+        </p>
+    </section>
+
+    <!-- 4. 핵심 포인트 섹션 -->
+    <section class="mb-8">
+        <h2 class="text-lg font-semibold text-black-600 mb-3">핵심 포인트</h2>
+        <div class="space-y-4">
+            <div class="key-point bg-gray-50 border-l-4 border-blue-500 p-4">
+                루프는 <b>특정 코드 블록을 반복적으로 실행</b>하는 것입니다. 이는 반복적인 작업을 쉽게 처리할 수 있게 합니다.
+            </div>
+            <div class="key-point bg-gray-50 border-l-4 border-blue-500 p-4">
+                루프는 <b>조건에 따라 실행 횟수를 변경</b>할 수 있습니다. 이는 동적인 프로그램을 만들 수 있게 합니다.
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. 주의사항 섹션 -->
+    <section class="mb-8">
+        <h2 class="text-lg font-semibold mb-3">주의사항</h2>
+        <ul class="list-decimal list-inside space-y-4">
+            <li>
+                <div class="mb-2">루프의 조건을 잘못 설정하면 무한 루프에 빠질 수 있습니다. 이는 프로그램이 끝나지 않고 계속 실행되는 상황을 의미합니다.</div>
+                <div class="space-y-2">
+                    <div class="bg-red-50 p-3 rounded-lg border-l-4 border-red-500">
+                        <div class="text-red-600 font-medium mb-1">❌ 잘못된 예시:</div>
+                        <pre class="bg-white p-2 rounded">
+while True:
+    print("Hello, world!")
+                        </pre>
+                    </div>
+                    <div class="bg-green-50 p-3 rounded-lg border-l-4 border-green-500">
+                        <div class="text-green-600 font-medium mb-1">✅ 올바른 예시:</div>
+                        <pre class="bg-white p-2 rounded">
+for i in range(5):
+    print("Hello, world!")
+                        </pre>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </section>
+</div>

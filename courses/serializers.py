@@ -1,10 +1,10 @@
 from rest_framework import serializers
-from .models import Course, Lesson, Quiz, PracticeExercise, UserCourse
+from .models import Course, Lesson, Assignment, PracticeExercise, UserCourse
 
 
-class QuizSerializer(serializers.ModelSerializer):
+class AssignmentSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Quiz
+        model = Assignment
         fields = '__all__'
 
 
@@ -15,7 +15,8 @@ class PracticeExerciseSerializer(serializers.ModelSerializer):
 
 
 class LessonSerializer(serializers.ModelSerializer):
-    quizzes = QuizSerializer(many=True, read_only=True)
+    assignments = AssignmentSerializer(many=True, read_only=True)
+    quizzes = AssignmentSerializer(many=True, read_only=True)
     exercises = PracticeExerciseSerializer(many=True, read_only=True)
 
     class Meta:
