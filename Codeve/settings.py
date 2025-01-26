@@ -12,7 +12,9 @@ load_dotenv(dotenv_path=os.path.join(BASE_DIR, '.env'))
 # 보안 설정 (Security Settings)
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 DEBUG = True
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '13.209.76.10',
+]
 
 # ------------------------------------------------------------------------------
 # 애플리케이션 설정 (Application Settings)
