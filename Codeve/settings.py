@@ -12,9 +12,7 @@ load_dotenv(dotenv_path=os.path.join(BASE_DIR, '.env'))
 # 보안 설정 (Security Settings)
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 DEBUG = True
-ALLOWED_HOSTS = [
-    '13.209.76.10',
-]
+ALLOWED_HOSTS = ['3.34.45.101']
 
 # ------------------------------------------------------------------------------
 # 애플리케이션 설정 (Application Settings)
@@ -183,7 +181,7 @@ MESSAGE_TAGS = {
 # ------------------------------------------------------------------------------
 # 정적 파일 및 미디어 설정 (Static & Media Settings)
 # ------------------------------------------------------------------------------
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
