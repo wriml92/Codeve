@@ -44,4 +44,7 @@ urlpatterns = [
     path('accounts/password/reset/',
          auth_views.PasswordResetView.as_view(),
          name='password_reset'),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
+
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
