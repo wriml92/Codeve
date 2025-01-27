@@ -24,6 +24,15 @@ class ChatRequestSerializer(serializers.Serializer):
 
     def validate_message(self, value):
         """메시지 유효성 검사 및 전처리"""
-        if not value.strip():
-            raise serializers.ValidationError("메시지가 필요합니다")
+        if not value or not value.strip():
+            raise serializers.ValidationError("메시지 내용이 비어있습니다.")
+        
+        # 최소 길이 검사
+        if len(value.strip()) < 2:
+            raise serializers.ValidationError("메시지는 최소 2자 이상이어야 합니다.")
+            
+        # 최대 길이 검사
+        if len(value.strip()) > 1000:
+            raise serializers.ValidationError("메시지는 1000자를 초과할 수 없습니다.")
+            
         return value.strip() 

@@ -79,13 +79,16 @@ class ChatbotWidget {
 
         const messagesContainer = document.querySelector('.chat-messages');
         const input = document.querySelector('.chat-input input');
+        input.value = '';
 
         try {
             this.displayMessage(message, 'user-message');
             
             const botMessageDiv = document.createElement('div');
             botMessageDiv.className = 'bot-message';
+            botMessageDiv.textContent = '...';
             messagesContainer.appendChild(botMessageDiv);
+            this.scrollToBottom(messagesContainer);
             
             const response = await fetch('/api/chatbot/', {
                 method: 'POST',
@@ -107,8 +110,6 @@ class ChatbotWidget {
             
             botMessageDiv.textContent = data.response;
             this.scrollToBottom(messagesContainer);
-            
-            input.value = '';
             this.saveChatHistory(data.response, 'bot-message');
             
         } catch (error) {
@@ -117,13 +118,15 @@ class ChatbotWidget {
             errorDiv.className = 'error-message';
             errorDiv.textContent = '죄송합니다. 오류가 발생했습니다.';
             messagesContainer.appendChild(errorDiv);
+            this.scrollToBottom(messagesContainer);
         }
     }
 
     scrollToBottom(element) {
-        setTimeout(() => {
-            element.scrollTop = element.scrollHeight;
-        }, 100);
+        if (!element) return;
+        
+        // 간단하고 안정적인 스크롤
+        element.scrollTop = element.scrollHeight;
     }
 
     getCookie(name) {
@@ -148,8 +151,9 @@ class ChatbotWidget {
         messageDiv.textContent = text;
         messagesContainer.appendChild(messageDiv);
         
-        this.saveChatHistory(text, className);
+        // 메시지 추가 후 즉시 스크롤
         this.scrollToBottom(messagesContainer);
+        this.saveChatHistory(text, className);
     }
 
     saveChatHistory(message, type) {

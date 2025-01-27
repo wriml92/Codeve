@@ -76,6 +76,10 @@ class ChatbotViewSet(viewsets.ViewSet):
         return None
 
     def create(self, request):
+        # 사용자 인증 확인
+        if not request.user.is_authenticated:
+            return Response({"error": "로그인이 필요한 서비스입니다."}, status=401)
+
         # 요청 데이터 검증
         serializer = ChatRequestSerializer(data=request.data)
         if not serializer.is_valid():
@@ -109,27 +113,33 @@ class ChatbotViewSet(viewsets.ViewSet):
 
     def _save_chat_message(self, user, message, response, is_cached):
         """채팅 메시지 저장"""
-        serializer = ChatMessageSerializer(data={
-            'user': user.id,
-            'message': message,
-            'response': response,
-            'is_cached': is_cached
-        })
-        if serializer.is_valid():
-            serializer.save()
+        try:
+            chat_message = ChatMessage.objects.create(
+                user=user,
+                message=message,
+                response=response,
+                is_cached=is_cached
+            )
+            return chat_message
+        except Exception as e:
+            logger.error(f"채팅 메시지 저장 중 오류 발생: {str(e)}")
+            # 메시지 저장 실패는 사용자 응답에 영향을 주지 않도록 함
+            return None
 
     def _call_openai_api(self, message):
         # OpenAI API 키 확인
         if not settings.OPENAI_API_KEY:
-            raise APIException("OpenAI API key is not configured")
+            logger.error("OpenAI API 키가 설정되지 않았습니다")
+            raise APIException("OpenAI API 키가 설정되지 않았습니다")
 
         try:
             # OpenAI API 호출
             client = OpenAI(api_key=settings.OPENAI_API_KEY)
+            
+            # 스트리밍 없이 일반 응답으로 변경
             response = client.chat.completions.create(
-                model="gpt-4o-mini",  # 오타가 있습니다
+                model="gpt-4o-mini",
                 messages=[
-                    # 시스템 프롬프트 설정
                     {"role": "system", "content": """
                         당신은 파이썬 프로그래밍 언어를 가르쳐주는 선생님입니다. 다음 규칙을 따라주세요:
                         1. 항상 존댓말을 사용합니다
@@ -140,20 +150,27 @@ class ChatbotViewSet(viewsets.ViewSet):
                     """},
                     {"role": "user", "content": message}
                 ],
-                temperature=0.1,
+                temperature=0.7,
                 max_tokens=500,
-                frequency_penalty=0.5,
-                stream=True
+                stream=False  # 스트리밍 비활성화
             )
 
-            # 스트리밍 응답 처리
-            full_response = ""
-            for chunk in response:
-                if chunk.choices[0].delta.content is not None:
-                    full_response += chunk.choices[0].delta.content
+            # 응답 처리
+            if not response.choices or not response.choices[0].message.content:
+                logger.error("OpenAI API가 빈 응답을 반환했습니다")
+                raise APIException("응답을 생성할 수 없습니다")
 
-            return full_response
+            return response.choices[0].message.content.strip()
 
         except Exception as e:
-            logger.error(f"OpenAI API 오류: {str(e)}")
-            raise APIException("챗봇 응답 생성 중 오류가 발생했습니다")
+            error_msg = str(e)
+            logger.error(f"OpenAI API 오류: {error_msg}")
+            
+            if "rate limit" in error_msg.lower():
+                raise APIException("요청이 너무 많습니다. 잠시 후 다시 시도해주세요")
+            elif "invalid_api_key" in error_msg.lower():
+                raise APIException("API 키가 유효하지 않습니다")
+            elif "model_not_found" in error_msg.lower():
+                raise APIException("지원하지 않는 AI 모델입니다")
+            else:
+                raise APIException("챗봇 응답 생성 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요")
