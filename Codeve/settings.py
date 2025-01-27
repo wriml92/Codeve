@@ -12,7 +12,7 @@ load_dotenv(dotenv_path=os.path.join(BASE_DIR, '.env'))
 # 보안 설정 (Security Settings)
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 DEBUG = True
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # ------------------------------------------------------------------------------
 # 애플리케이션 설정 (Application Settings)
@@ -181,13 +181,24 @@ MESSAGE_TAGS = {
 # ------------------------------------------------------------------------------
 # 정적 파일 및 미디어 설정 (Static & Media Settings)
 # ------------------------------------------------------------------------------
-STATIC_URL = 'static/'
-STATICFILES_DIRS = [
-    BASE_DIR / 'static',
-]
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+AWS_S3_ACCESS_KEY_ID = os.getenv("AWS_S3_ACCESS_KEY_ID")
+AWS_S3_SECRET_ACCESS_KEY = os.getenv("AWS_S3_SECRET_ACCESS_KEY")
+AWS_S3_REGION_NAME = os.getenv("AWS_S3_REGION_NAME")
+AWS_STORAGE_BUCKET_NAME = os.getenv("AWS_STORAGE_BUCKET_NAME")
+AWS_S3_URL = os.getenv("AWS_S3_URL")
+AWS_S3_OBJECT_PARAMETERS = {"CacheControl": "max-age=86400"}
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.s3.S3Storage",
+    },
+    "staticfiles": {
+        "BACKEND": "storages.backends.s3.S3StaticStorage",
+    },
+}
 
+AWS_LOCATION = "static"
+STATIC_URL = f"{AWS_S3_URL}/{AWS_LOCATION}/"
 
 # ------------------------------------------------------------------------------
 # 국제화 설정 (Internationalization Settings)
@@ -206,3 +217,4 @@ PASSWORD_RESET_TIMEOUT = 259200  # 3일
 
 # OpenAI API 설정
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY', None)
+

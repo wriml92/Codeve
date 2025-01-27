@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnl
 from django.shortcuts import get_object_or_404
 from .models import Course, Lesson, Assignment, PracticeExercise, UserCourse
 from .serializers import (CourseSerializer, LessonSerializer, AssignmentSerializer,
-                          PracticeExerciseSerializer, UserCourseSerializer)
+                        PracticeExerciseSerializer, UserCourseSerializer)
 from django.http import JsonResponse
 import json
 import os
@@ -43,6 +43,7 @@ TOPICS = [
     {'id': 'files', 'name': '파일 입출력'}
 ]
 
+
 class CourseViewSet(viewsets.ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
@@ -52,17 +53,17 @@ class CourseViewSet(viewsets.ModelViewSet):
     def enroll(self, request, pk=None):
         course = self.get_object()
         user = request.user
-
+        
         if UserCourse.objects.filter(user=user, course=course).exists():
-            return Response({'error': '이미 수강 신청된 강좌입니다.'},
-                            status=status.HTTP_400_BAD_REQUEST)
-
+            return Response({'error': '이미 수강 신청된 강좌입니다.'}, 
+                status=status.HTTP_400_BAD_REQUEST)
+        
         user_course = UserCourse.objects.create(
             user=user,
             course=course,
             status='enrolled'
         )
-
+        
         serializer = UserCourseSerializer(user_course)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
@@ -93,7 +94,7 @@ class PracticeExerciseViewSet(viewsets.ModelViewSet):
     def submit_solution(self, request, pk=None):
         exercise = self.get_object()
         submitted_code = request.data.get('code')
-
+        
         # TODO: 코드 실행 및 테스트 케이스 검증 로직 구현
         return Response({'message': '제출이 완료되었습니다.'})
 
@@ -109,7 +110,7 @@ class UserCourseViewSet(viewsets.ModelViewSet):
     def update_progress(self, request, pk=None):
         user_course = self.get_object()
         progress = request.data.get('progress_percentage')
-
+        
         if progress is not None:
             user_course.progress_percentage = progress
             if progress == 100:
@@ -117,12 +118,12 @@ class UserCourseViewSet(viewsets.ModelViewSet):
             elif progress > 0:
                 user_course.status = 'in_progress'
             user_course.save()
-
+            
             serializer = self.get_serializer(user_course)
             return Response(serializer.data)
-
-        return Response({'error': '진행률이 제공되지 않았습니다.'},
-                        status=status.HTTP_400_BAD_REQUEST)
+        
+        return Response({'error': '진행률이 제공되지 않았습니다.'}, 
+            status=status.HTTP_400_BAD_REQUEST)
 
 
 @login_required
@@ -135,7 +136,7 @@ def complete_topic(request, topic_id):
                 'status': 'error',
                 'message': '유효하지 않은 토픽입니다.'
             }, status=400)
-        
+
         # 코스 가져오기 또는 생성
         try:
             course = Course.objects.first()
@@ -152,7 +153,7 @@ def complete_topic(request, topic_id):
                 'status': 'error',
                 'message': '코스 생성 중 오류가 발생했습니다.'
             }, status=500)
-        
+
         try:
             # 사용자의 코스 등록 정보 찾기 또는 생성
             user_course, created = UserCourse.objects.get_or_create(
@@ -173,7 +174,8 @@ def complete_topic(request, topic_id):
 
         try:
             # 현재 완료된 토픽 목록 가져오기
-            completed_topics = set(user_course.completed_topics.split(',')) if user_course.completed_topics else set()
+            completed_topics = set(user_course.completed_topics.split(
+                ',')) if user_course.completed_topics else set()
             completed_topics.add(str(topic_id))
 
             # 중복 제거 및 정렬
@@ -201,7 +203,7 @@ def complete_topic(request, topic_id):
             'progress': progress,
             'completed_topics': completed_topics
         })
-        
+
     except Exception as e:
         print(f"예상치 못한 오류: {str(e)}")
         return JsonResponse({
@@ -214,12 +216,13 @@ def load_topic_content(topic_id: str, content_type: str) -> dict:
     """토픽의 콘텐츠 로드"""
     try:
         # content 디렉토리에서 파일을 찾도록 수정
-        content_file = Path(__file__).parent / 'data' / 'topics' / topic_id / 'content' / f'{content_type}.json'
-        
+        content_file = Path(__file__).parent / 'data' / 'topics' / \
+            topic_id / 'content' / f'{content_type}.json'
+
         if content_file.exists():
             with open(content_file, 'r', encoding='utf-8') as f:
                 return json.load(f)
-        
+
         # 파일이 없을 경우 기본 템플릿 반환
         if content_type == 'assignment':
             return {
@@ -253,14 +256,15 @@ def theory_lesson_detail(request, topic_id=None):
     """이론 학습 뷰"""
     if topic_id is None:
         topic_id = TOPICS[0]['id']
-        
+
     topic_name = next((t['name'] for t in TOPICS if t['id'] == topic_id), '')
-    
+
     try:
         # 새로운 경로 구조에 맞게 수정
         base_dir = Path(__file__).parent
-        theory_file = base_dir / 'data' / 'topics' / topic_id / 'content' / 'theory' / 'theory.html'
-        
+        theory_file = base_dir / 'data' / 'topics' / \
+            topic_id / 'content' / 'theory' / 'theory.html'
+
         with open(theory_file, 'r', encoding='utf-8') as f:
             content = f.read()
             
@@ -271,7 +275,7 @@ def theory_lesson_detail(request, topic_id=None):
             'content': mark_safe(content)
         }
         return render(request, 'courses/theory-lesson.html', context)
-        
+
     except FileNotFoundError:
         context = {
             'topics': TOPICS,
@@ -295,28 +299,31 @@ def practice_view(request, topic_id=None):
     """실습 뷰"""
     if topic_id is None:
         topic_id = TOPICS[0]['id']
-        
+
     topic_name = next((t['name'] for t in TOPICS if t['id'] == topic_id), '')
-    
+
     try:
         # 새로운 경로 구조에 맞게 수정
         base_dir = Path(__file__).parent
-        practice_file = base_dir / 'data' / 'topics' / topic_id / 'content' / 'practice' / 'practice.html'
-        
+        practice_file = base_dir / 'data' / 'topics' / \
+            topic_id / 'content' / 'practice' / 'practice.html'
+
         with open(practice_file, 'r', encoding='utf-8') as f:
             content = f.read()
-            
+
             # 메타데이터와 불필요한 마크업 제거
             content = re.sub(r'<!--[\s\S]*?-->', '', content)  # HTML 주석 제거
-            content = re.sub(r'#\s*출력\s*데이터\s*```html', '', content)  # 출력 데이터 마크업 제거
+            content = re.sub(r'#\s*출력\s*데이터\s*```html',
+                             '', content)  # 출력 데이터 마크업 제거
             content = re.sub(r'```(?:html)?\s*', '', content)  # 모든 백틱 제거
-            
+
             # 실제 콘텐츠 부분만 추출
             if '<div class="practice-content' in content:
-                content_match = re.search(r'(<div class="practice-content.*?</div>)\s*$', content, re.DOTALL)
+                content_match = re.search(
+                    r'(<div class="practice-content.*?</div>)\s*$', content, re.DOTALL)
                 if content_match:
                     content = content_match.group(1)
-                    
+            
         context = {
             'topics': TOPICS,
             'topic_id': topic_id,
@@ -324,7 +331,7 @@ def practice_view(request, topic_id=None):
             'practice_content': mark_safe(content)
         }
         return render(request, 'courses/practice.html', context)
-        
+
     except FileNotFoundError:
         context = {
             'topics': TOPICS,
@@ -354,7 +361,7 @@ def course_list_view(request):
     course_list_path = Path(__file__).parent / 'data' / 'course_list.json'
     with open(course_list_path, 'r', encoding='utf-8') as f:
         course_list = json.load(f)
-
+    
     # Python 코스 정보에 정의된 토픽 목록 사용
     python_course = course_list['python']
     python_course['topics'] = TOPICS  # 정의된 토픽 목록으로 교체
@@ -364,9 +371,10 @@ def course_list_view(request):
     if request.user.is_authenticated:
         try:
             user_course = UserCourse.objects.get(user=request.user)
-            completed_topics = set(user_course.completed_topics.split(',')) if user_course.completed_topics else set()
+            completed_topics = set(user_course.completed_topics.split(
+                ',')) if user_course.completed_topics else set()
             progress_percentage = (len(completed_topics) / len(TOPICS)) * 100
-            
+
             # 각 토픽의 완료 상태 설정
             for topic in TOPICS:
                 topic['is_completed'] = topic['id'] in completed_topics
@@ -398,20 +406,22 @@ def resume_learning(request):
         return redirect('courses:theory-lesson-detail', topic_id=TOPICS[0]['id'])
 
     # completed_topics에서 마지막으로 완료한 토픽 ID 가져오기
-    completed_topics = user_course.completed_topics.split(',') if user_course.completed_topics else []
-    
+    completed_topics = user_course.completed_topics.split(
+        ',') if user_course.completed_topics else []
+
     if completed_topics:
         last_completed_topic = completed_topics[-1]
         # TOPICS 리스트에서 현재 토픽의 인덱스 찾기
-        current_index = next((i for i, topic in enumerate(TOPICS) if topic['id'] == last_completed_topic), -1)
-        
+        current_index = next((i for i, topic in enumerate(
+            TOPICS) if topic['id'] == last_completed_topic), -1)
+
         if current_index >= len(TOPICS) - 1:
             # 마지막 토픽이면 첫 번째 토픽으로 이동
             next_topic_id = TOPICS[0]['id']
         else:
             # 다음 토픽으로 이동
             next_topic_id = TOPICS[current_index + 1]['id']
-            
+
         return redirect('courses:theory-lesson-detail', topic_id=next_topic_id)
     else:
         # 완료한 토픽이 없으면 첫 번째 토픽으로 이동
@@ -422,8 +432,9 @@ def load_assignment_data(topic_id: str) -> dict:
     """토픽별 과제 데이터 로드"""
     try:
         base_dir = Path(__file__).parent
-        assignment_file = base_dir / 'data' / 'topics' / topic_id / 'content' / 'assignments' / 'data' / 'assignment.json'
-        
+        assignment_file = base_dir / 'data' / 'topics' / topic_id / \
+            'content' / 'assignments' / 'data' / 'assignment.json'
+
         with open(assignment_file, 'r', encoding='utf-8') as f:
             return json.load(f)
     except FileNotFoundError:
@@ -439,18 +450,19 @@ def load_assignment_data(topic_id: str) -> dict:
             ]
         }
 
+
 def assignment_view(request, topic_id=None):
     """과제 뷰"""
     if topic_id is None:
         topic_id = TOPICS[0]['id']
-        
+
     topic_name = next((t['name'] for t in TOPICS if t['id'] == topic_id), '')
-    
+
     try:
         # assignment.json 파일 읽기
         assignment_data = load_assignment_data(topic_id)
         print(f"로드된 과제 데이터: {assignment_data}")  # 디버깅용 출력
-        
+
         if assignment_data is None:  # 파일이 없거나 로드 실패
             context = {
                 'topics': TOPICS,
@@ -466,14 +478,15 @@ def assignment_view(request, topic_id=None):
                 'topic_name': topic_name,
                 'assignments': assignment_data.get('assignments', [])
             }
-            
+
         # 렌더링된 HTML 확인
         from django.template.loader import render_to_string
-        rendered_html = render_to_string('courses/assignment.html', context, request)
+        rendered_html = render_to_string(
+            'courses/assignment.html', context, request)
         print(f"렌더링된 HTML (일부): {rendered_html[:1000]}")  # 처음 1000자만 출력
-        
+
         return render(request, 'courses/assignment.html', context)
-        
+
     except Exception as e:
         print(f"Error loading assignment content: {str(e)}")
         context = {
@@ -500,8 +513,10 @@ def submit_assignment(request, topic_id):
 
         # 파일 경로 설정
         base_path = Path(__file__).parent
-        content_file = base_path / 'data' / 'topics' / topic_id / 'content' / 'assignments' / 'data' / 'assignment.json'
-        answer_file = base_path / 'data' / 'topics' / topic_id / 'content' / 'assignments' / 'answers' / 'assignment_answers.json'
+        content_file = base_path / 'data' / 'topics' / topic_id / \
+            'content' / 'assignments' / 'data' / 'assignment.json'
+        answer_file = base_path / 'data' / 'topics' / topic_id / \
+            'content' / 'assignments' / 'answers' / 'assignment_answers.json'
         attempts_file = base_path / 'agents' / 'assignment_attempts.json'
 
         # 데이터 로드
@@ -509,21 +524,23 @@ def submit_assignment(request, topic_id):
             assignments_data = json.load(f)
         with open(answer_file, 'r', encoding='utf-8') as f:
             answers_data = json.load(f)
-        
+
         # 시도 횟수 데이터 로드
         attempts = {}
         if attempts_file.exists():
             with open(attempts_file, 'r') as f:
                 attempts = json.load(f)
-        
+
         attempt_key = f"{user_id}_{topic_id}_{assignment_id}"
         user_attempts = attempts.get(attempt_key, {'attempts': 0})
         current_attempt = user_attempts.get('attempts', 0) + 1
 
         # 해당 과제와 정답 찾기
-        assignment = next((a for a in assignments_data['assignments'] if str(a['id']) == str(assignment_id)), None)
-        answer_data = next((a for a in answers_data['assignments'] if str(a['id']) == str(assignment_id)), None)
-        
+        assignment = next((a for a in assignments_data['assignments'] if str(
+            a['id']) == str(assignment_id)), None)
+        answer_data = next((a for a in answers_data['assignments'] if str(
+            a['id']) == str(assignment_id)), None)
+
         if not assignment or not answer_data:
             return JsonResponse({'error': '과제를 찾을 수 없습니다.'}, status=404)
 
@@ -531,33 +548,34 @@ def submit_assignment(request, topic_id):
         if answer_type in ['concept_basic', 'concept_application', 'concept_analysis', 'concept_debug', 'metaphor', 'theory_concept', 'concept_synthesis']:
             # 객관식 문제 처리
             is_correct = str(answer) == str(answer_data['correct_answer'])
-            
+
             if is_correct:
                 feedback = "정답입니다! 잘 이해하고 계시네요."
             else:
                 # 두 번째 시도부터 힌트 제공
-                feedback = answer_data.get('hint', '다시 한번 생각해보세요.') if current_attempt >= 2 else "다시 한번 생각해보세요."
-                
+                feedback = answer_data.get(
+                    'hint', '다시 한번 생각해보세요.') if current_attempt >= 2 else "다시 한번 생각해보세요."
+
                 # 시도 횟수 업데이트
                 user_attempts['attempts'] = current_attempt
                 user_attempts['last_attempt'] = datetime.now().isoformat()
                 attempts[attempt_key] = user_attempts
-                
+
                 # 시도 횟수 저장
                 with open(attempts_file, 'w') as f:
                     json.dump(attempts, f, indent=2)
-            
+
             return JsonResponse({
                 'correct': is_correct,
                 'feedback': feedback
             })
-            
+
         elif answer_type in ['implementation_playground', 'implementation_modify', 'implementation_creative']:
             # 구현 문제는 현재 지원하지 않음
             return JsonResponse({
                 'error': '구현 문제는 현재 준비 중입니다.'
             }, status=400)
-            
+
         else:
             return JsonResponse({
                 'error': f'지원하지 않는 과제 유형입니다: {answer_type}'
@@ -573,11 +591,12 @@ def submit_assignment(request, topic_id):
 def save_assignment_data(topic_id: str, data: Dict[str, Any]) -> None:
     """과제 데이터 저장"""
     base_dir = Path(__file__).parent
-    assignment_file = base_dir / 'data' / 'topics' / topic_id / 'content' / 'assignments' / 'data' / 'assignment.json'
-    
+    assignment_file = base_dir / 'data' / 'topics' / topic_id / \
+        'content' / 'assignments' / 'data' / 'assignment.json'
+
     # 디렉토리가 없으면 생성
     assignment_file.parent.mkdir(parents=True, exist_ok=True)
-    
+
     with open(assignment_file, 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
 
@@ -627,7 +646,7 @@ async def submit_practice(request, topic_id):
                 return JsonResponse(response_data)
             else:
                 print(f"분석 실패: {result.get('error')}")  # 디버깅을 위한 로그 추가
-                return JsonResponse({
+    return JsonResponse({
                     'success': False,
                     'error': result.get('error', '분석 중 오류가 발생했습니다.')
                 })
