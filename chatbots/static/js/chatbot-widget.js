@@ -36,7 +36,6 @@ class ChatbotWidget {
             </div>
         `;
         document.body.appendChild(widget);
-        
         this.bindEvents();
     }
 
@@ -47,6 +46,7 @@ class ChatbotWidget {
         const closeBtn = document.querySelector('.chat-header .close-btn');
         const sendBtn = document.querySelector('.chat-input button');
         const input = document.querySelector('.chat-input input');
+        const messagesContainer = document.querySelector('.chat-messages');
 
         toggleBtn.addEventListener('click', () => {
             this.isOpen = !this.isOpen;
@@ -57,7 +57,7 @@ class ChatbotWidget {
                     this.showChatNotification('코드이브입니다! 무엇이든 물어보세요 😊', 'welcome');
                     this.hasInitialMessage = true;
                 }
-                this.scrollToBottom(document.querySelector('.chat-messages'));
+                this.scrollToBottom(messagesContainer);
                 input.focus();
             }
         });
@@ -124,9 +124,12 @@ class ChatbotWidget {
 
     scrollToBottom(element) {
         if (!element) return;
-        
-        // 간단하고 안정적인 스크롤
-        element.scrollTop = element.scrollHeight;
+        const isScrolledToBottom = element.scrollHeight - element.clientHeight <= element.scrollTop + 1;
+        if (isScrolledToBottom) {
+            requestAnimationFrame(() => {
+                element.scrollTop = element.scrollHeight;
+            });
+        }
     }
 
     getCookie(name) {
@@ -150,32 +153,31 @@ class ChatbotWidget {
         messageDiv.className = className;
         messageDiv.textContent = text;
         messagesContainer.appendChild(messageDiv);
-        
-        // 메시지 추가 후 즉시 스크롤
         this.scrollToBottom(messagesContainer);
         this.saveChatHistory(text, className);
     }
 
     saveChatHistory(message, type) {
         let chatHistory = this.getChatHistory();
-        
         chatHistory.push({
             message: message,
             type: type,
             timestamp: new Date().toISOString()
         });
-
         if (chatHistory.length > this.MAX_HISTORY) {
             chatHistory = chatHistory.slice(-this.MAX_HISTORY);
         }
-
         localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
+    }
+
+    getChatHistory() {
+        const history = localStorage.getItem('chatHistory');
+        return history ? JSON.parse(history) : [];
     }
 
     loadChatHistory() {
         const chatHistory = this.getChatHistory();
         const messagesContainer = document.querySelector('.chat-messages');
-        
         if (messagesContainer) {
             chatHistory.forEach(item => {
                 const messageDiv = document.createElement('div');
@@ -187,25 +189,6 @@ class ChatbotWidget {
         }
     }
 
-    getChatHistory() {
-        const history = localStorage.getItem('chatHistory');
-        return history ? JSON.parse(history) : [];
-    }
-
-    clearChatHistory() {
-        localStorage.removeItem('chatHistory');
-        const messagesContainer = document.querySelector('.chat-messages');
-        if (messagesContainer) {
-            messagesContainer.innerHTML = '';
-        }
-        console.log('Chat history cleared');
-    }
-
-    static clearOnLogout() {
-        localStorage.removeItem('chatHistory');
-        console.log('Chat history cleared on logout');
-    }
-
     showChatNotification(message, type = '') {
         const container = document.querySelector('.chat-container');
         const existingNotification = container.querySelector('.chat-notification');
@@ -215,22 +198,14 @@ class ChatbotWidget {
 
         const notification = document.createElement('div');
         notification.className = `chat-notification ${type}`;
-        notification.innerHTML = `
-            ${message}
-            <button class="close-notification">&times;</button>
-        `;
-
+        notification.textContent = message;
         container.appendChild(notification);
 
-        const closeBtn = notification.querySelector('.close-notification');
-        closeBtn.addEventListener('click', () => notification.remove());
-
-        // 20초 후 자동으로 알림 닫기
         setTimeout(() => {
             if (notification.parentElement) {
                 notification.remove();
             }
-        }, 20000);
+        }, 5000);
     }
 }
 
