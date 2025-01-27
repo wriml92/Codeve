@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnl
 from django.shortcuts import get_object_or_404
 from .models import Course, Lesson, Assignment, PracticeExercise, UserCourse
 from .serializers import (CourseSerializer, LessonSerializer, AssignmentSerializer,
-                          PracticeExerciseSerializer, UserCourseSerializer)
+                        PracticeExerciseSerializer, UserCourseSerializer)
 from django.http import JsonResponse
 import json
 import os
@@ -52,17 +52,17 @@ class CourseViewSet(viewsets.ModelViewSet):
     def enroll(self, request, pk=None):
         course = self.get_object()
         user = request.user
-
+        
         if UserCourse.objects.filter(user=user, course=course).exists():
-            return Response({'error': '이미 수강 신청된 강좌입니다.'},
-                            status=status.HTTP_400_BAD_REQUEST)
-
+            return Response({'error': '이미 수강 신청된 강좌입니다.'}, 
+                status=status.HTTP_400_BAD_REQUEST)
+        
         user_course = UserCourse.objects.create(
             user=user,
             course=course,
             status='enrolled'
         )
-
+        
         serializer = UserCourseSerializer(user_course)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
@@ -93,7 +93,7 @@ class PracticeExerciseViewSet(viewsets.ModelViewSet):
     def submit_solution(self, request, pk=None):
         exercise = self.get_object()
         submitted_code = request.data.get('code')
-
+        
         # TODO: 코드 실행 및 테스트 케이스 검증 로직 구현
         return Response({'message': '제출이 완료되었습니다.'})
 
@@ -109,7 +109,7 @@ class UserCourseViewSet(viewsets.ModelViewSet):
     def update_progress(self, request, pk=None):
         user_course = self.get_object()
         progress = request.data.get('progress_percentage')
-
+        
         if progress is not None:
             user_course.progress_percentage = progress
             if progress == 100:
@@ -117,12 +117,12 @@ class UserCourseViewSet(viewsets.ModelViewSet):
             elif progress > 0:
                 user_course.status = 'in_progress'
             user_course.save()
-
+            
             serializer = self.get_serializer(user_course)
             return Response(serializer.data)
-
-        return Response({'error': '진행률이 제공되지 않았습니다.'},
-                        status=status.HTTP_400_BAD_REQUEST)
+        
+        return Response({'error': '진행률이 제공되지 않았습니다.'}, 
+            status=status.HTTP_400_BAD_REQUEST)
 
 
 @login_required
@@ -316,7 +316,7 @@ def practice_view(request, topic_id=None):
                 content_match = re.search(r'(<div class="practice-content.*?</div>)\s*$', content, re.DOTALL)
                 if content_match:
                     content = content_match.group(1)
-                    
+            
         context = {
             'topics': TOPICS,
             'topic_id': topic_id,
@@ -354,7 +354,7 @@ def course_list_view(request):
     course_list_path = Path(__file__).parent / 'data' / 'course_list.json'
     with open(course_list_path, 'r', encoding='utf-8') as f:
         course_list = json.load(f)
-
+    
     # Python 코스 정보에 정의된 토픽 목록 사용
     python_course = course_list['python']
     python_course['topics'] = TOPICS  # 정의된 토픽 목록으로 교체
@@ -627,7 +627,7 @@ async def submit_practice(request, topic_id):
                 return JsonResponse(response_data)
             else:
                 print(f"분석 실패: {result.get('error')}")  # 디버깅을 위한 로그 추가
-                return JsonResponse({
+    return JsonResponse({
                     'success': False,
                     'error': result.get('error', '분석 중 오류가 발생했습니다.')
                 })
