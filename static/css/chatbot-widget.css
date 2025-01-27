@@ -9,6 +9,7 @@
     --border-color: #eee;
     --input-border: #ddd;
     --bg-color: #fafafa;
+    --text-color: #333;
     
     /* 크기 및 간격 */
     --border-radius-lg: 10px;
@@ -18,6 +19,8 @@
     --header-height: 60px;
     --toggle-size: 60px;
     --spacing: 15px;
+    --message-max-width: 85%;
+    --message-padding: 12px 16px;
     
     /* 스크롤바 */
     --scrollbar-width: 6px;
@@ -39,8 +42,8 @@
     width: var(--toggle-size);
     height: var(--toggle-size);
     border-radius: 50%;
-    background: transparent;
-    border: none;
+    background: #FFEBA4;
+    border: 2px solid var(--primary-color);
     cursor: pointer;
     box-shadow: 0 2px 10px var(--shadow-color);
     display: flex;
@@ -52,14 +55,15 @@
 }
 
 .chat-toggle button img {
-    width: 90%;
-    height: 90%;
+    width: 85%;
+    height: 85%;
     object-fit: cover;
 }
 
 .chat-toggle button:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 15px var(--shadow-color);
+    border-color: var(--secondary-color);
 }
 
 /* 채팅 컨테이너 */
@@ -146,15 +150,17 @@
     padding: var(--spacing);
     border-top: 1px solid var(--border-color);
     display: flex;
+    align-items: center;
     gap: 8px;
     height: var(--header-height);
 }
 
 .chat-input input {
     flex: 1;
-    padding: 8px;
+    padding: 8px 12px;
     border: 1px solid var(--input-border);
     border-radius: var(--border-radius-sm);
+    height: 36px;
 }
 
 .chat-input button {
@@ -164,6 +170,10 @@
     border-radius: var(--border-radius-sm);
     cursor: pointer;
     transition: background-color 0.2s ease;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .chat-input button:hover {
@@ -172,25 +182,24 @@
 
 /* 메시지 스타일 */
 .user-message, .bot-message {
-    padding: 12px 16px;
+    padding: var(--message-padding);
     border-radius: var(--border-radius-lg);
-    max-width: 85%;
+    max-width: var(--message-max-width);
     word-wrap: break-word;
     white-space: pre-wrap;
     line-height: 1.4;
     animation: fadeIn 0.3s ease;
+    margin: 5px;
 }
 
 .user-message {
     background-color: var(--primary-color);
     margin-left: auto;
-    margin-right: 5px;
 }
 
 .bot-message {
     background-color: var(--secondary-color);
     margin-right: auto;
-    margin-left: 5px;
 }
 
 .error-message {
@@ -253,9 +262,6 @@
     :root {
         --widget-width: 340px;
         --widget-height: 520px;
-    }
-    
-    .user-message, .bot-message {
-        max-width: 80%;
+        --message-max-width: 80%;
     }
 } 
