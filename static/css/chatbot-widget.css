@@ -5,19 +5,28 @@
     --secondary-color: #FFEBA4;
     --shadow-color: rgba(0,0,0,0.1);
     --welcome-color: #e8f5e9;
+    --error-color: #e74c3c;
+    --border-color: #eee;
+    --input-border: #ddd;
+    --bg-color: #fafafa;
     
     /* 크기 및 간격 */
     --border-radius-lg: 10px;
     --border-radius-sm: 4px;
+    --widget-width: 400px;
+    --widget-height: 600px;
+    --header-height: 60px;
+    --toggle-size: 60px;
+    --spacing: 15px;
+    
+    /* 스크롤바 */
     --scrollbar-width: 6px;
     --scrollbar-radius: 3px;
-    
-    /* 스크롤바 색상 */
-    --scrollbar-track-color: #f1f1f1;
-    --scrollbar-thumb-color: #4e4e4e;
+    --scrollbar-track: #f1f1f1;
+    --scrollbar-thumb: #4e4e4e;
 }
 
-/* 채팅 위젯 기본 레이아웃 */
+/* 채팅 위젯 레이아웃 */
 .chatbot-widget {
     position: fixed;
     bottom: 20px;
@@ -25,10 +34,10 @@
     z-index: 9999;
 }
 
-/* 토글 버튼 스타일 */
+/* 토글 버튼 */
 .chat-toggle button {
-    width: 60px;
-    height: 60px;
+    width: var(--toggle-size);
+    height: var(--toggle-size);
     border-radius: 50%;
     background: transparent;
     border: none;
@@ -58,8 +67,8 @@
     position: fixed;
     bottom: 20px;
     right: 20px;
-    width: 400px;
-    height: 600px;
+    width: var(--widget-width);
+    height: var(--widget-height);
     background: white;
     border-radius: var(--border-radius-lg);
     box-shadow: 0 0 10px var(--shadow-color);
@@ -71,12 +80,12 @@
 
 /* 채팅 헤더 */
 .chat-header {
-    padding: 15px;
+    padding: var(--spacing);
     background-color: var(--primary-color);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: #333;
+    height: var(--header-height);
 }
 
 .chat-header .title {
@@ -103,15 +112,14 @@
 /* 메시지 영역 */
 .chat-messages {
     flex: 1;
-    padding: 10px;
+    padding: var(--spacing);
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
     gap: 8px;
-    height: calc(100% - 120px); /* 헤더 높이 고려 */
+    height: calc(100% - var(--header-height) * 2);
     overflow-y: auto;
     overflow-x: hidden;
-    background-color: #fafafa;
+    background-color: var(--bg-color);
 }
 
 /* 스크롤바 스타일 */
@@ -120,12 +128,12 @@
 }
 
 .chat-messages::-webkit-scrollbar-track {
-    background: var(--scrollbar-track-color);
+    background: var(--scrollbar-track);
     border-radius: var(--scrollbar-radius);
 }
 
 .chat-messages::-webkit-scrollbar-thumb {
-    background: var(--scrollbar-thumb-color);
+    background: var(--scrollbar-thumb);
     border-radius: var(--scrollbar-radius);
 }
 
@@ -135,17 +143,18 @@
 
 /* 입력 영역 */
 .chat-input {
-    padding: 10px;
-    border-top: 1px solid #eee;
+    padding: var(--spacing);
+    border-top: 1px solid var(--border-color);
     display: flex;
+    gap: 8px;
+    height: var(--header-height);
 }
 
 .chat-input input {
     flex: 1;
     padding: 8px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--input-border);
     border-radius: var(--border-radius-sm);
-    margin-right: 8px;
 }
 
 .chat-input button {
@@ -154,17 +163,22 @@
     border: none;
     border-radius: var(--border-radius-sm);
     cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.chat-input button:hover {
+    background-color: var(--primary-color);
 }
 
 /* 메시지 스타일 */
 .user-message, .bot-message {
-    margin: 8px 0;
     padding: 12px 16px;
-    border-radius: 12px;
+    border-radius: var(--border-radius-lg);
     max-width: 85%;
     word-wrap: break-word;
     white-space: pre-wrap;
     line-height: 1.4;
+    animation: fadeIn 0.3s ease;
 }
 
 .user-message {
@@ -179,72 +193,48 @@
     margin-left: 5px;
 }
 
-/* 환영 메시지 스타일 */
-.welcome-message {
-    background-color: var(--welcome-color) !important;
-    font-size: 1.1em;
-    margin-right: auto;
-    margin-left: 5px;
-    animation: fadeIn 0.5s ease-in-out;
+.error-message {
+    background-color: var(--error-color);
+    color: white;
+    margin: 8px auto;
+    padding: 10px 15px;
+    border-radius: var(--border-radius-sm);
+    text-align: center;
 }
 
+/* 알림 스타일 */
+.chat-notification {
+    position: absolute;
+    top: var(--header-height);
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--error-color);
+    color: white;
+    padding: 12px 20px;
+    border-radius: var(--border-radius-sm);
+    font-size: 0.9em;
+    box-shadow: 0 2px 10px var(--shadow-color);
+    z-index: 10000;
+    width: 90%;
+    text-align: center;
+    animation: slideDown 0.3s ease-out;
+}
+
+.chat-notification.welcome {
+    background-color: var(--welcome-color);
+    color: #333;
+}
+
+/* 애니메이션 */
 @keyframes fadeIn {
     from {
         opacity: 0;
-        transform: translateY(10px);
+        transform: translateY(5px);
     }
     to {
         opacity: 1;
         transform: translateY(0);
     }
-}
-
-/* 모바일 반응형 */
-@media (max-width: 480px) {
-    .chat-container {
-        width: 340px;
-        height: 520px;
-    }
-    
-    .user-message, .bot-message {
-        max-width: 80%;
-    }
-}
-
-/* 채팅창 내 알림 팝업 */
-.chat-notification {
-    position: absolute;
-    top: 60px; /* 헤더 높이 이후로 위치 조정 */
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #e74c3c;
-    color: white;
-    padding: 12px 20px;
-    border-radius: var(--border-radius-sm);
-    font-size: 0.9em;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    z-index: 1000;
-    animation: slideDown 0.3s ease-out;
-    width: 90%;
-    text-align: center;
-}
-
-.chat-notification.welcome {
-    background-color: var(--primary-color);
-}
-
-.chat-notification .close-notification {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    color: white;
-    cursor: pointer;
-    font-size: 1.2em;
-    padding: 0;
-    line-height: 1;
 }
 
 @keyframes slideDown {
@@ -255,5 +245,17 @@
     to {
         transform: translate(-50%, 0);
         opacity: 1;
+    }
+}
+
+/* 모바일 반응형 */
+@media (max-width: 480px) {
+    :root {
+        --widget-width: 340px;
+        --widget-height: 520px;
+    }
+    
+    .user-message, .bot-message {
+        max-width: 80%;
     }
 } 

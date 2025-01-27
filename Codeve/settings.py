@@ -181,13 +181,15 @@ MESSAGE_TAGS = {
 # ------------------------------------------------------------------------------
 # 정적 파일 및 미디어 설정 (Static & Media Settings)
 # ------------------------------------------------------------------------------
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    BASE_DIR / 'static',
+    os.path.join(BASE_DIR, 'static'),
 ]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# Media files
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
 
 # ------------------------------------------------------------------------------
 # 국제화 설정 (Internationalization Settings)

@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
@@ -27,13 +27,13 @@ def main_view(request):
     return render(request, 'base/main.html')
 
 
-def main2_view(request):
-    return render(request, 'base/main.html')
+def practice_redirect(request):
+    return redirect('courses:practice')
 
 
 urlpatterns = [
     path('', main_view, name='main'),
-    path('practice/', main2_view, name='main2'),
+    path('practice/', practice_redirect, name='practice'),
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),
     path('courses/', include('courses.urls')),
