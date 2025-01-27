@@ -1,6 +1,7 @@
 from rest_framework import viewsets
 from rest_framework.response import Response
 from .models import ChatMessage
+from .serializers import ChatMessageSerializer, ChatRequestSerializer
 from openai import OpenAI
 from django.conf import settings
 from rest_framework.exceptions import APIException
@@ -53,12 +54,7 @@ class ChatbotViewSet(viewsets.ViewSet):
         for keyword in keywords:
             if keyword in self.cached_responses:
                 response = self.cached_responses[keyword]
-                response_formats = [
-                    f"{keyword}란 {response}",
-                    f"{keyword}는 {response}",
-                    f"{keyword}에 대해 설명드리면 {response}"
-                ]
-                return random.choice(response_formats)
+                return ChatMessageSerializer().format_response(keyword, response)
 
         # 2. 부분 매칭 (가장 긴 일치 키워드 찾기)
         best_match = None
@@ -75,31 +71,23 @@ class ChatbotViewSet(viewsets.ViewSet):
 
         if best_match:
             cache_key, response = best_match
-            response_formats = [
-                f"{cache_key}란 {response}",
-                f"{cache_key}는 {response}",
-                f"{cache_key}에 대해 설명드리면 {response}"
-            ]
-            return random.choice(response_formats)
+            return ChatMessageSerializer().format_response(cache_key, response)
 
         return None
 
     def create(self, request):
-        message = request.data.get('message', '').strip()
-        if not message:
-            return Response({'error': '메시지가 필요합니다'}, status=400)
+        # 요청 데이터 검증
+        serializer = ChatRequestSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=400)
+
+        message = serializer.validated_data['message']
 
         # 1. 정확한 메시지 매칭
         if message in self.cached_responses:
             response = self.cached_responses[message]
-            response_formats = [
-                f"{message}란 {response}",
-                f"{message}는 {response}",
-                f"{message}에 대해 설명드리면 {response}"
-            ]
-            formatted_response = random.choice(response_formats)
-            self._save_chat_message(
-                request.user, message, formatted_response, True)
+            formatted_response = ChatMessageSerializer().format_response(message, response)
+            self._save_chat_message(request.user, message, formatted_response, True)
             return Response({'response': formatted_response})
 
         # 2. 키워드 기반 검색
@@ -107,15 +95,13 @@ class ChatbotViewSet(viewsets.ViewSet):
         cached_response = self.find_best_match(keywords)
 
         if cached_response:
-            self._save_chat_message(
-                request.user, message, cached_response, True)
+            self._save_chat_message(request.user, message, cached_response, True)
             return Response({'response': cached_response})
 
         # 3. OpenAI API 호출
         try:
             response_text = self._call_openai_api(message)
-            self._save_chat_message(
-                request.user, message, response_text, False)
+            self._save_chat_message(request.user, message, response_text, False)
             return Response({'response': response_text})
         except Exception as e:
             logger.error(f"API 호출 중 오류 발생: {str(e)}")
@@ -123,12 +109,14 @@ class ChatbotViewSet(viewsets.ViewSet):
 
     def _save_chat_message(self, user, message, response, is_cached):
         """채팅 메시지 저장"""
-        ChatMessage.objects.create(
-            user=user,
-            message=message,
-            response=response,
-            is_cached=is_cached
-        )
+        serializer = ChatMessageSerializer(data={
+            'user': user.id,
+            'message': message,
+            'response': response,
+            'is_cached': is_cached
+        })
+        if serializer.is_valid():
+            serializer.save()
 
     def _call_openai_api(self, message):
         # OpenAI API 키 확인
