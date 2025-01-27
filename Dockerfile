@@ -8,6 +8,6 @@ WORKDIR /app/
 
 RUN apt update && apt install libpq-dev gcc -y
 
-COPY ./django/requirements.txt .
+COPY ./requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 RUN pip install gunicorn

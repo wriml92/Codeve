@@ -606,19 +606,15 @@ async def submit_practice(request, topic_id):
     """실습 스크린샷 제출 및 분석"""
     if request.method != 'POST':
         return JsonResponse({'error': '잘못된 요청 방식입니다.'}, status=405)
-    
     try:
         if 'screenshot' not in request.FILES:
             return JsonResponse({'error': '스크린샷이 제출되지 않았습니다.'}, status=400)
-        
         screenshot = request.FILES['screenshot']
-        
         # 임시 파일로 저장
         with tempfile.NamedTemporaryFile(delete=False, suffix='.png') as temp_file:
             for chunk in screenshot.chunks():
                 temp_file.write(chunk)
             temp_path = temp_file.name
-        
         try:
             # 이미지 분석
             agent = PracticeAnalysisAgent()
@@ -627,9 +623,7 @@ async def submit_practice(request, topic_id):
                 'image_path': temp_path,
                 'user_id': str(request.user.id)  # 사용자 ID 추가
             })
-            
             print(f"분석 결과: {result}")  # 디버깅을 위한 로그 추가
-            
             # 분석 결과에 따른 응답 생성
             if result.get('success'):
                 response_data = {
@@ -638,24 +632,20 @@ async def submit_practice(request, topic_id):
                     'feedback': result.get('feedback', ''),
                     'sections': result.get('sections', {})
                 }
-                
                 # 모든 섹션을 통과한 경우 축하 메시지 추가
                 if result.get('passed'):
-                    response_data['message'] = '🎉 축하합니다! 실습을 성공적으로 완료했어요!'
-                
+                    response_data['message'] = ':짠: 축하합니다! 실습을 성공적으로 완료했어요!'
                 return JsonResponse(response_data)
             else:
                 print(f"분석 실패: {result.get('error')}")  # 디버깅을 위한 로그 추가
-    return JsonResponse({
+                return JsonResponse({
                     'success': False,
                     'error': result.get('error', '분석 중 오류가 발생했습니다.')
                 })
-                
         finally:
             # 임시 파일 삭제
             if os.path.exists(temp_path):
                 os.unlink(temp_path)
-                
     except Exception as e:
         import traceback
         print(f"서버 오류 발생: {str(e)}")
