@@ -217,4 +217,4 @@ PASSWORD_RESET_TIMEOUT = 259200  # 3일
 
 # OpenAI API 설정
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY', None)
-
+CSRF_TRUSTED_ORIGINS = ['https://codeve.site']
