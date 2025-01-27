@@ -104,40 +104,41 @@ class ChatbotWidget {
         this.showChatNotification('코드이브입니다! 무엇이든 물어보세요 😊', 'welcome');
     }
 
+    displayMessage(text, type, isLoading = false) {
+        const { messagesContainer } = this.elements;
+        const messageDiv = document.createElement('div');
+        messageDiv.className = type;
+        messageDiv.textContent = isLoading ? '...' : text;
+        messagesContainer.appendChild(messageDiv);
+        this.scrollToBottom(messagesContainer);
+        
+        if (!isLoading) {
+            this.saveChatHistory(text, type);
+        }
+        
+        return messageDiv;
+    }
+
     async sendMessage(message) {
         const messageText = message.trim();
         if (!messageText) return;
 
-        const { messagesContainer, input } = this.elements;
-
-        this.displayMessage(messageText, 'user-message');
+        const { input, messagesContainer } = this.elements;
         input.value = '';
 
+        this.displayMessage(messageText, 'user-message');
+
         try {
-            const botMessageDiv = this.createLoadingMessage();
+            const botMessageDiv = this.displayMessage('', 'bot-message', true);
             const response = await this.fetchBotResponse(messageText);
-            
-            this.updateBotMessage(botMessageDiv, response);
+            botMessageDiv.textContent = response;
             this.saveChatHistory(response, 'bot-message');
+            
+            this.scrollToBottom(messagesContainer);
         } catch (error) {
             console.error('Error:', error);
-            this.showErrorMessage();
+            this.displayMessage('죄송합니다. 오류가 발생했습니다.', 'error-message');
         }
-    }
-
-    createLoadingMessage() {
-        const { messagesContainer } = this.elements;
-        const botMessageDiv = document.createElement('div');
-        botMessageDiv.className = 'bot-message';
-        botMessageDiv.textContent = '...';
-        messagesContainer.appendChild(botMessageDiv);
-        this.scrollToBottom(messagesContainer);
-        return botMessageDiv;
-    }
-
-    updateBotMessage(messageDiv, text) {
-        messageDiv.textContent = text;
-        this.scrollToBottom(this.elements.messagesContainer);
     }
 
     async fetchBotResponse(message) {
@@ -162,17 +163,28 @@ class ChatbotWidget {
         return data.response;
     }
 
-    showErrorMessage() {
-        const { messagesContainer } = this.elements;
-        const errorDiv = document.createElement('div');
-        errorDiv.className = 'error-message';
-        errorDiv.textContent = '죄송합니다. 오류가 발생했습니다.';
-        messagesContainer.appendChild(errorDiv);
-        this.scrollToBottom(messagesContainer);
+    showChatNotification(message, type = '') {
+        const { container } = this.elements;
+        const existingNotification = container.querySelector('.chat-notification');
+        existingNotification?.remove();
+
+        const notification = document.createElement('div');
+        notification.className = `chat-notification ${type}`;
+        notification.textContent = message;
+        container.appendChild(notification);
+
+        setTimeout(() => notification.remove(), 5000);
     }
 
     scrollToBottom(element) {
         if (!element) return;
+        
+        element.scrollTop = element.scrollHeight;
+        
+        setTimeout(() => {
+            element.scrollTop = element.scrollHeight;
+        }, 100);
+        
         requestAnimationFrame(() => {
             element.scrollTop = element.scrollHeight;
         });
@@ -191,33 +203,35 @@ class ChatbotWidget {
         return null;
     }
 
-    displayMessage(text, className) {
-        const { messagesContainer } = this.elements;
-        const messageDiv = document.createElement('div');
-        messageDiv.className = className;
-        messageDiv.textContent = text;
-        messagesContainer.appendChild(messageDiv);
-        this.scrollToBottom(messagesContainer);
-        this.saveChatHistory(text, className);
+    handleStorage(action, data = null) {
+        const STORAGE_KEY = 'chatHistory';
+        
+        if (action === 'save') {
+            let chatHistory = this.handleStorage('get');
+            chatHistory.push({
+                message: data.message,
+                type: data.type,
+                timestamp: new Date().toISOString()
+            });
+
+            if (chatHistory.length > this.MAX_HISTORY) {
+                chatHistory = chatHistory.slice(-this.MAX_HISTORY);
+            }
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(chatHistory));
+        } else if (action === 'get') {
+            const history = localStorage.getItem(STORAGE_KEY);
+            return history ? JSON.parse(history) : [];
+        } else if (action === 'clear') {
+            localStorage.removeItem(STORAGE_KEY);
+        }
     }
 
     saveChatHistory(message, type) {
-        let chatHistory = this.getChatHistory();
-        chatHistory.push({
-            message,
-            type,
-            timestamp: new Date().toISOString()
-        });
-
-        if (chatHistory.length > this.MAX_HISTORY) {
-            chatHistory = chatHistory.slice(-this.MAX_HISTORY);
-        }
-        localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
+        this.handleStorage('save', { message, type });
     }
 
     getChatHistory() {
-        const history = localStorage.getItem('chatHistory');
-        return history ? JSON.parse(history) : [];
+        return this.handleStorage('get');
     }
 
     loadChatHistory() {
@@ -235,35 +249,15 @@ class ChatbotWidget {
 
         setTimeout(() => this.scrollToBottom(messagesContainer), 0);
     }
-
-    showChatNotification(message, type = '') {
-        const { container } = this.elements;
-        const existingNotification = container.querySelector('.chat-notification');
-        
-        if (existingNotification) {
-            existingNotification.remove();
-        }
-
-        const notification = document.createElement('div');
-        notification.className = `chat-notification ${type}`;
-        notification.textContent = message;
-        container.appendChild(notification);
-
-        setTimeout(() => {
-            if (notification.parentElement) {
-                notification.remove();
-            }
-        }, 5000);
-    }
 }
 
 function handleLogout(event) {
     event.preventDefault();
-    localStorage.removeItem('chatHistory');
+    const widget = document.querySelector('.chatbot-widget');
     
-    const chatbotWidget = document.querySelector('.chatbot-widget');
-    if (chatbotWidget) {
-        chatbotWidget.remove();
+    if (widget) {
+        widget.remove();
+        localStorage.removeItem('chatHistory');
     }
     
     document.getElementById('logout-form').submit();

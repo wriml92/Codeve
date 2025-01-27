@@ -1,18 +1,24 @@
+from pathlib import Path
+import json
+import re
 from typing import Dict, Any, List
+
+from asgiref.sync import sync_to_async
+from langchain_core.messages import SystemMessage, HumanMessage
+
 from .base_llm import BaseLLM
 from ..models import TheoryContent
-from asgiref.sync import sync_to_async
-import re
-from langchain_core.messages import SystemMessage, HumanMessage
 
 class TheoryLLM(BaseLLM):
     def __init__(self, model_name="gpt-4", temperature=0.7):
         super().__init__(model_name, temperature)
         self.data_dir = self.base_dir / 'data' / 'topics'
         self.prompt_template = self.load_prompt('theory_llm_prompt.md')
-        
-        # 토픽별 예제 코드 패턴 정의
-        self.example_patterns = {
+        self.example_patterns = self._init_example_patterns()
+
+    def _init_example_patterns(self) -> Dict[str, Dict[str, Any]]:
+        """토픽별 예제 코드 패턴 정의"""
+        return {
             'input_output': {
                 'structure': ['input(', 'print('],
                 'output_pattern': r'안녕하세요.*!',
@@ -161,15 +167,10 @@ class TheoryLLM(BaseLLM):
         response = await self.llm.agenerate([messages])
         content = response.generations[0][0].text
         
-        # 예제 코드 검증
         example_code = self._extract_example_code(content)
-        if example_code:
-            is_valid = self._validate_example_code(example_code, topic_id)
-            if not is_valid:
-                # 예제가 패턴에 맞지 않으면 재생성
-                return await self.generate(topic_id)
+        if example_code and not self._validate_example_code(example_code, topic_id):
+            return await self.generate(topic_id)
         
-        # DB에 저장
         await sync_to_async(TheoryContent.objects.update_or_create)(
             topic_id=topic_id,
             defaults={'content': content}
@@ -189,17 +190,13 @@ class TheoryLLM(BaseLLM):
             
         pattern = self.example_patterns[topic_id]
         
-        # 구조 검사
         for struct in pattern['structure']:
             if struct not in code:
                 return False
                 
-        # 출력 패턴 검사
-        output_pattern = pattern['output_pattern']
-        if not re.search(output_pattern, code):
+        if not re.search(pattern['output_pattern'], code):
             return False
             
-        # 필수 요소 검사
         for element in pattern['required_elements']:
             if element == '사용자 입력' and 'input(' not in code:
                 return False
@@ -214,9 +211,7 @@ class TheoryLLM(BaseLLM):
 
     def _format_response(self, content: str) -> str:
         """HTML 형식으로 응답 포맷팅"""
-        return f"""<div class="space-y-8">
-            {content}
-        </div>"""
+        return f'<div class="space-y-8">{content}</div>'
         
     async def analyze(self, content: str) -> Dict[str, Any]:
         """이론 내용 분석"""
@@ -247,12 +242,6 @@ class TheoryLLM(BaseLLM):
     def _extract_key_concepts(self, content: str) -> List[str]:
         """핵심 개념 추출"""
         concepts = []
-        
-        # <b> 태그로 강조된 내용을 핵심 개념으로 추출
         concepts.extend(re.findall(r'<b>(.*?)</b>', content))
-        
-        # 파란색으로 표시된 전문 용어 추출
         concepts.extend(re.findall(r'<span style=\'color: #0066cc;\'>(.*?)</span>', content))
-        
-        # 중복 제거 및 반환
         return list(set(concepts))
