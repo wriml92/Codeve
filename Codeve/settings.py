@@ -14,7 +14,6 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 DEBUG = True
 ALLOWED_HOSTS = [
     '3.35.11.71',
-    'codeve.p-e.kr',
     ]
 
 # ------------------------------------------------------------------------------
