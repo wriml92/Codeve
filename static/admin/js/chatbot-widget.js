@@ -20,7 +20,7 @@ class ChatbotWidget {
         widget.innerHTML = `
             <div class="chat-toggle">
                 <button id="chat-toggle-btn">
-                    <img src="/static/images/codeve_icon.png" alt="챗봇">
+                    <img src="{% static 'images/codeve_icon.png' alt="챗봇" %}
                 </button>
             </div>
             <div class="chat-container" style="display: none;">
