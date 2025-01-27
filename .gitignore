@@ -46,7 +46,6 @@ db.sqlite3-journal
 .coverage
 htmlcov/
 .pytest_cache/
-.cursorrules
 media/
 
 # .gitignore 예시
