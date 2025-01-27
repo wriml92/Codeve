@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
-from typing import Dict, Any
 import asyncio
 from pathlib import Path
+from typing import Dict, Any
 
 class BaseAgent(ABC):
     def __init__(self, llm):
@@ -24,6 +24,7 @@ class BaseAgent(ABC):
         pass 
 
     async def execute_with_retry(self, func, *args, max_retries=3):
+        """재시도 로직이 포함된 함수 실행"""
         for attempt in range(max_retries):
             try:
                 return await func(*args)

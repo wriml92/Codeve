@@ -19,11 +19,10 @@ class AssignmentAnalysisAgent(BaseAgent):
         load_dotenv()
         api_key = os.getenv('ANTHROPIC_API_KEY')
         
-        if api_key:
-            api_key = api_key.strip().strip("'").strip('"').strip()
-        else:
+        if not api_key:
             raise ValueError("API 키가 설정되지 않았습니다.")
             
+        api_key = api_key.strip().strip("'").strip('"').strip()
         self.anthropic = Anthropic(api_key=api_key)
         super().__init__()
         self.prompt_template = self.load_prompt('assignment_analysis_prompt.md')
