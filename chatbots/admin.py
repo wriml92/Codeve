@@ -1,15 +1,16 @@
 from django.contrib import admin
-from .models import ChatMessage, CachedResponse
+from .models import ChatMessage
 
 
 @admin.register(ChatMessage)
 class ChatMessageAdmin(admin.ModelAdmin):
-    list_display = ('user', 'message', 'created_at', 'is_cached')
-    list_filter = ('is_cached', 'created_at')
-    search_fields = ('message', 'response')
+    list_display = ('user', 'short_message', 'created_at')
+    list_filter = ('created_at', 'user')
+    search_fields = ('message', 'response', 'user__username')
+    readonly_fields = ('created_at',)
+    date_hierarchy = 'created_at'
 
-
-@admin.register(CachedResponse)
-class CachedResponseAdmin(admin.ModelAdmin):
-    list_display = ('question', 'created_at', 'updated_at')
-    search_fields = ('question', 'response')
+    def short_message(self, obj):
+        """메시지 내용을 짧게 표시"""
+        return (obj.message[:50] + '...') if len(obj.message) > 50 else obj.message
+    short_message.short_description = '메시지'
