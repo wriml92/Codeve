@@ -12,7 +12,7 @@ load_dotenv(dotenv_path=os.path.join(BASE_DIR, '.env'))
 # 보안 설정 (Security Settings)
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 DEBUG = False
-ALLOWED_HOSTS = ['backend', 'codeve.site']
+ALLOWED_HOSTS = ['backend', 'codeve.site', 'localhost', '127.0.0.1']
 
 # ------------------------------------------------------------------------------
 # 애플리케이션 설정 (Application Settings)
@@ -136,10 +136,8 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
     'https://www.googleapis.com/auth/userinfo.profile',
 ]
 
-SOCIAL_AUTH_GOOGLE_OAUTH2_REDIRECT_URI = 'https://codeve.site/accounts/google/login/callback/'
-
-# Site 설정 추가
-SITE_ID = 1
+# 리디렉션 URI 설정 추가
+SOCIAL_AUTH_GOOGLE_OAUTH2_REDIRECT_URI = 'https://codeve.site/complete/google-oauth2/'  # 프로덕션 환경
 
 # ------------------------------------------------------------------------------
 # REST Framework 설정
