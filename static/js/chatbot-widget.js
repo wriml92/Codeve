@@ -30,7 +30,7 @@ class ChatbotWidget {
         return `
             <div class="chat-toggle">
                 <button id="chat-toggle-btn">
-                    <img src="https://codeve-bucket.s3.ap-northeast-2.amazonaws.com/static/images/codeve_icon.png" alt="챗봇">
+                    <img src="https://s3.ap-northeast-2.amazonaws.com/codeve.site/static/images/codeve_icon.png" alt="챗봇">
                 </button>
             </div>
             <div class="chat-container" style="display: none;">
