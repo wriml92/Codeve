@@ -11,7 +11,7 @@ load_dotenv(dotenv_path=os.path.join(BASE_DIR, '.env'))
 
 # 보안 설정 (Security Settings)
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
-DEBUG = True
+DEBUG = False
 ALLOWED_HOSTS = ['backend']
 
 # ------------------------------------------------------------------------------
@@ -94,21 +94,14 @@ WSGI_APPLICATION = 'Codeve.wsgi.application'
 # ------------------------------------------------------------------------------
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    },
-    'production': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'codeve_db',
-        'USER': 'codeve_user',
-        'PASSWORD': 'your_password_here',
-        'HOST': 'localhost',
+        'NAME': os.getenv("DB_NAME"),
+        'USER': os.getenv("DB_USER"),
+        'PASSWORD': os.getenv("DB_PASSWORD"),
+        'HOST': os.getenv("DB_HOST"),
         'PORT': '5432',
     }
 }
-
-# DEBUG가 True일 때는 SQLite를 사용하고, False일 때는 PostgreSQL을 사용하도록 설정
-DATABASES["default"] = DATABASES["default" if DEBUG else "production"]
 
 # ------------------------------------------------------------------------------
 # 인증 및 보안 설정 (Authentication & Security Settings)
@@ -217,4 +210,4 @@ PASSWORD_RESET_TIMEOUT = 259200  # 3일
 
 # OpenAI API 설정
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY', None)
-
+CSRF_TRUSTED_ORIGINS = ['https://codeve.site']
