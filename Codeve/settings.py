@@ -12,7 +12,7 @@ load_dotenv(dotenv_path=os.path.join(BASE_DIR, '.env'))
 # 보안 설정 (Security Settings)
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 DEBUG = False
-ALLOWED_HOSTS = ['backend']
+ALLOWED_HOSTS = ['backend', 'codeve.site']
 
 # ------------------------------------------------------------------------------
 # 애플리케이션 설정 (Application Settings)
