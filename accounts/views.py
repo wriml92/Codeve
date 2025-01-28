@@ -12,15 +12,17 @@ from django.core.exceptions import ValidationError
 from django.contrib import messages
 import uuid
 from datetime import timedelta
-from .serializers import (UserSerializer, UserProfileSerializer, SocialAccountSerializer,
+from .serializers import (UserSerializer, UserProfileSerializer,
                           PasswordChangeSerializer, PasswordResetRequestSerializer,
                           PasswordResetConfirmSerializer)
 from .models import User, SocialAccount, PasswordReset
 from chatbots.models import ChatMessage  # ChatMessage import 경로 수정
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.urls import reverse_lazy
 from django.views import View
-import logging
+import requests
+from rest_framework import serializers
+from .utils import generate_unique_username
+
 
 
 class SignUpView(APIView):
@@ -194,37 +196,78 @@ class LogoutView(APIView):
         return response
 
 
-class GoogleLoginView(APIView):
-    permission_classes = [AllowAny]
+def google_login(request):
+    return redirect(
+        f"{settings.GOOGLE_REDIRECT}?"
+        f"client_id={settings.GOOGLE_OAUTH2_KEY}&"
+        f"response_type=code&"
+        f"redirect_uri={settings.GOOGLE_OAUTH2_REDIRECT_URI}&"
+        f"scope={settings.GOOGLE_SCOPE_USERINFO}"
+    )
 
-    def post(self, request):
-        google_id = request.data.get('google_id')
-        email = request.data.get('email')
-        access_token = request.data.get('access_token')
+def google_callback(request):
+    code = request.GET.get("code")
 
-        try:
-            social_account = SocialAccount.objects.get(
-                provider='google', social_id=google_id)
-            user = social_account.user
-            social_account.access_token = access_token
-            social_account.save()
-        except SocialAccount.DoesNotExist:
+    token_req = requests.post(
+        f"https://oauth2.googleapis.com/token?"
+        f"client_id={settings.GOOGLE_OAUTH2_KEY}&"
+        f"client_secret={settings.GOOGLE_OAUTH2_SECRET}&"
+        f"code={code}&"
+        f"grant_type=authorization_code&"
+        f"redirect_uri={settings.GOOGLE_OAUTH2_REDIRECT_URI}"
+    )
+    token_req_json = token_req.json()
+
+    error = token_req_json.get("error")
+    if error:
+        raise serializers.ValidationError({"error": f"Google Token Error: {error}"})
+
+    google_access_token = token_req_json.get("access_token")
+
+    email_response = requests.get(
+        f"https://www.googleapis.com/oauth2/v1/tokeninfo?access_token={google_access_token}"
+    )
+    res_status = email_response.status_code
+
+    if res_status != 200:
+        raise serializers.ValidationError({"error": "Bad Request: Invalid response status from server."})
+
+    email_res_json = email_response.json()
+    email = email_res_json.get("email")
+    user_id = email_res_json.get("user_id")
+
+    if not email or not user_id:
+        raise serializers.ValidationError({"error": "Invalid user information from Google."})
+
+    try:
+        social_account = SocialAccount.objects.get(
+            provider="google",
+            social_id=user_id
+        )
+        user = social_account.user
+        social_account.access_token = google_access_token
+        social_account.save()
+
+    except SocialAccount.DoesNotExist:
+        if User.objects.filter(email=email).exists():
+            user = User.objects.get(email=email)
+        else:
+            username = generate_unique_username(email)
             user = User.objects.create_user(
                 email=email,
-                username=email.split('@')[0],
-                google_id=google_id,
+                username=username,
+                google_id=user_id,
                 is_email_verified=True
             )
-            SocialAccount.objects.create(
-                user=user,
-                provider='google',
-                social_id=google_id,
-                access_token=access_token
-            )
+        SocialAccount.objects.create(
+            user=user,
+            provider="google",
+            social_id=user_id,
+            access_token=google_access_token
+        )
 
-        login(request, user)
-        serializer = UserProfileSerializer(user)
-        return Response(serializer.data)
+    login(request, user)
+    return redirect('main')
 
 
 class UserProfileView(generics.RetrieveUpdateAPIView):

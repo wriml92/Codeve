@@ -11,8 +11,9 @@ load_dotenv(dotenv_path=os.path.join(BASE_DIR, '.env'))
 
 # 보안 설정 (Security Settings)
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
-DEBUG = False
-ALLOWED_HOSTS = ['backend', 'codeve.site']
+DEBUG = True
+# ALLOWED_HOSTS = ['backend', 'codeve.site']
+ALLOWED_HOSTS = ['*']
 
 # ------------------------------------------------------------------------------
 # 애플리케이션 설정 (Application Settings)
@@ -32,11 +33,6 @@ DJANGO_APPS = [
 THIRD_PARTY_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.google',
-    'social_django',
 ]
 
 # 로컬 앱
@@ -61,7 +57,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'Codeve.urls'
@@ -81,8 +76,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'social_django.context_processors.backends',
-                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -115,31 +108,16 @@ AUTH_PASSWORD_VALIDATORS = [
 
 AUTH_USER_MODEL = 'accounts.User'
 
-AUTHENTICATION_BACKENDS = [
-    'social_core.backends.google.GoogleOAuth2',
-    'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
-]
-
-# 로그인/로그아웃 설정
-LOGIN_URL = 'accounts:login'
-LOGIN_REDIRECT_URL = 'main'
-LOGOUT_REDIRECT_URL = 'main'
-
 # ------------------------------------------------------------------------------
 # 구글 OAuth2 설정 (Google OAuth2 Settings)
 # ------------------------------------------------------------------------------
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.getenv('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.getenv('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')
-SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
-    'https://www.googleapis.com/auth/userinfo.email',
-    'https://www.googleapis.com/auth/userinfo.profile',
-]
-
-SOCIAL_AUTH_GOOGLE_OAUTH2_REDIRECT_URI = 'https://codeve.site/accounts/google/login/callback/'
-
-# Site 설정 추가
-SITE_ID = 1
+GOOGLE_REDIRECT = 'https://accounts.google.com/o/oauth2/v2/auth'
+GOOGLE_SCOPE_USERINFO = 'https://www.googleapis.com/auth/userinfo.email'
+GOOGLE_OAUTH2_KEY = os.getenv('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')
+GOOGLE_OAUTH2_SECRET = os.getenv('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')
+GOOGLE_OAUTH2_REDIRECT_URI = 'https://codeve.site/accounts/google/callback/' # 배포용
+# GOOGLE_OAUTH2_REDIRECT_URI = 'http://127.0.0.1:8000/accounts/google/callback/' # LOCAL 전용
+# GOOGLE_OAUTH2_REDIRECT_URI = 'http://localhost:8000/accounts/google/callback/' # LOCAL 전용
 
 # ------------------------------------------------------------------------------
 # REST Framework 설정
