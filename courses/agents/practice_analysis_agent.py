@@ -8,6 +8,7 @@ from typing import Dict, Any
 from anthropic import Anthropic
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
+from asgiref.sync import sync_to_async
 
 from .base_agent import BaseAgent
 
@@ -29,6 +30,7 @@ class PracticeAnalysisAgent(BaseAgent):
         self.max_attempts = 3
         self.cooldown_minutes = 30
 
+    @sync_to_async
     def _check_rate_limit(self, user_id: str, topic_id: str) -> Dict[str, Any]:
         """사용자별 API 호출 제한 확인"""
         try:
@@ -69,6 +71,7 @@ class PracticeAnalysisAgent(BaseAgent):
             print(f"rate limit 확인 중 오류 발생: {str(e)}")
             return {'allowed': True, 'remaining_attempts': self.max_attempts}
 
+    @sync_to_async
     def _update_rate_limit(self, user_id: str, topic_id: str) -> None:
         """사용자별 API 호출 횟수 업데이트"""
         try:
@@ -108,21 +111,61 @@ class PracticeAnalysisAgent(BaseAgent):
         if not user_id:
             return {'success': False, 'error': '사용자 ID가 제공되지 않았습니다.'}
 
-        rate_limit_check = self._check_rate_limit(user_id, topic_id)
+        rate_limit_check = await self._check_rate_limit(user_id, topic_id)
         if not rate_limit_check['allowed']:
             return {'success': False, 'error': rate_limit_check.get('error', '분석 횟수가 초과되었습니다.')}
 
-        self._update_rate_limit(user_id, topic_id)
+        await self._update_rate_limit(user_id, topic_id)
         return await self.analyze_practice_image(topic_id, image_path)
+
+    @sync_to_async
+    def _read_image(self, image_path: str) -> str:
+        """이미지 파일 읽기"""
+        with open(image_path, 'rb') as image_file:
+            return base64.b64encode(image_file.read()).decode('utf-8')
+
+    @sync_to_async
+    def _load_theory_content(self, topic_id: str) -> str:
+        """이론 내용 로드"""
+        theory_file = self.data_dir / topic_id / 'content' / 'theory' / 'theory.html'
+        if theory_file.exists():
+            with open(theory_file, 'r', encoding='utf-8') as f:
+                soup = BeautifulSoup(f, 'html.parser')
+                return soup.get_text()
+        return ''
+
+    @sync_to_async
+    def _load_practice_content(self, topic_id: str) -> str:
+        """실습 내용 로드"""
+        practice_file = self.data_dir / topic_id / 'content' / 'practice' / 'practice.html'
+        try:
+            if practice_file.exists():
+                with open(practice_file, 'r', encoding='utf-8') as f:
+                    content = f.read()
+                    soup = BeautifulSoup(content, 'html.parser')
+                    text_content = []
+                    for section in soup.find_all('section'):
+                        title = section.find(['h1', 'h2', 'h3'])
+                        if title:
+                            text_content.append(f"\n## {title.get_text().strip()}")
+                        
+                        for p in section.find_all(['p', 'li', 'pre']):
+                            text = p.get_text().strip()
+                            if text:
+                                text_content.append(text)
+                    
+                    return '\n'.join(text_content)
+            return ''
+        except Exception as e:
+            print(f"실습 내용 로드 중 오류 발생: {str(e)}")
+            return ''
 
     async def analyze_practice_image(self, topic_id: str, image_path: str) -> Dict[str, Any]:
         """실습 이미지 분석"""
         try:
-            theory_content = self._load_theory_content(topic_id)
-            practice_content = self._load_practice_content(topic_id)
-            
-            with open(image_path, 'rb') as image_file:
-                image_data = base64.b64encode(image_file.read()).decode('utf-8')
+            theory_content = await self._load_theory_content(topic_id)
+            practice_content = await self._load_practice_content(topic_id)
+            image_data = await self._read_image(image_path)
 
             messages = [{
                 "role": "user",
@@ -168,54 +211,21 @@ class PracticeAnalysisAgent(BaseAgent):
                 ]
             }]
 
-            response = self.anthropic.messages.create(
+            response = await sync_to_async(self.anthropic.messages.create)(
                 model="claude-3-sonnet-20240229",
                 max_tokens=1024,
                 messages=messages
             )
 
-            analysis_result = self._parse_analysis_response(response.content)
-            self._save_analysis_result(topic_id, analysis_result)
+            analysis_result = await self._parse_analysis_response(response.content)
+            await self._save_analysis_result(topic_id, analysis_result)
             return analysis_result
 
         except Exception as e:
             print(f"이미지 분석 중 오류 발생: {str(e)}")
             return {'success': False, 'error': f'이미지 분석 중 오류 발생: {str(e)}'}
 
-    def _load_theory_content(self, topic_id: str) -> str:
-        """이론 내용 로드"""
-        theory_file = self.data_dir / topic_id / 'content' / 'theory' / 'theory.html'
-        if theory_file.exists():
-            with open(theory_file, 'r', encoding='utf-8') as f:
-                soup = BeautifulSoup(f, 'html.parser')
-                return soup.get_text()
-        return ''
-
-    def _load_practice_content(self, topic_id: str) -> str:
-        """실습 내용 로드"""
-        practice_file = self.data_dir / topic_id / 'content' / 'practice' / 'practice.html'
-        try:
-            if practice_file.exists():
-                with open(practice_file, 'r', encoding='utf-8') as f:
-                    content = f.read()
-                    soup = BeautifulSoup(content, 'html.parser')
-                    text_content = []
-                    for section in soup.find_all('section'):
-                        title = section.find(['h1', 'h2', 'h3'])
-                        if title:
-                            text_content.append(f"\n## {title.get_text().strip()}")
-                        
-                        for p in section.find_all(['p', 'li', 'pre']):
-                            text = p.get_text().strip()
-                            if text:
-                                text_content.append(text)
-                    
-                    return '\n'.join(text_content)
-            return ''
-        except Exception as e:
-            print(f"실습 내용 로드 중 오류 발생: {str(e)}")
-            return ''
-
+    @sync_to_async
     def _parse_analysis_response(self, response: str) -> Dict[str, Any]:
         """Claude의 응답을 간결한 결과로 변환"""
         try:
@@ -290,6 +300,7 @@ class PracticeAnalysisAgent(BaseAgent):
         
         return '\n'.join(feedback)
 
+    @sync_to_async
     def _save_analysis_result(self, topic_id: str, result: Dict[str, Any]) -> None:
         """분석 결과 저장"""
         analysis_dir = self.data_dir / topic_id / 'content' / 'analysis'

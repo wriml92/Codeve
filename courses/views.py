@@ -7,7 +7,7 @@ from django.shortcuts import get_object_or_404
 from .models import Course, Lesson, Assignment, PracticeExercise, UserCourse
 from .serializers import (CourseSerializer, LessonSerializer, AssignmentSerializer,
                         PracticeExerciseSerializer, UserCourseSerializer)
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 import json
 import os
 import tempfile
@@ -23,6 +23,10 @@ from asgiref.sync import sync_to_async
 from .scripts.assignment_tools import AssignmentDataManager, CodeSubmissionAnalyzer, CodeAnalysisResult
 from .llm.practice_llm import PracticeAnalysisAgent
 from datetime import datetime
+from django.contrib.auth import get_user_model
+from django.core.files.uploadedfile import UploadedFile
+from PIL import Image
+import io
 
 
 # 공통으로 사용할 토픽 목록을 모듈 레벨에 정의
@@ -357,43 +361,55 @@ def reflection_view(request):
 
 def course_list_view(request):
     """코스 목록 뷰"""
-    # course_list.json에서 코스 정보 가져오기
-    course_list_path = Path(__file__).parent / 'data' / 'course_list.json'
-    with open(course_list_path, 'r', encoding='utf-8') as f:
-        course_list = json.load(f)
-    
-    # Python 코스 정보에 정의된 토픽 목록 사용
-    python_course = course_list['python']
-    python_course['topics'] = TOPICS  # 정의된 토픽 목록으로 교체
+    try:
+        # 기본 Python 코스 정보 정의
+        python_course = {
+            'id': 'python',
+            'title': 'Python 기초 프로그래밍',
+            'description': 'Python 프로그래밍의 기초를 배우는 코스입니다.',
+            'difficulty': 'beginner',
+            'estimated_hours': 40,
+            'topics': TOPICS
+        }
 
-    # 사용자가 로그인한 경우 학습 진행률 계산
-    progress_percentage = 0
-    if request.user.is_authenticated:
-        try:
-            user_course = UserCourse.objects.get(user=request.user)
-            completed_topics = set(user_course.completed_topics.split(
-                ',')) if user_course.completed_topics else set()
-            progress_percentage = (len(completed_topics) / len(TOPICS)) * 100
+        # 사용자가 로그인한 경우 학습 진행률 계산
+        progress_percentage = 0
+        if request.user.is_authenticated:
+            try:
+                user_course = UserCourse.objects.get(
+                    user=request.user,
+                    course__title='Python 기초 프로그래밍'
+                )
+                completed_topics = set(user_course.completed_topics.split(',')) if user_course.completed_topics else set()
+                progress_percentage = (len(completed_topics) / len(TOPICS)) * 100
 
-            # 각 토픽의 완료 상태 설정
-            for topic in TOPICS:
-                topic['is_completed'] = topic['id'] in completed_topics
-        except UserCourse.DoesNotExist:
-            # 학습 기록이 없는 경우
+                # 각 토픽의 완료 상태 설정
+                for topic in TOPICS:
+                    topic['is_completed'] = topic['id'] in completed_topics
+            except UserCourse.DoesNotExist:
+                # 학습 기록이 없는 경우
+                for topic in TOPICS:
+                    topic['is_completed'] = False
+        else:
+            # 비로그인 사용자
             for topic in TOPICS:
                 topic['is_completed'] = False
-    else:
-        # 비로그인 사용자
-        for topic in TOPICS:
-            topic['is_completed'] = False
 
-    context = {
-        'course': python_course,
-        'topics': TOPICS,
-        'progress_percentage': progress_percentage
-    }
+        context = {
+            'course': python_course,
+            'topics': TOPICS,
+            'progress_percentage': progress_percentage
+        }
 
-    return render(request, 'roadmaps/course-list.html', context)
+        return render(request, 'roadmaps/course-list.html', context)
+
+    except Exception as e:
+        print(f"코스 목록 로드 중 오류 발생: {str(e)}")
+        return render(request, 'roadmaps/course-list.html', {
+            'error': '코스 정보를 불러오는 중 오류가 발생했습니다.',
+            'topics': TOPICS,
+            'progress_percentage': 0
+        })
 
 
 @login_required
@@ -499,158 +515,159 @@ def assignment_view(request, topic_id=None):
         return render(request, 'courses/assignment.html', context)
 
 
-@csrf_exempt
-@require_http_methods(["POST"])
-def submit_assignment(request, topic_id):
-    try:
-        data = json.loads(request.body)
-        assignment_id = data.get('assignment_id')
-        answer_type = data.get('type')
-        answer = data.get('answer')
-        user_id = str(request.user.id)  # 사용자 ID 가져오기
-
-        print(f"제출된 데이터: type={answer_type}, id={assignment_id}")  # 디버깅용
-
-        # 파일 경로 설정
-        base_path = Path(__file__).parent
-        content_file = base_path / 'data' / 'topics' / topic_id / \
-            'content' / 'assignments' / 'data' / 'assignment.json'
-        answer_file = base_path / 'data' / 'topics' / topic_id / \
-            'content' / 'assignments' / 'answers' / 'assignment_answers.json'
-        attempts_file = base_path / 'agents' / 'assignment_attempts.json'
-
-        # 데이터 로드
-        with open(content_file, 'r', encoding='utf-8') as f:
-            assignments_data = json.load(f)
-        with open(answer_file, 'r', encoding='utf-8') as f:
-            answers_data = json.load(f)
-
-        # 시도 횟수 데이터 로드
-        attempts = {}
-        if attempts_file.exists():
-            with open(attempts_file, 'r') as f:
-                attempts = json.load(f)
-
-        attempt_key = f"{user_id}_{topic_id}_{assignment_id}"
-        user_attempts = attempts.get(attempt_key, {'attempts': 0})
-        current_attempt = user_attempts.get('attempts', 0) + 1
-
-        # 해당 과제와 정답 찾기
-        assignment = next((a for a in assignments_data['assignments'] if str(
-            a['id']) == str(assignment_id)), None)
-        answer_data = next((a for a in answers_data['assignments'] if str(
-            a['id']) == str(assignment_id)), None)
-
-        if not assignment or not answer_data:
-            return JsonResponse({'error': '과제를 찾을 수 없습니다.'}, status=404)
-
-        # 과제 유형에 따른 처리
-        if answer_type in ['concept_basic', 'concept_application', 'concept_analysis', 'concept_debug', 'metaphor', 'theory_concept', 'concept_synthesis']:
-            # 객관식 문제 처리
-            is_correct = str(answer) == str(answer_data['correct_answer'])
-
-            if is_correct:
-                feedback = "정답입니다! 잘 이해하고 계시네요."
-            else:
-                # 두 번째 시도부터 힌트 제공
-                feedback = answer_data.get(
-                    'hint', '다시 한번 생각해보세요.') if current_attempt >= 2 else "다시 한번 생각해보세요."
-
-                # 시도 횟수 업데이트
-                user_attempts['attempts'] = current_attempt
-                user_attempts['last_attempt'] = datetime.now().isoformat()
-                attempts[attempt_key] = user_attempts
-
-                # 시도 횟수 저장
-                with open(attempts_file, 'w') as f:
-                    json.dump(attempts, f, indent=2)
-
-            return JsonResponse({
-                'correct': is_correct,
-                'feedback': feedback
-            })
-
-        elif answer_type in ['implementation_playground', 'implementation_modify', 'implementation_creative']:
-            # 구현 문제는 현재 지원하지 않음
-            return JsonResponse({
-                'error': '구현 문제는 현재 준비 중입니다.'
-            }, status=400)
-
-        else:
-            return JsonResponse({
-                'error': f'지원하지 않는 과제 유형입니다: {answer_type}'
-            }, status=400)
-
-    except json.JSONDecodeError:
-        return JsonResponse({'error': '잘못된 요청 형식입니다.'}, status=400)
-    except Exception as e:
-        print(f"과제 제출 처리 중 오류 발생: {str(e)}")  # 디버깅용
-        return JsonResponse({'error': f'서버 오류가 발생했습니다: {str(e)}'}, status=500)
-
-
-def save_assignment_data(topic_id: str, data: Dict[str, Any]) -> None:
-    """과제 데이터 저장"""
-    base_dir = Path(__file__).parent
-    assignment_file = base_dir / 'data' / 'topics' / topic_id / \
-        'content' / 'assignments' / 'data' / 'assignment.json'
-
-    # 디렉토리가 없으면 생성
-    assignment_file.parent.mkdir(parents=True, exist_ok=True)
-
-    with open(assignment_file, 'w', encoding='utf-8') as f:
-        json.dump(data, f, ensure_ascii=False, indent=2)
-
-
-@csrf_exempt
-async def submit_practice(request, topic_id):
-    """실습 스크린샷 제출 및 분석"""
-    if request.method != 'POST':
-        return JsonResponse({'error': '잘못된 요청 방식입니다.'}, status=405)
-    try:
-        if 'screenshot' not in request.FILES:
-            return JsonResponse({'error': '스크린샷이 제출되지 않았습니다.'}, status=400)
-        screenshot = request.FILES['screenshot']
-        # 임시 파일로 저장
-        with tempfile.NamedTemporaryFile(delete=False, suffix='.png') as temp_file:
-            for chunk in screenshot.chunks():
-                temp_file.write(chunk)
-            temp_path = temp_file.name
+def async_login_required(view_func):
+    """비동기 뷰를 위한 로그인 필수 데코레이터"""
+    async def wrapped_view(request, *args, **kwargs):
         try:
-            # 이미지 분석
+            # 세션과 유저 정보를 비동기적으로 확인
+            is_authenticated = await sync_to_async(lambda r: r.user.is_authenticated)(request)
+            if not is_authenticated:
+                return HttpResponse(
+                    '<script>window.location.href = "/accounts/login/";</script>',
+                    content_type='text/html'
+                )
+            return await view_func(request, *args, **kwargs)
+        except Exception as e:
+            print(f"인증 확인 중 오류 발생: {str(e)}")
+            return HttpResponse(
+                '<script>window.location.href = "/accounts/login/";</script>',
+                content_type='text/html'
+            )
+    return wrapped_view
+
+@sync_to_async
+def async_json_response(data, status=200):
+    """비동기 컨텍스트에서 안전한 JsonResponse"""
+    return JsonResponse(data, status=status)
+
+@async_login_required
+@csrf_exempt
+@require_POST
+async def submit_practice(request, topic_id):
+    """실습 제출 처리"""
+    print("\n=== 실습 제출 처리 시작 ===")
+    print(f"Topic ID: {topic_id}")
+    print(f"Request method: {request.method}")
+    print(f"Request FILES: {request.FILES}")
+    
+    temp_file_path = None
+    try:
+        # 사용자 ID 가져오기
+        try:
+            print("사용자 ID 가져오기 시도...")
+            user_id = await get_user_id_from_request(request)
+            print(f"가져온 사용자 ID: {user_id}")
+        except Exception as e:
+            print(f"사용자 ID 가져오기 실패: {str(e)}")
+            return await async_json_response({
+                'success': False,
+                'error': '사용자 인증이 필요합니다.'
+            }, status=401)
+
+        # 이미지 파일 가져오기
+        print("이미지 파일 가져오기 시도...")
+        image_file = await get_file_from_request(request, 'screenshot')
+        print(f"이미지 파일 객체: {image_file}")
+        if not image_file:
+            print("이미지 파일이 제공되지 않음")
+            return await async_json_response({
+                'success': False,
+                'error': '이미지가 제공되지 않았습니다.'
+            }, status=400)
+
+        # 임시 파일로 저장
+        print("임시 파일 저장 시도...")
+        temp_file_path = os.path.join(tempfile.gettempdir(), f'practice_{user_id}_{topic_id}.png')
+        print(f"임시 파일 경로: {temp_file_path}")
+        await save_file_chunks(image_file, temp_file_path)
+        print("임시 파일 저장 완료")
+
+        try:
+            print("분석 에이전트 초기화 및 처리 시작...")
+            # 분석 에이전트 초기화 및 처리
             agent = PracticeAnalysisAgent()
             result = await agent.process({
                 'topic_id': topic_id,
-                'image_path': temp_path,
-                'user_id': str(request.user.id)  # 사용자 ID 추가
+                'image_path': temp_file_path,
+                'user_id': user_id
             })
-            print(f"분석 결과: {result}")  # 디버깅을 위한 로그 추가
-            # 분석 결과에 따른 응답 생성
-            if result.get('success'):
-                response_data = {
-                    'success': True,
-                    'passed': result.get('passed', False),
-                    'feedback': result.get('feedback', ''),
-                    'sections': result.get('sections', {})
-                }
-                # 모든 섹션을 통과한 경우 축하 메시지 추가
-                if result.get('passed'):
-                    response_data['message'] = ':짠: 축하합니다! 실습을 성공적으로 완료했어요!'
-                return JsonResponse(response_data)
-            else:
-                print(f"분석 실패: {result.get('error')}")  # 디버깅을 위한 로그 추가
-                return JsonResponse({
-                    'success': False,
-                    'error': result.get('error', '분석 중 오류가 발생했습니다.')
-                })
-        finally:
+            print(f"분석 결과: {result}")
+
             # 임시 파일 삭제
-            if os.path.exists(temp_path):
-                os.unlink(temp_path)
+            if os.path.exists(temp_file_path):
+                os.unlink(temp_file_path)
+                print("임시 파일 삭제 완료")
+
+            return await async_json_response(result)
+
+        except Exception as e:
+            print(f"분석 처리 중 오류 발생: {str(e)}")
+            # 오류 발생 시 임시 파일 삭제 시도
+            if temp_file_path and os.path.exists(temp_file_path):
+                os.unlink(temp_file_path)
+                print("오류 발생으로 인한 임시 파일 삭제")
+            raise e
+
     except Exception as e:
+        print(f"실습 제출 처리 중 오류 발생: {str(e)}")
+        print(f"오류 상세: {type(e).__name__}")
         import traceback
-        print(f"서버 오류 발생: {str(e)}")
-        print(traceback.format_exc())  # 상세한 에러 스택 트레이스 출력
-        return JsonResponse({
+        print(f"스택 트레이스:\n{traceback.format_exc()}")
+        
+        # 마지막으로 임시 파일 삭제 시도
+        if temp_file_path and os.path.exists(temp_file_path):
+            try:
+                os.unlink(temp_file_path)
+                print("최종 임시 파일 삭제 완료")
+            except:
+                print("최종 임시 파일 삭제 실패")
+        return await async_json_response({
             'success': False,
             'error': f'서버 오류가 발생했습니다: {str(e)}'
         }, status=500)
+
+
+# 동기 작업을 위한 헬퍼 함수들
+@sync_to_async
+def get_user_id_from_request(request) -> str:
+    """request에서 user id를 가져오는 동기 함수"""
+    try:
+        print(f"get_user_id_from_request 호출됨: {request.user}")
+        if not hasattr(request, '_cached_user'):
+            request._cached_user = request.user
+        return str(request._cached_user.id)
+    except Exception as e:
+        print(f"사용자 ID 가져오기 실패: {str(e)}")
+        raise
+
+@sync_to_async
+def get_file_from_request(request, field_name: str) -> UploadedFile:
+    """request.FILES에서 파일을 가져오는 동기 함수"""
+    print(f"get_file_from_request 호출됨: field_name={field_name}")
+    file = request.FILES.get(field_name)
+    print(f"가져온 파일 객체: {file}")
+    return file
+
+@sync_to_async
+def save_file_chunks(file_obj: UploadedFile, temp_file_path: str) -> None:
+    """파일을 임시 파일로 저장하는 동기 함수"""
+    print(f"save_file_chunks 시작: {temp_file_path}")
+    try:
+        # 이미지 파일을 PIL Image로 열기
+        image = Image.open(io.BytesIO(file_obj.read()))
+        
+        # RGBA 모드인 경우 RGB로 변환
+        if image.mode in ('RGBA', 'LA'):
+            background = Image.new('RGB', image.size, (255, 255, 255))
+            background.paste(image, mask=image.split()[-1])
+            image = background
+        elif image.mode != 'RGB':
+            image = image.convert('RGB')
+            
+        # PNG 형식으로 저장
+        image.save(temp_file_path, 'PNG')
+        print(f"이미지 변환 및 저장 완료: {image.format} -> PNG")
+    except Exception as e:
+        print(f"이미지 변환 중 오류 발생: {str(e)}")
+        raise
+    print("save_file_chunks 완료")
