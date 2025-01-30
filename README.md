@@ -106,6 +106,7 @@
         <td>프론트엔드와 백엔드를 각각 빌드/배포해야 함</td>
     </tr>
 </table>
+<p><strong>의사결정:</strong> <span style="color: orange; font-weight: bold;">Django Template</span>은 서버 사이드 렌더링으로 SEO, 초기 로딩 속도, CRUD 서비스에 적합하며, 통합 배포와 유지보수가 용이하다. React는 동적 UI와 확장성이 뛰어나지만, 현재 프로젝트의 요구사항과 유지보수 전략을 고려했을 때 <span style="color: orange; font-weight: bold;">Django Template</span>이 최적의 선택이라고 생각했습니다.</p>
 </details>
 
 <details>
@@ -153,7 +154,7 @@
         </tr>
     </table>
 
-
+<p><strong>의사결정:</strong> 기술 사용에 있어서 <span style="color: orange; font-weight: bold;">PostgreSQL</span>과 MySQL 사용을 놓고 고민하다가, 대규모 데이터를 다루거나 장기적인 확장성과 안정성을 고려하여 <span style="color: orange; font-weight: bold;">PostgreSQL</span>을 선택하게 되었습니다.</p>
 </details>
 
 <details>
@@ -311,7 +312,7 @@
 <details>
     <summary> 프로젝트 아키텍처 </summary>
 
-![서비스 아키텍처](서비스아키텍처.png)
+![서비스아키텍처](./service_architecture.png)
 </details>
 
 <details>
@@ -335,7 +336,6 @@
 - 실습 결과 평가 시스템 (practice_analysis_agent.py)
 - 개인화된 피드백 생성 파이프라인
 #### 통합 학습 관리 시스템
-
 - 학습 진도 추적 시스템 (roadmaps)
 - 개인화된 학습 경로 관리
 - 학습 데이터 분석 및 저장
@@ -346,35 +346,225 @@
 
 
 
-
 ### 🗝️ 트러블슈팅
 <details>
-<summary>강예진</summary>
+<summary>강예진 🌱</summary>
+<p><strong>1. 이론-실습 예제 불일치 문제</strong></p>
+<p><strong>문제 상황</strong></p>
+<pre><code>
+default_examples = {
+    'input_output': {
+        'code': '# 예제 코드...',
+        'pattern': {...}
+    }
+}
+</code></pre>
+PracticeLLM에서만 예제 코드 패턴을 정의하고 검증하는 로직을 넣어서 코드 패턴의 불일치가 생겼다. 
+
+<p><strong>원인</strong></p>
+이론(ThreoryLLM)과 실습(PracticeLLM) 사이의 예제 코드 생성 기준이 달라 불일치가 생겼다.
+이는 실습에서 기대하는 코드 패턴이 이론에서 제시된 예제와 맞지 않아서 발생하였다.
+<p><strong>해결</strong></p>
+<pre><code>
+class TheoryLLM(BaseLLM):
+    def __init__(self, model_name="gpt-4", temperature=0.7):
+        self.example_patterns = {
+            'input_output': {
+                'structure': ['input(', 'print('],
+                'output_pattern': r'안녕하세요.*!',
+                'required_elements': ['input', 'print', '사용자 입력']
+            }
+        }
+        
+    def _validate_example_code(self, code: str, topic_id: str) -> bool:
+        if topic_id not in self.example_patterns:
+            return True
+        pattern = self.example_patterns[topic_id]
+        # 패턴 검증 로직...
+</code></pre>
+TheoryLLM에 예제 코드 패턴 정의 및 검증 로직을 추가 하였다.
+
+<strong>2. 실시간 피드백 시스템 개선</strong>
+<p><strong>문제 상황</strong></p>
+처음에는 제출된 코드를 단순히 실행하고 결과만 확인하는 방식이였으나, 성공만 알려주는게 학습에 도움이 되지 않는 것 같아 학습에 도움을 주기 위해 보완하기로 하였다. 
+<pre><code>
+# 초기 구현 - 너무 단순한 피드백
+def analyze_submission(self, code: str) -> Dict:
+    try:
+        exec(code)
+        return {"success": True, "message": "성공!"}
+    except Exception as e:
+        return {"success": False, "message": str(e)}
+</code></pre>
+
+<p><strong>개선 과정</strong></p>
+   1. 실제 학습자들의 피드백을 수집하고 분석
+   2. 다른 교육용 플랫폼들의 피드백 시스템 벤치마킹
+   3. 코드 품질과 학습 목표 달성 여부를 측정할 방법 고민
+
+<p><strong>해결 과정</strong></p>
+코드 분석과 실행을 분리하고, 여러 측면에서 피드백을 제공하는 방식으로 개선하였다.
+
+<pre><code>
+class CodeAnalyzer:
+    def analyze_code_quality(self, code: str) -> Dict:
+        metrics = {
+            'has_comments': self._check_comments(code),
+            'follows_convention': self._check_naming_convention(code),
+            'code_structure': self._analyze_structure(code)
+        }
+        
+        feedback = []
+        if metrics['has_comments']:
+            feedback.append("✨ 주석을 통해 코드의 의도를 잘 설명했어요!")
+        
+        # 실행 결과 분석
+        try:
+            result = self._safe_execute(code)
+            if result['success']:
+                feedback.append("🎯 코드가 정상적으로 동작합니다!")
+                if self._check_creative_solution(code):
+                    feedback.append("🌟 창의적인 해결 방법이네요!")
+        except Exception as e:
+            feedback.append(f"💡 오류가 발생했어요: {str(e)}\n다음을 확인해보세요:")
+            feedback.extend(self._generate_error_hints(e))
+            
+        return {'metrics': metrics, 'feedback': feedback}
+</code></pre>
+이런 개선을 통해 학습자들이 더 구체적이고 유익한 피드백을 받을 수 있으며, 코드 품질도 자연스럽게 향상될 것으로 기대된다. 이를 통해 사용자 경험을 고려한 개선의 중요성을 더욱 실감하게 되었다.
+
+<strong>3. LLM 응답 템플릿 커스터마이징</strong>
+<p><strong>문제 상황</strong></p>
+처음에는 ChatGPT API를 사용하여  이론 내용을 생성할 때, HTML 구조가 일관적이지 않고 스타일링이 제각각으로 보였다. 특히 코드 블록이나 강조 구문이 때때로 깨지는 현상이 발생하였다.
+<pre><code>
+# 초기 구현 - 단순한 프롬프트 사용
+messages = [{
+    "role": "user",
+    "content": f"Python {topic_id}에 대한 설명을 HTML로 작성해주세요."
+}]
+</code></pre>
+<p><strong>문제 분석 과정</strong></p>
+    1. 개발자 도구로 생성된 HTML을 분리해보니 태그 구조가 불규칙적
+    2. ChatGPT 응답을 로깅해서 살펴보니 때때로 마크다운과 HTML이 섞여서 출력
+    3. Tailwind CSS 클래스가 누락되거나 잘못 적용되는 부분 발견
+<p><strong>해결 과정</strong></p>
+여러 시도 끝에 프롬프트에 상세한 템플릿을 제공하고, 응답을 구조화하는 방식을 택했다.
+<pre><code>
+class TheoryLLM(BaseLLM):
+    def __init__(self):
+        self.prompt_template = """
+"""
+</code></pre>
+이렇게 구조화된 템플릿을 사용하니 응답의 일관성이 증가하였고, 스타일링도 안정적으로 적용되었다.
+
 </details>
 
 <details>
-<summary>강성민</summary>
-</details>
+<summary>강성민 🌿</summary>
+<p>1. 챗봇 단어 분리</p>
 
-<details>
-<summary>정재혁</summary>
-**장고 정적 파일 로드 문제**
-1. 상황 설명
-Django 프로젝트에서 템플릿을 작성하던 중 다음과 같은 오류가 발생했다:
+저장해놓은 답변을 불러오는데 문장을 입력했을때 일정 단어가 들어가면 저장해놓은 답변을 불러오는 코드가 있다. 그런데 문장단위로 쓰게되면 인식을 못하여 불필요한 단어들을 제거하고 메시지를 단어로 분리한 다음에 저장해놓은 답변을 불러오도록 하였다(ex, 변수가 뭐야? → 변수 답변이 나옴)
+<pre><code>
+class ChatbotViewSet(viewsets.ViewSet):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        # responses.json 파일 로드
+        json_path = os.path.join(os.path.dirname(__file__), 'responses.json')
+        with open(json_path, 'r', encoding='utf-8') as f:
+            self.cached_responses = json.load(f)
+            
+    def extract_keywords(self, message):
+        # 불필요한 단어들 제거
+        stop_words = ['이란', '란', '이', '가', '은', '는', '을', '를', '에', '대해', '뭐야', '무엇', '설명', '해줘', '알려줘', '?', '.']
+        
+        # 메시지를 단어로 분리
+        words = message.replace('?', ' ').replace('.', ' ').split()
+        
+        # 불필요한 단어 제거
+        keywords = [word for word in words if word not in stop_words]
+        
+        return keywords
+</code></pre>
+
+<p>2. 자바스크립트 이미지 호출</p>
+기존에는 프로젝트 내의 static 폴더에서 이미지를 호출하고 있었으나, 배포 과정에서 S3 버킷에서 이미지를 불러오는 방식으로 변경되었음. 그러나 자바스크립트에서는 Django 템플릿 방식이 작동하지 않아, 이미지를 하드코딩된 S3 URL로 호출하는 방식으로 수정하여서 해결. 이후에도 이미지 업로드가 되지 않아, S3 버킷에서 CORS 설정을 추가하여 요청을 처리할 수 있도록 하여 최종적으로 해결함
+
+```html
+기존 코드 - <img src="{% static 'images/codeve_icon.png' %}" alt="챗봇">
+
+수정코드 - <img id="chatbot-icon" src="https://s3.ap-northeast-2.amazonaws.com/codeve.site/static/images/codeve_icon.png" alt="챗봇">
 ```
+<pre><code>
+CORS설정
+
+[
+    {
+        "AllowedHeaders": [
+            "*"
+        ],
+        "AllowedMethods": [
+            "GET",
+            "PUT",
+            "POST",
+            "DELETE",
+            "HEAD"
+        ],
+        "AllowedOrigins": [
+            "https://codeve.site",
+            "http://localhost:8000",
+            "http://127.0.0.1:8000"
+        ],
+        "ExposeHeaders": [
+            "Access-Control-Allow-Origin"
+        ]
+    }
+]
+</code></pre>
+
+
+</details>
+
+<details>
+<summary>정재혁 🍀</summary>
+<strong>1. 장고 정적 파일 로드 문제</strong>
+- 상황 설명
+Django 프로젝트에서 템플릿을 작성하던 중 다음과 같은 오류가 발생했다:
 TemplateSyntaxError at /api/courses/practice/input_output/
 Invalid block tag on line 6: 'static', expected 'endblock'. Did you forget to register or load this tag?
-```
-2. 원인
-정적 파일을 로드하기 위해 `{% static %}`를 사용하려면 템플릿 상단에 `{% load static %}`가 있어야 한다.
-3. 해결
-  ```html
-  {% load static %}
-  <!DOCTYPE html>
-  <html>
-  <head>
-```
 
+- 원인
+정적 파일을 로드하기 위해 `{% static %}`를 사용하려면 템플릿 상단에 `{% load static %}`가 있어야 한다.
+
+- 해결
+<pre><code>
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+</code></pre>
+
+<strong>2. 8000번 포트가 이미 사용 중 문제</strong>
+- 상황 설명
+Error: That port is already in use.
+
+- 해결
+lsof -i :8000로 8000번 포트를 사용하고 있는 프로세스를 찾은 후
+kill -9 7765 7813 8327 8585로 해당 프로세스들을 종료
+
+<strong>3. 배포했는데 static 폴더에 있는 미디어 파일들이 뜨지 않음 현상</strong>
+- 원인
+nginx 설정 파일에 문제가 있어서 발생한 오류.
+location 지시문이 server 블록 내부에 위치해야 하는데 잘못된 위치에 있었음.
+
+- 해결
+<pre><code>
+server {
+    root /www/data;
+    location / {
+    }
+}
+위처럼 location 지시문을 server 블록에 위치하게 함.
+</code></pre>
 </details>
 
 ### 📂 프로젝트 구조
@@ -458,9 +648,6 @@ Codeve/
 
 
 ```
-
-### ER 다이어그램
-(이미지로 넣기)
 
 
 ### 📕 API 엔드포인트
