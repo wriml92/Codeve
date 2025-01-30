@@ -11,8 +11,10 @@ load_dotenv(dotenv_path=os.path.join(BASE_DIR, '.env'))
 
 # 보안 설정 (Security Settings)
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
-DEBUG = False
-ALLOWED_HOSTS = ['backend', 'codeve.site', 'localhost', '127.0.0.1']
+DEBUG = True # 개발
+ALLOWED_HOSTS = ['backend', 'codeve.site', '*'] # 개발
+# DEBUG = False # 배포
+# ALLOWED_HOSTS = ['backend', 'codeve.site', 'localhost', '127.0.0.1'] # 배포
 
 # ------------------------------------------------------------------------------
 # 애플리케이션 설정 (Application Settings)
@@ -84,16 +86,25 @@ WSGI_APPLICATION = 'Codeve.wsgi.application'
 # ------------------------------------------------------------------------------
 # 데이터베이스 설정 (Database Settings)
 # ------------------------------------------------------------------------------
+## 개발
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv("DB_NAME"),
-        'USER': os.getenv("DB_USER"),
-        'PASSWORD': os.getenv("DB_PASSWORD"),
-        'HOST': os.getenv("DB_HOST"),
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+## 아래는 배포
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': os.getenv("DB_NAME"),
+#         'USER': os.getenv("DB_USER"),
+#         'PASSWORD': os.getenv("DB_PASSWORD"),
+#         'HOST': os.getenv("DB_HOST"),
+#         'PORT': '5432',
+#     }
+# }
 
 # ------------------------------------------------------------------------------
 # 인증 및 보안 설정 (Authentication & Security Settings)
@@ -114,9 +125,9 @@ GOOGLE_REDIRECT = 'https://accounts.google.com/o/oauth2/v2/auth'
 GOOGLE_SCOPE_USERINFO = 'https://www.googleapis.com/auth/userinfo.email'
 GOOGLE_OAUTH2_KEY = os.getenv('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')
 GOOGLE_OAUTH2_SECRET = os.getenv('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')
-GOOGLE_OAUTH2_REDIRECT_URI = 'https://codeve.site/accounts/google/callback/' # 배포용
-# GOOGLE_OAUTH2_REDIRECT_URI = 'http://127.0.0.1:8000/accounts/google/callback/' # LOCAL 전용
-# GOOGLE_OAUTH2_REDIRECT_URI = 'http://localhost:8000/accounts/google/callback/' # LOCAL 전용
+# GOOGLE_OAUTH2_REDIRECT_URI = 'https://codeve.site/accounts/google/callback/' # 배포용
+GOOGLE_OAUTH2_REDIRECT_URI = 'http://127.0.0.1:8000/accounts/google/callback/' # LOCAL 전용
+GOOGLE_OAUTH2_REDIRECT_URI = 'http://localhost:8000/accounts/google/callback/' # LOCAL 전용
 
 # ------------------------------------------------------------------------------
 # REST Framework 설정
