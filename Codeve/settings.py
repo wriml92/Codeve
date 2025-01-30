@@ -11,8 +11,8 @@ load_dotenv(dotenv_path=os.path.join(BASE_DIR, '.env'))
 
 # 보안 설정 (Security Settings)
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
-DEBUG = True
-ALLOWED_HOSTS = ['backend', 'codeve.site', 'localhost', '127.0.0.1']
+DEBUG = False
+ALLOWED_HOSTS = ['backend', 'codeve.site']
 
 # ------------------------------------------------------------------------------
 # 애플리케이션 설정 (Application Settings)
@@ -114,8 +114,8 @@ GOOGLE_SCOPE_USERINFO = 'https://www.googleapis.com/auth/userinfo.email'
 GOOGLE_OAUTH2_KEY = os.getenv('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')
 GOOGLE_OAUTH2_SECRET = os.getenv('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')
 GOOGLE_OAUTH2_REDIRECT_URI = 'https://codeve.site/accounts/google/callback/' # 배포용
-GOOGLE_OAUTH2_REDIRECT_URI = 'http://127.0.0.1:8000/accounts/google/callback/' # LOCAL 전용
-GOOGLE_OAUTH2_REDIRECT_URI = 'http://localhost:8000/accounts/google/callback/' # LOCAL 전용
+# GOOGLE_OAUTH2_REDIRECT_URI = 'http://127.0.0.1:8000/accounts/google/callback/' # LOCAL 전용
+# GOOGLE_OAUTH2_REDIRECT_URI = 'http://localhost:8000/accounts/google/callback/' # LOCAL 전용
 
 # ------------------------------------------------------------------------------
 # 깃허브 OAuth2 설정 (Github OAuth2 Settings)
@@ -123,8 +123,8 @@ GOOGLE_OAUTH2_REDIRECT_URI = 'http://localhost:8000/accounts/google/callback/' #
 GITHUB_OAUTH2_KEY = os.getenv('SOCIAL_AUTH_GITHUB_OAUTH2_KEY')
 GITHUB_OAUTH2_SECRET = os.getenv('SOCIAL_AUTH_GITHUB_OAUTH2_KEY')
 GITHUB_OAUTH2_REDIRECT_URI = 'https://codeve.site/accounts/github/callback/' # 배포용
-GITHUB_OAUTH2_REDIRECT_URI = 'http://127.0.0.1:8000/accounts/github/callback/' # LOCAL 전용
-GITHUB_OAUTH2_REDIRECT_URI = 'http://localhost:8000/accounts/github/callback/' # LOCAL 전용
+# GITHUB_OAUTH2_REDIRECT_URI = 'http://127.0.0.1:8000/accounts/github/callback/' # LOCAL 전용
+# GITHUB_OAUTH2_REDIRECT_URI = 'http://localhost:8000/accounts/github/callback/' # LOCAL 전용
 
 
 # ------------------------------------------------------------------------------
@@ -132,8 +132,8 @@ GITHUB_OAUTH2_REDIRECT_URI = 'http://localhost:8000/accounts/github/callback/' #
 # ------------------------------------------------------------------------------
 NAVER_OAUTH2_KEY = os.getenv('SOCIAL_AUTH_NAVER_OAUTH2_KEY')
 NAVER_OAUTH2_SECRET = os.getenv('SOCIAL_AUTH_NAVER_OAUTH2_SECRET')
-# NAVER_OAUTH2_REDIRECT_URI = 'https://codeve.site/accounts/naver/callback/' # 배포용
-NAVER_OAUTH2_REDIRECT_URI = 'http://127.0.0.1:8000/accounts/naver/callback/' # LOCAL 전용
+NAVER_OAUTH2_REDIRECT_URI = 'https://codeve.site/accounts/naver/callback/' # 배포용
+# NAVER_OAUTH2_REDIRECT_URI = 'http://127.0.0.1:8000/accounts/naver/callback/' # LOCAL 전용
 # NAVER_OAUTH2_REDIRECT_URI = 'http://localhost:8000/accounts/naver/callback/' # LOCAL 전용
 
 # ------------------------------------------------------------------------------
@@ -142,8 +142,8 @@ NAVER_OAUTH2_REDIRECT_URI = 'http://127.0.0.1:8000/accounts/naver/callback/' # L
 KAKAO_OAUTH2_KEY = os.getenv('SOCIAL_AUTH_KAKAO_OAUTH2_KEY')
 KAKAO_OAUTH2_SECRET = os.getenv('SOCIAL_AUTH_KAKAO_OAUTH2_SECRET')
 KAKAO_OAUTH2_REDIRECT_URI = 'https://codeve.site/accounts/kakao/callback/' # 배포용
-KAKAO_OAUTH2_REDIRECT_URI = 'http://127.0.0.1:8000/accounts/kakao/callback/' # LOCAL 전용
-KAKAO_OAUTH2_REDIRECT_URI= 'http://localhost:8000/accounts/kakao/callback/' # LOCAL 전용
+# KAKAO_OAUTH2_REDIRECT_URI = 'http://127.0.0.1:8000/accounts/kakao/callback/' # LOCAL 전용
+# KAKAO_OAUTH2_REDIRECT_URI= 'http://localhost:8000/accounts/kakao/callback/' # LOCAL 전용
 
 
 # ------------------------------------------------------------------------------
