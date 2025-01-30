@@ -1,65 +1,469 @@
-### 프로젝트 구조
+# CODEVE 프로젝트
+
+![로고](https://s3.ap-northeast-2.amazonaws.com/codeve.site/static/images/codeve.png)
+![로고](https://images.velog.io/images/hwanghye/post/4bea2bd0-0fd5-46d1-9941-6370526ffb7e/sparta.png)
+### 네비게이션
+1. [프로젝트 개요](#프로젝트-개요)
+2. [팀 구성 및 역할](#팀-구성-및-역할)
+3. [기술 스택](#기술-스택)
+4. [프로젝트 구조](#프로젝트-구조)
+5. [트러블 슈팅](#트러블-슈팅)
+6. [SA 문서](#sa-문서)
+
+### 🌼 프로젝트 개요
+<details>
+    <summary><strong> 기획 의도 </strong></summary>
+    저희 팀은 모두 비전공자로 구성되어 있습니다. 프로그래밍을 처음 접했을 때, ‘변수는 왜 필요할까?’, ‘객체지향이 뭐야?’ 같은 기초 개념과 컴퓨터 사이언스 배경지식이 낯설고 어렵게 느껴졌던 경험이 있습니다. 특히, 부트캠프와 같은 빠르게 진행되는 교육 과정에서는 이러한 기초 지식 부족이 수업과 실습에 큰 어려움으로 다가왔습니다.
+
+이러한 경험을 바탕으로, 저희는 **튜터가 옆에서 맞춤형 과외를 해주듯이 대화를 기반**으로 **프로그래밍의 기초를 빠르고 쉽게 이해할 수 있는 AI 기반 튜터링 서비스**를 기획하게 되었습니다. 복잡한 개념을 실생활 비유와 직관적인 설명으로 풀어내어 학습자가 부담 없이 배우고 성장할 수 있는 환경을 제공하고자 합니다.
+</details>
+
+<details>
+    <summary><strong> 개발 기간 </strong></summary>
+    2025.01.06 ~ 2025.01.30 약 4주
+</details>
+
+### 팀 구성 및 역할
+
+|이름 |	역할 | 업무 |
+-----|--------------|----------------------|
+|강예진 | 백엔드, 프롬프트 엔지니어링, AI 엔지니어링 | 학습 자료 생성 LLM 구현, 답안 분석 및 피드백 AI 에이전트 구현, 자동화 스크립트 작성, 모델 설계 및 DB 구조화, API 엔드포인트 |
+|강성민	| 백엔드, 게시판 기능, 챗봇 구현 | 와이어프레임 작성, 로직 흐름도, Javascript와 OpenAI를 이용해서 챗봇 구현, 로드맵 구현 |
+|정재혁	| 프론트엔드, 백엔드, AWS 배포 | Django와 Tailwind CSS를 이용해서 UI 설계 및 구현, 사용자 관리 및 구글 로그인 기능 구현, AWS와 Nginx를 이용해서 배포 및 PostgreSQL를 이용해서 DB 생성 |
+
+
+
+
+
+
+### 📚 기술 스택
+
+<div align=center>
+
+#### Frontend : <img src="https://img.shields.io/badge/django template 5.1.4-092E20?style=for-the-badge&logo=django&logoColor=white"> <img src="https://img.shields.io/badge/Tailwind%20CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white">
+
+#### Backend : <img src="https://img.shields.io/badge/Python%203.10-3776AB?style=for-the-badge&logo=python&logoColor=white"> <img src="https://img.shields.io/badge/django rest framework-092E20?style=for-the-badge&logo=django&logoColor=white"> <img src="https://img.shields.io/badge/django 5.1.4-092E20?style=for-the-badge&logo=django&logoColor=white"> 
+
+#### AI : <img src="https://img.shields.io/badge/OpenAI-2D2D3C?style=for-the-badge&logo=openai&logoColor=white"> <img src="https://img.shields.io/badge/LangChain-0052CC?style=for-the-badge&logo=langchain&logoColor=white"> <img src="https://img.shields.io/badge/Anthropic-FF6D00?style=for-the-badge&logo=anthropic&logoColor=white">
+
+#### Database : <img src="https://img.shields.io/badge/PostgreSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white"> 
+
+#### Server : <img src="https://img.shields.io/badge/AMAZON EC2-FFE900?style=for-the-badge&logo=amazon&logoColor=black"> <img src="https://img.shields.io/badge/Amazon S3-DC382D?style=for-the-badge&logo=amazon-s3&logoColor=white"> <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white"> <img src="https://img.shields.io/badge/NGINX-2F9624?style=for-the-badge&logo=nginx&logoColor=white"> <img src="https://img.shields.io/badge/GUNICORN-2BB530?style=for-the-badge&logo=gunicorn&logoColor=white"> <img src="https://img.shields.io/badge/DOCKER COMPOSE-3D97FF?style=for-the-badge&logo=docker&logoColor=white"> <img src="https://img.shields.io/badge/AWS RDS-527FFF?style=for-the-badge&logo=amazon-aws&logoColor=white"> <img src="https://img.shields.io/badge/AWS ALB-FF9900?style=for-the-badge&logo=amazon-aws&logoColor=white">
+
+ 
+
+#### Collaboration : <img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white"> <img src="https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white"> <img src="https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=slack&logoColor=white"> <img src="https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=notion&logoColor=white"> <img src="https://img.shields.io/badge/Google%20Docs-34A853?style=for-the-badge&logo=google-docs&logoColor=white"> 
+
+</div>
+
+### 🫧 기술적 의사결정
+<details>
+    <summary>프론트 구현 | <strong>Django Template</strong> vs React</summary>
+<table border="1">
+    <tr>
+        <th>항목</th>
+        <th>Django Template</th>
+        <th>React</th>
+    </tr>
+    <tr>
+        <td>렌더링 방식</td>
+        <td>SSR (서버 사이드 렌더링)</td>
+        <td>기본적으로 CSR (클라이언트 사이드 렌더링)</td>
+    </tr>
+    <tr>
+        <td>초기 로딩 속도</td>
+        <td>빠름 (HTML 자체 전달)</td>
+        <td>JS 번들 로딩까지 대기 필요 (SSR 적용 전제 제외 시)</td>
+    </tr>
+    <tr>
+        <td>SEO(검색 최적화)</td>
+        <td>유리 (서버 렌더링으로 콘텐츠 완전 제공)</td>
+        <td>순수 CSR 시 제한적 (SSR 프레임워크 적용 시 개선 가능)</td>
+    </tr>
+    <tr>
+        <td>상호작용/동적 UI</td>
+        <td>제한적 (AJAX와 약간의 JS로 가능하지만 규모가 제한됨)</td>
+        <td>강력 (SPA 구현과 동적 상태 관리, 부분 렌더링 용이)</td>
+    </tr>
+    <tr>
+        <td>학습 곡선</td>
+        <td>Django(파이썬) 지식으로 충분, 템플릿 문법만 숙지하면 됨</td>
+        <td>React 기본 문법 + 자바스크립트 생태계(webpack 등) 학습 필요</td>
+    </tr>
+    <tr>
+        <td>프로젝트 구조</td>
+        <td>서버 템플릿 기반, 전통적 웹 방식</td>
+        <td>백엔드/프론트엔드 분리, API 통신 기반 SPA</td>
+    </tr>
+    <tr>
+        <td>확장성</td>
+        <td>단일 프로젝트로 간단하지만 큰 규모 확장 시 제약 있을 수 있음</td>
+        <td>프론트엔드/백엔드 분리로 대규모 프로젝트에도 유연함</td>
+    </tr>
+    <tr>
+        <td>배포/호스팅</td>
+        <td>Django 서버 하나만 배포하면 됨</td>
+        <td>프론트엔드와 백엔드를 각각 빌드/배포해야 함</td>
+    </tr>
+</table>
+</details>
+
+<details>
+    <summary>DB 구축 | <strong>PostgreSQL</strong> vs MySQL</summary>
+    <table border="1">
+        <tr>
+            <th>특징</th>
+            <th>PostgreSQL</th>
+            <th>MySQL</th>
+        </tr>
+        <tr>
+            <td>성능</td>
+            <td>복잡한 쿼리 및 대규모 데이터 처리에 우수</td>
+            <td>단순한 쿼리에서 빠른 성능</td>
+        </tr>
+        <tr>
+            <td>확장성</td>
+            <td>수평적 확장성 뛰어남</td>
+            <td>수직적 확장성에 강점</td>
+        </tr>
+        <tr>
+            <td>호환성</td>
+            <td>SQL 표준 준수, 다양한 언어 호환</td>
+            <td>가벼운 데이터베이스 시스템</td>
+        </tr>
+        <tr>
+            <td>트랜잭션</td>
+            <td>강력한 트랜잭션 관리, MVCC 지원</td>
+            <td>InnoDB를 통한 ACID 지원</td>
+        </tr>
+        <tr>
+            <td>기능</td>
+            <td>고급 기능 및 복잡한 데이터 모델링 지원</td>
+            <td>기본적인 RDBMS 기능 지원</td>
+        </tr>
+        <tr>
+            <td>지원</td>
+            <td>활발한 커뮤니티 및 엔터프라이즈 지원</td>
+            <td>Oracle 지원, 커뮤니티 지원</td>
+        </tr>
+        <tr>
+            <td>배포</td>
+            <td>설정이 복잡할 수 있음</td>
+            <td>간편한 설정과 배포</td>
+        </tr>
+    </table>
+
+
+</details>
+
+<details>
+    <summary>챗봇 LLM | <strong>OpenAPI</strong> vs Anthopic API</summary>
+<table border="1">
+    <tr>
+        <th>모델</th>
+        <th>GPT-4o Mini</th>
+        <th>GPT-o1-mini</th>
+        <th>Claude 3.5 Sonnet</th>
+    </tr>
+    <tr>
+        <td>성능</td>
+        <td>고급 언어 작업, 다분야 학습, 복잡한 논리적 추론에 강점</td>
+        <td>추론 기능이 좋아진 모델. 단순작업에 적합하나 생성된지 얼마 안되어 일부 성능 부족.</td>
+        <td>장기 문맥 이해, 자연스러운 언어 생성, 감성적 표현에 강점</td>
+    </tr>
+    <tr>
+        <td>입력 비용 (백만 토큰당)</td>
+        <td>$0.15</td>
+        <td>$3</td>
+        <td>$3</td>
+    </tr>
+    <tr>
+        <td>출력 비용 (백만 토큰당)</td>
+        <td>$0.60</td>
+        <td>$12</td>
+        <td>$15</td>
+    </tr>
+    <tr>
+        <td>응답 속도</td>
+        <td>2.7초</td>
+        <td>9초</td>
+        <td>4.5초</td>
+    </tr>
+    <tr>
+        <td>멀티모달 지원</td>
+        <td>텍스트, 이미지</td>
+        <td>텍스트, 이미지</td>
+        <td>텍스트, 이미지</td>
+    </tr>
+    <tr>
+        <td>컨텍스트 길이</td>
+        <td>128,000 토큰</td>
+        <td>128,000 토큰</td>
+        <td>200,000 토큰</td>
+    </tr>
+</table></strong>
+
+<p><strong>의사결정:</strong> 비용 효율성, 응답 속도, 간단한 응답이 우리가 사용하는 기술 요구 사항인 점을 고려했을 때, 
+    <span style="color: orange; font-weight: bold;">GPT-o1-mini</span> 와 
+    <span style="color: orange; font-weight: bold;">Claude 3.5 Sonnet</span> 보다 
+    <span style="color: orange; font-weight: bold;">GPT-4o-mini</span> 모델을 선택하는 것이 합리적이라고 판단하여 선택하게 되었습니다.
+</p>
+
+</table>
+</details>
+<details>
+    <summary>LLM 기반 학습자료 생성 | 멀티 에이전트 vs <strong>	
+프롬프트 엔지니어링 </strong></summary>
+<table border="1">
+    <tr>
+        <th>항목</th>
+        <th>멀티에이전트 구조</th>
+        <th>프롬프트 체인</th>
+    </tr>
+    <tr>
+        <td>구현 복잡도</td>
+        <td>
+            - 각 단계별 독립적 에이전트 설계 필요<br>
+            - 에이전트 간 데이터 연계 및 API 설계 필요<br>
+            - 학습 곡선이 높음
+        </td>
+        <td>
+            - 단일 LLM 컨텍스트에서 프롬프트 최적화<br>
+            - 추가 설계 없이 빠르게 적용 가능
+        </td>
+    </tr>
+    <tr>
+        <td>비용 효율성</td>
+        <td>
+            - 특정 단계에서 Function Calling 사용 가능<br>
+            - 초기 개발 비용과 관리 비용이 큼
+        </td>
+        <td>
+            - 초기 비용 낮음<br>
+            - 대규모 데이터 처리 시 비용 증가 가능성 있음
+        </td>
+    </tr>
+    <tr>
+        <td>확장성과 유지보수</td>
+        <td>
+            - 새로운 학습 단계나 기능 추가에 유리<br>
+            - 복잡도가 높아질수록 유지보수 어려움
+        </td>
+        <td>
+            - 초기 유지보수 간단<br>
+            - 새로운 역할 추가 시 프롬프트 수정으로 간단히 적용<br>
+            - 학습 단계 증가 시 프롬프트 관리 복잡성 증가 가능성
+        </td>
+    </tr>
+    <tr>
+        <td>프로젝트 완료 가능성</td>
+        <td>
+            - 마감 기한 내 완벽한 구현 부담 큼<br>
+            - 높은 유연성과 효율성 제공 가능
+        </td>
+        <td>
+            - 구현 속도 빠름<br>
+            - 단기 프로젝트에 적합
+        </td>
+    </tr>
+    <tr>
+        <td>장점</td>
+        <td>
+            - 독립적이고 유연한 구조 제공<br>
+            - 확장성 및 효율성 우수
+        </td>
+        <td>
+            - 구현 속도 빠름<br>
+            - 단기 프로젝트에 적합
+        </td>
+    </tr>
+    <tr>
+        <td>단점</td>
+        <td>
+            - 높은 초기 개발 비용과 학습 필요<br>
+            - 시간 제약 내 구현 어려움<br>
+            - 에이전트 수만큼 레이턴시 증가 가능
+        </td>
+        <td>
+            - 확장성과 유연성 제한<br>
+            - 복잡한 기능 추가 시 프롬프트 수정 필요<br>
+            - 멀티에이전트가 효율적으로 풀 수 있는 문제에서 성능이 떨어질 수 있음
+        </td>
+    </tr>
+</table>
+<p>
+    최종적으로, <span style="color: orange; font-weight: bold;">프로젝트를 성공적으로 완료</span>하기 위해 
+    <span style="color: orange; font-weight: bold;">프롬프트 체인</span> 방식을 선택했습니다. 
+    <span style="color: orange; font-weight: bold;">프롬프트 체인</span>은 
+    <span style="color: orange; font-weight: bold;">단일 LLM 내에서 프롬프트를 통해 작업 단계를 연결</span>하는 방식으로, 
+    이론, 실습, 과제, 회고 등 각 단계를 빠르게 처리할 수 있도록 설계되었습니다. 
+    이는 <span style="color: orange; font-weight: bold;">빠른 구현과 초기 비용 절감</span>이라는 장점이 있지만, 
+    장기적으로 확장성과 유연성의 부족이라는 한계를 가질 수 있음을 인지하고 있습니다.
+</p>
+<p>
+    따라서, 시스템이 안정화되고 추가적인 리소스와 시간이 확보된다면, 
+    멀티에이전트 구조를 도입하여 학습 단계를 더욱 유기적으로 연결하고, 
+    전반적인 <strong>효율성을 강화</strong>할 계획입니다.
+</p>
+</details>
+
+### 🖋️ 주요 아키텍처
+<details>
+    <summary> 프로젝트 아키텍처 </summary>
+
+![서비스 아키텍처](서비스아키텍처.png)
+</details>
+
+<details>
+    <summary> 와이어프레임 </summary>
+
+![와이어프레임](와이어프레임.png)
+</details>
+
+<details>
+    <summary> ERD </summary>
+</details>
+
+
+### 💡 주요 기능
+#### LLM을 활용한 교육 콘텐츠 생성
+- 이론/실습/과제/회고 각 단계별 맞춤 컨텐츠 생성
+- 각 학습 단계에 특화된 LLM 모듈 구현 (theory_llm.py, practice_llm.py, assignment_llm.py)
+- 컨텐츠 품질 관리를 위한 사전 생성 방식 채택
+#### LangChain 기반 학습 분석 시스템
+- 과제 답안 자동 분석 시스템 (assignment_analysis_agent.py)
+- 실습 결과 평가 시스템 (practice_analysis_agent.py)
+- 개인화된 피드백 생성 파이프라인
+#### 통합 학습 관리 시스템
+
+- 학습 진도 추적 시스템 (roadmaps)
+- 개인화된 학습 경로 관리
+- 학습 데이터 분석 및 저장
+#### 프로그래밍 용어 사전 챗봇
+- 실시간 프로그래밍 용어 검색 및 설명
+- 대화형 인터페이스를 통한 개념 설명
+
+
+
+
+
+### 🗝️ 트러블슈팅
+<details>
+<summary>강예진</summary>
+</details>
+
+<details>
+<summary>강성민</summary>
+</details>
+
+<details>
+<summary>정재혁</summary>
+**장고 정적 파일 로드 문제**
+1. 상황 설명
+Django 프로젝트에서 템플릿을 작성하던 중 다음과 같은 오류가 발생했다:
+```
+TemplateSyntaxError at /api/courses/practice/input_output/
+Invalid block tag on line 6: 'static', expected 'endblock'. Did you forget to register or load this tag?
+```
+2. 원인
+정적 파일을 로드하기 위해 `{% static %}`를 사용하려면 템플릿 상단에 `{% load static %}`가 있어야 한다.
+3. 해결
+  ```html
+  {% load static %}
+  <!DOCTYPE html>
+  <html>
+  <head>
+```
+
+</details>
+
+### 📂 프로젝트 구조
 ```
 Codeve/
 │
-├── accounts/             # 사용자 및 인증 관리
-│   ├── templates/accounts/ # 회원가입, 로그인 페이지
-│   ├── models.py         # User, Authentication 관련 모델
-│   ├── views.py          # 로그인, 회원가입 등 인증 관련 엔드포인트
-│   ├── serializers.py    # API 데이터 직렬화
-│   └── urls.py           # accounts 관련 엔드포인트 라우팅
+├── .github/                # GitHub 관련 설정 파일
 │
-├── courses/              # 강좌 및 학습 관리
-│   ├── templates/courses/ # 강좌 페이지
-│   ├── models.py         # Course, Lesson, Assignment 관련 모델
-│   ├── views.py          # 강좌 CRUD 및 퀴즈 관련 엔드포인트
-│   ├── serializers.py    # 강좌/학습 데이터 직렬화
-│   └── urls.py           # courses 관련 엔드포인트 라우팅
+├── accounts/               # 사용자 계정 관리
+│   ├── templates/accounts  # 계정 관련 템플릿
+│   ├── models.py           # User, SocialAccount 모델
+│   ├── views.py            # 로그인/회원가입 등 계정 관련 뷰
+│   ├── serializers.py      # 사용자 데이터 직렬화
+│   └── urls.py             # accounts 관련 URL 라우팅
 │
-├── roadmaps/             # 학습 경로 관리
-│   ├── templates/roadmaps/ # 학습 경로 페이지
-│   ├── models.py         # Roadmap 및 Step 관련 모델
-│   ├── views.py          # 학습 경로 CRUD 및 유저 진행 상황 처리
-│   ├── serializers.py    # 학습 경로 데이터 직렬화
-│   └── urls.py           # roadmaps 관련 엔드포인트 라우팅
+├── courses/                # 이론, 실습, 과제, 회고 관리
+│   ├── agents/              # AI 분석 에이전트 모듈
+│   │   ├── base_agent.py          # 에이전트 기본 클래스
+│   │   ├── practice_analysis_agent.py    # 실습 분석 에이전트
+│   │   └── assignment_analysis_agent.py  # 과제 분석 에이전트
+│   │
+│   ├── llm/                 # LLM 컨텐츠 생성 모듈
+│   │   ├── base_llm.py           # LLM 기본 클래스
+│   │   ├── theory_llm.py         # 이론 컨텐츠 생성
+│   │   ├── practice_llm.py       # 실습 문제 생성
+│   │   ├── assignment_llm.py     # 과제 생성
+│   │   └── reflection_llm.py     # 회고 가이드 생성
+│   │
+│   ├── scripts/             # 유틸리티 스크립트
+│   │   └── assignment_tools.py    # 과제 관리 도구
+│   │
+│   ├── config/              # 설정 파일
+│   │   └── constants.py          # 상수 및 설정값
+│   │
+│   ├── data/                # 학습 데이터 저장소
+│   │   └── topics/               # 주제별 학습 자료
+│   │
+│   ├── templates/           # 템플릿 파일
+│   │   ├── courses/              # 코스 관련 템플릿
+│   │   └── practice/             # 실습 관련 템플릿
+│   │
+│   ├── models.py            # 코스 데이터베이스 모델
+│   ├── views.py            # 코스 뷰 로직 (API & 렌더링)
+│   ├── urls.py             # 코스 URL 라우팅
+│   └── serializers.py      # API 시리얼라이저 
 │
-├── communities/          # 커뮤니티 기능
-│   ├── templates/communities/ # 커뮤니티 페이지
-│   ├── models.py         # Post, Comment 모델
-│   ├── views.py          # 게시글, CRUD 처리
-│   ├── serializers.py    # 데이터 직렬화
-│   └── urls.py           # community 관련 엔드포인트 라우팅
+├── roadmaps/               # 학습 경로 관리
+│   ├── templates/roadmaps  # 학습 경로 템플릿
+│   ├── models.py           # Roadmap, Step 모델
+│   ├── views.py            # 학습 경로 CRUD 및 진행 상황
+│   ├── serializers.py      # 학습 경로 데이터 직렬화
+│   └── urls.py             # 로드맵 관련 URL 라우팅
 │
-├── ai_services/          # AI 관련 기능
-│   ├── templates/ai_services/ # AI 서비스 페이지
-│   ├── gpt_chatbot.py    # GPT 기반 Python 학습 챗봇
-│   ├── rag_chatbot.py    # RAG 기반 챗봇
-│   └── utils.py          # AI 서비스 관련 유틸리티 함수
+├── communities/            # 커뮤니티 기능
+│   ├── templates/communities/ # 커뮤니티 템플릿
+│   ├── models.py           # Post 모델
+│   ├── views.py            # 게시글 CRUD
+│   ├── serializers.py      # 커뮤니티 데이터 직렬화
+│   └── urls.py             # 커뮤니티 관련 URL 라우팅
 │
-├── performances/         # 성과 관리
-│   ├── templates/performances/ # 성과 관리 페이지
-│   ├── models.py         # UserPerformance, Performance 관련 모델
-│   ├── views.py          # 성과 관리 API 엔드포인트
-│   ├── serializers.py    # 데이터 직렬화
-│   └── urls.py           # performance 관련 엔드포인트 라우팅
+├── chatbot/                # AI 기능
+│   ├── templates/chatbots  # AI 서비스 템플릿
+│   ├── models.py           # GPT 기반 Python 학습 챗봇
+│   ├── views.py            # 챗봇 관련 뷰뷰
+│   ├── serializers.py      # 챗봇 데이터터 직렬화
+│   └── urls.py             # AI 유틸리티 함수
 │
-├── Codeve/              # 프로젝트 설정
-│   ├── __init__.py      # Python 패키지 선언
-│   ├── asgi.py          # ASGI 설정
-│   ├── settings.py      # Django 설정 파일
-│   ├── urls.py          # 전역 URL 라우팅
-│   └── wsgi.py          # WSGI 설정
+├── Codeve/                 # 프로젝트 설정
+│   ├── __init__.py         # Python 패키지 선언
+│   ├── asgi.py             # ASGI 설정
+│   ├── settings.py         # Django 설정
+│   ├── urls.py             # 메인 URL 라우팅
+│   └── wsgi.py             # WSGI 설정
 │
-├── manage.py            # Django 관리 스크립트
-└── requirements.txt     # 프로젝트 의존성 목록
+├── templates/base          # 전역 템플릿
+├── .gitignore              # Git 제외 파일 설정
+├── Dockerfile              # Docker 설정 파일
+├── manage.py               # Django 관리 스크립트
+├── requirements.txt        # 프로젝트 의존성
+└── README.md               # 프로젝트 설명 및 실행 가이드
+
+
 ```
 
-### 기술 스택
-| **분류** | **사용 기술** |
-| --- | --- |
-| **프로그래밍 언어** | Python, JavaScript |
-| **백엔드 프레임워크** | Django REST Framework (DRF) |
-| **프론트엔드** | Django 템플릿, Tailwind CSS 또는 Bootstrap |
-| **데이터베이스** | PostgreSQL |
-| **AI 및 분석 도구** | OpenAI GPT API, LangChain, FAISS |
-| **협업 도구** | Google Docs, GitHub, Notion, Slack |
+### ER 다이어그램
+(이미지로 넣기)
+
+
+### 📕 API 엔드포인트
+[API 명세](https://www.notion.so/teamsparta/v2-3a35ccd6631543c88d7738d2b3a5ebbc?pvs=4#1742dc3ef51481828994f2c1dd4c0b25)
+### 📗 SA 문서
+[팀 메타몽 SA 문서](https://www.notion.so/teamsparta/SA-v2-5e3a147b921b43fd87ff2ab774d8c06f)
