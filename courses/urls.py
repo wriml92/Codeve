@@ -23,11 +23,10 @@ urlpatterns = [
     path('theory/<str:topic_id>/', views.theory_lesson_detail, name='theory-lesson-detail'),
     path('practice/', views.practice_view, name='practice'),
     path('practice/<str:topic_id>/', views.practice_view, name='practice-detail'),
-    path('practice/<str:topic_id>/submit/', views.submit_practice, name='submit-practice'),
+    path('practice/<str:topic_id>/submit/', csrf_exempt(views.submit_practice), name='submit-practice'),
     path('assignment/', views.assignment_view, name='assignment'),
     path('assignment/<str:topic_id>/', views.assignment_view, name='assignment-detail'),
     path('reflection/', views.reflection_view, name='reflection'),
     path('complete-topic/<str:topic_id>/', views.complete_topic, name='complete-topic'),
     path('resume-learning/', views.resume_learning, name='resume-learning'),
-    path('assignment/submit/<str:topic_id>/', csrf_exempt(views.submit_assignment), name='submit-assignment'),
 ]
