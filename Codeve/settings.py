@@ -121,7 +121,7 @@ GOOGLE_OAUTH2_REDIRECT_URI = 'https://codeve.site/accounts/google/callback/' # �
 # 깃허브 OAuth2 설정 (Github OAuth2 Settings)
 # ------------------------------------------------------------------------------
 GITHUB_OAUTH2_KEY = os.getenv('SOCIAL_AUTH_GITHUB_OAUTH2_KEY')
-GITHUB_OAUTH2_SECRET = os.getenv('SOCIAL_AUTH_GITHUB_OAUTH2_KEY')
+GITHUB_OAUTH2_SECRET = os.getenv('SOCIAL_AUTH_GITHUB_OAUTH2_SECRET')
 GITHUB_OAUTH2_REDIRECT_URI = 'https://codeve.site/accounts/github/callback/' # 배포용
 # GITHUB_OAUTH2_REDIRECT_URI = 'http://127.0.0.1:8000/accounts/github/callback/' # LOCAL 전용
 # GITHUB_OAUTH2_REDIRECT_URI = 'http://localhost:8000/accounts/github/callback/' # LOCAL 전용
