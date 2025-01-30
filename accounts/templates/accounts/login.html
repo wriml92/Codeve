@@ -92,11 +92,51 @@
     </div>
 
     <div class="mt-6">
-        <a href="{% url 'accounts:google-login' %}"
-            class="w-full flex items-center justify-center px-6 py-3 border border-gray-300 shadow-sm rounded-xl text-gray-700 bg-white hover:bg-gray-50 hover:shadow-md transform hover:-translate-y-0.5 transition-all duration-200">
-            <img src="https://www.google.com/favicon.ico" alt="Google logo" class="h-5 w-5 mr-3">
-            <span class="font-medium">Google로 로그인</span>
-        </a>
+        <button type="button" onclick="location.href='{% url 'accounts:google-login' %}'"
+                class="btn w-full px-4 py-3 bg-white border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors duration-200">
+            <div class="btn__content flex items-center justify-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" fill="none" viewBox="0 0 21 21">
+                    <path fill="#4285F4" d="M18.18 10.398c0-.567-.05-1.113-.145-1.636H10.5v3.094h4.306a3.68 3.68 0 0 1-1.597 2.415v2.007h2.586c1.512-1.393 2.385-3.443 2.385-5.88Z"/>
+                    <path fill="#34A853" d="M10.5 18.216c2.16 0 3.97-.716 5.294-1.938l-2.585-2.007c-.717.48-1.633.763-2.71.763-2.083 0-3.847-1.407-4.476-3.298H3.351v2.073a7.997 7.997 0 0 0 7.149 4.407Z"/>
+                    <path fill="#FBBC05" d="M6.024 11.738c-.16-.48-.251-.993-.251-1.52 0-.528.09-1.04.25-1.52V6.625H3.352a7.997 7.997 0 0 0-.851 3.593c0 1.29.31 2.512.85 3.592l2.674-2.072Z"/>
+                    <path fill="#EA4335" d="M10.5 5.399c1.174 0 2.229.403 3.058 1.196L15.852 4.3c-1.385-1.29-3.196-2.083-5.352-2.083a7.997 7.997 0 0 0-7.15 4.407l2.673 2.073c.63-1.891 2.393-3.298 4.477-3.298Z"/>
+                </svg>
+                <span class="font-medium text-gray-700">구글로 시작하기</span>
+            </div>
+        </button>
+    </div>
+    <div class="mt-6">
+        <button type="button" onclick="location.href='{% url 'accounts:github-login' %}'"
+            class="btn w-full px-4 py-3 bg-[#24292F] text-white border border-[#24292F] rounded-xl hover:bg-[#2F3337] transition-colors duration-200">
+        <div class="btn__content flex items-center justify-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" fill="none" viewBox="0 0 21 21">
+            <path fill="white" fill-rule="evenodd" d="M10.5 3a7.5 7.5 0 0 0-2.371 14.615c.375.07.513-.163.513-.362 0-.178-.007-.652-.01-1.28-2.089.455-2.53-1.007-2.53-1.007-.341-.868-.833-1.099-.833-1.099-.682-.466.051-.456.051-.456.754.053 1.15.774 1.15.774.67 1.148 1.757.816 2.185.624.068-.486.262-.816.477-1.003-1.668-.19-3.422-.834-3.422-3.713 0-.82.293-1.49.774-2.015-.078-.19-.335-.954.073-1.99 0 0 .63-.202 2.066.77A7.216 7.216 0 0 1 10.5 6.32a7.23 7.23 0 0 1 1.892.254c1.435-.972 2.064-.77 2.064-.77.41 1.036.152 1.8.075 1.99.482.525.774 1.195.774 2.015 0 2.885-1.757 3.521-3.43 3.708.27.232.51.69.51 1.39 0 1.003-.009 1.813-.009 2.058 0 .2.135.435.516.361A7.5 7.5 0 0 0 10.5 3Z" clip-rule="evenodd"/>
+        </svg>
+        <span class="font-medium">깃허브로 시작하기</span>
+    </div>
+</button>
+    </div>
+    <div class="mt-6">
+        <button type="button" onclick="location.href='{% url 'accounts:naver-login' %}'"
+                class="btn w-full px-4 py-3 bg-[#03C75A] text-white rounded-xl hover:bg-[#02B351] transition-colors duration-200">
+            <div class="btn__content flex items-center justify-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" fill="none" viewBox="0 0 21 21">
+                    <path fill="#fff" d="M4 16.717h4.377V9.98l4.203 6.737H17v-13h-4.377v6.737l-4.16-6.737H4v13Z"/>
+                </svg>
+                <span class="font-medium">네이버로 시작하기</span>
+            </div>
+        </button>
+    </div>
+    <div class="mt-6">
+        <button type="button" onclick="location.href='{% url 'accounts:kakao-login' %}'" 
+                class="btn w-full px-4 py-3 bg-[#FEE500] rounded-xl hover:bg-[#FDD835] transition-colors duration-200">
+            <div class="btn__content flex items-center justify-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" fill="#3C1E1E" viewBox="0 0 21 21">
+                    <path fill="current" d="M10.5 3.217c4.514 0 8 2.708 8 6.004 0 3.758-4.045 6.184-8 5.892-1.321-.093-1.707-.17-2.101-.23-1.425.814-2.728 2.344-3.232 2.334-.325-.19.811-2.896.533-3.114-.347-.244-3.157-1.329-3.2-4.958 0-3.199 3.486-5.928 8-5.928Z"/>
+                </svg>
+                <span class="font-medium text-[#3C1E1E]">카카오로 시작하기</span>
+            </div>
+        </button>
     </div>
 </div>
 

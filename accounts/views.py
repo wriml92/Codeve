@@ -198,7 +198,7 @@ class LogoutView(APIView):
 
 def google_login(request):
     return redirect(
-        f"{settings.GOOGLE_REDIRECT}?"
+        f"https://accounts.google.com/o/oauth2/v2/auth?"
         f"client_id={settings.GOOGLE_OAUTH2_KEY}&"
         f"response_type=code&"
         f"redirect_uri={settings.GOOGLE_OAUTH2_REDIRECT_URI}&"
@@ -269,6 +269,249 @@ def google_callback(request):
     login(request, user)
     return redirect('main')
 
+
+#-----------------
+# 깃허브
+#-----------------
+
+def github_login(request):
+    return redirect(
+        f"https://github.com/login/oauth/authorize?"
+        f"client_id={settings.GITHUB_OAUTH2_KEY}&"
+        f"user:emailstate=state_parameter&"
+        f"redirect_uri={settings.GITHUB_OAUTH2_REDIRECT_URI}&"
+        f"scope=read:user"
+    )
+
+def github_callback(request):
+    code = request.GET.get("code")
+
+    response = requests.post(
+        url="https://github.com/login/oauth/access_token",
+        headers={"Accept": "application/json"},
+        data={
+            "client_id": settings.GITHUB_OAUTH2_KEY,
+            "client_secret": settings.GITHUB_OAUTH2_SECRET,
+            "code": code,
+            "redirect_uri": settings.GITHUB_OAUTH2_REDIRECT_URI,
+        },
+    )
+    token_req_json = response.json()
+
+    error = token_req_json.get("error")
+    if error:
+        raise serializers.ValidationError({"error": f"Github Token Error: {error}"})
+
+    github_access_token = token_req_json.get("access_token")
+
+    email_response = requests.get(
+        f"https://api.github.com/user",
+        headers={
+            "Authorization": f"Bearer {github_access_token}"
+        }
+        
+    )
+    res_status = email_response.status_code
+
+    if res_status != 200:
+        raise serializers.ValidationError({"error": "Bad Request: Invalid response status from server."})
+
+    email_res_json = email_response.json()
+
+    user_id = email_res_json.get("id")
+    email = email_res_json.get("email")
+
+    if not user_id or not email:
+        raise serializers.ValidationError({"error": "Invalid user information from Github."})
+
+    try:
+        social_account = SocialAccount.objects.get(
+            provider="github",
+            social_id=user_id
+        )
+        user = social_account.user
+        social_account.access_token = github_access_token
+        social_account.save()
+
+    except SocialAccount.DoesNotExist:
+        if User.objects.filter(email=email).exists():
+            user = User.objects.get(email=email)
+        else:
+            username = generate_unique_username(email)
+            user = User.objects.create_user(
+                email=email,
+                username=username,
+                google_id=user_id,
+                is_email_verified=True
+            )
+        SocialAccount.objects.create(
+            user=user,
+            provider="github",
+            social_id=user_id,
+            access_token=github_access_token
+        )
+
+    login(request, user)
+    return redirect('main')
+
+
+#-----------------
+# 네이버
+#-----------------
+def naver_login(request):
+    return redirect(
+        f"https://nid.naver.com/oauth2.0/authorize?"
+        f"response_type=code&"
+        f"client_id={settings.NAVER_OAUTH2_KEY}&"
+        f"state=state_parameter&"
+        f"redirect_uri={settings.NAVER_OAUTH2_REDIRECT_URI}"
+    )
+
+
+def naver_callback(request):
+    code = request.GET.get("code")
+    state = request.GET.get("state")
+
+    response = requests.post(
+        url="https://nid.naver.com/oauth2.0/token",
+        headers={"Accept": "application/json"},
+        data={
+            "grant_type": "authorization_code",
+            "client_id": settings.NAVER_OAUTH2_KEY,
+            "client_secret": settings.NAVER_OAUTH2_SECRET,
+            "code": code,
+            "state": state,
+            "redirect_uri": settings.NAVER_OAUTH2_REDIRECT_URI,
+        },
+    )
+    token_req_json = response.json()
+
+    error = token_req_json.get("error", None)
+    if error:
+        raise serializers.ValidationError({"error": f"Naver Token Error: {error}"})
+
+    naver_access_token = token_req_json.get("access_token")
+
+    user_info_response = requests.get(
+        "https://openapi.naver.com/v1/nid/me",
+        headers={"Authorization": f"Bearer {naver_access_token}"}
+    )
+
+    if user_info_response.status_code != 200:
+        raise serializers.ValidationError({"error": "Invalid response from Naver API"})
+
+    user_info_json = user_info_response.json().get("response", {})
+    user_id = user_info_json.get("id")
+    email = user_info_json.get("email")
+
+    if not user_id or not email:
+        raise serializers.ValidationError({"error": "Invalid user information from Naver"})
+
+    try:
+        social_account = SocialAccount.objects.get(provider="naver", social_id=user_id)
+        user = social_account.user
+        social_account.access_token = naver_access_token
+        social_account.save()
+
+    except SocialAccount.DoesNotExist:
+        if User.objects.filter(email=email).exists():
+            user = User.objects.get(email=email)
+        else:
+            username = generate_unique_username(email)
+            user = User.objects.create_user(
+                email=email,
+                username=username,
+                is_email_verified=True
+            )
+        SocialAccount.objects.create(
+            user=user,
+            provider="naver",
+            social_id=user_id,
+            access_token=naver_access_token
+        )
+
+    login(request, user)
+    return redirect("main")
+
+
+
+#-----------------
+# 카카오
+#-----------------
+
+
+def kakao_login(request):
+    return redirect(
+        f"https://kauth.kakao.com/oauth/authorize?"
+        f"client_id={settings.KAKAO_OAUTH2_KEY }&"
+        f"response_type=code&"
+        f"redirect_uri={settings.KAKAO_OAUTH2_REDIRECT_URI}"
+    )
+
+def kakao_callback(request):
+    code = request.GET.get("code")
+
+    response = requests.post(
+        url="https://kauth.kakao.com/oauth/token",
+        headers={"Content-Type": "application/x-www-form-urlencoded"},
+        data={
+            "grant_type": "authorization_code",
+            "client_id": settings.KAKAO_OAUTH2_KEY,
+            "client_secret": settings.KAKAO_OAUTH2_SECRET,
+            "code": code,
+            "redirect_uri": settings.KAKAO_OAUTH2_REDIRECT_URI,
+        },
+    )
+
+    token_req_json = response.json()
+
+    error = token_req_json.get("error", None)
+    if error:
+        raise serializers.ValidationError({"error": f"Kakao Token Error: {error}"})
+
+    kakao_access_token = token_req_json.get("access_token")
+
+    user_info_response = requests.get(
+        "https://kapi.kakao.com/v2/user/me",
+        headers={"Authorization": f"Bearer {kakao_access_token}"}
+    )
+
+    if user_info_response.status_code != 200:
+        raise serializers.ValidationError({"error": "Invalid response from Kakao API"})
+
+    user_info_json = user_info_response.json()
+    user_id = user_info_json.get("id")
+    kakao_account = user_info_json.get("kakao_account", {})
+    email = kakao_account.get("email")
+
+    if not user_id or not email:
+        raise serializers.ValidationError({"error": "Invalid user information from Kakao"})
+
+    try:
+        social_account = SocialAccount.objects.get(provider="kakao", social_id=user_id)
+        user = social_account.user
+        social_account.access_token = kakao_access_token
+        social_account.save()
+
+    except SocialAccount.DoesNotExist:
+        if User.objects.filter(email=email).exists():
+            user = User.objects.get(email=email)
+        else:
+            username = generate_unique_username(email)
+            user = User.objects.create_user(
+                email=email,
+                username=username,
+                is_email_verified=True
+            )
+        SocialAccount.objects.create(
+            user=user,
+            provider="kakao",
+            social_id=user_id,
+            access_token=kakao_access_token
+        )
+
+    login(request, user)
+    return redirect("main")
 
 class UserProfileView(generics.RetrieveUpdateAPIView):
     serializer_class = UserProfileSerializer

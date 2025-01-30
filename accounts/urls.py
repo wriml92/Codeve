@@ -5,12 +5,11 @@ from django.urls import reverse_lazy
 
 app_name = 'accounts'
 
+
 urlpatterns = [
     path('signup/', views.SignUpView.as_view(), name='signup'),
     path('login/', views.LoginView.as_view(), name='login'),
     path('logout/', views.LogoutView.as_view(), name='logout'),
-    path('google/login/', views.google_login, name='google-login'),
-    path('google/callback/', views.google_callback, name='google_call_back'),
     path('profile/', views.UserProfileView.as_view(), name='profile'),
     path('password/change/', views.PasswordChangeView.as_view(),
          name='password_change'),
@@ -46,3 +45,16 @@ urlpatterns = [
          ),
          name='password_reset_complete'),
 ]
+
+oauth_urlpatterns = [
+    path('google/login/', views.google_login, name='google-login'),
+    path('google/callback/', views.google_callback, name='google_call_back'),
+    path('github/login/', views.github_login, name='github-login'),
+    path('github/callback/', views.github_callback, name='github_call_back'),
+    path('kakao/login/', views.kakao_login, name='kakao-login'),
+    path('kakao/callback/', views.kakao_callback, name='kakao_call_back'),
+    path('naver/login/', views.naver_login, name='naver-login'),
+    path('naver/callback/', views.naver_callback, name='naver_call_back'),
+]
+
+urlpatterns += oauth_urlpatterns
