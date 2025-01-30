@@ -318,12 +318,12 @@
 <details>
     <summary> 와이어프레임 </summary>
 
-![와이어프레임](./와이어프레임.png)
+![와이어프레임](https://github.com/wriml92/Codeve/issues/41#issue-2821874373)
 </details>
 
 <details>
     <summary> ERD </summary>
-![ERD](./erd-1.png)
+![ERD](https://github.com/wriml92/Codeve/issues/42#issue-2821875536)
 </details>
 
 
