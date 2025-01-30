@@ -318,11 +318,12 @@
 <details>
     <summary> 와이어프레임 </summary>
 
-![와이어프레임](와이어프레임.png)
+![와이어프레임](./와이어프레임.png)
 </details>
 
 <details>
     <summary> ERD </summary>
+![ERD](./erd-1.png)
 </details>
 
 
