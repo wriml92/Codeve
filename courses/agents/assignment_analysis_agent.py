@@ -24,7 +24,7 @@ class AssignmentAnalysisAgent(BaseAgent):
             
         api_key = api_key.strip().strip("'").strip('"').strip()
         self.anthropic = Anthropic(api_key=api_key)
-        super().__init__()
+        super().__init__(llm=self.anthropic)
         self.prompt_template = self.load_prompt('assignment_analysis_prompt.md')
         self.attempts_file = Path(__file__).parent / 'assignment_attempts.json'
         self.max_attempts = 3  # 문제당 최대 시도 횟수
@@ -48,21 +48,26 @@ class AssignmentAnalysisAgent(BaseAgent):
         }
         # 피드백 스타일 설정
         self.feedback_style = {
-            "positive_reinforcement": True,
-            "creativity_praise": True,
-            "encouragement_messages": [
+            "correct_messages": [
+                "정답입니다! 👏",
+                "잘했어요! ⭐",
+                "훌륭해요! 🎉",
+                "완벽해요! ✨",
+                "멋져요! 🌟"
+            ],
+            "incorrect_messages": [
+                "다시 한번 생각해보세요! 💭",
+                "조금 더 고민해볼까요? 🤔",
+                "천천히 다시 읽어보세요! 📖",
+                "다른 관점에서 생각해보세요! 🔍"
+            ],
+            "implementation_messages": [
                 "멋진 시도예요! 🌟",
                 "창의적인 접근이네요! ✨",
                 "자기만의 스타일로 잘 표현했어요! 💫",
                 "예제와 다르지만 훌륭한 해결방법이에요! 🎯",
                 "코드가 잘 작동하네요! 👏",
                 "이런 방식으로 생각하다니 대단해요! 🚀"
-            ],
-            "improvement_suggestions": [
-                "조금 더 발전시켜볼까요? 💪",
-                "이렇게 해보는 건 어떨까요? 💡",
-                "다음 단계로 도전해보세요! 🎯",
-                "새로운 시도를 해보는 건 어떨까요? ✨"
             ]
         }
 
@@ -142,6 +147,18 @@ class AssignmentAnalysisAgent(BaseAgent):
         except Exception as e:
             print(f"제출 횟수 업데이트 중 오류 발생: {str(e)}")
 
+    def _load_answer_data(self, topic_id: str) -> Dict[str, Any]:
+        """정답 데이터 로드"""
+        try:
+            answer_file = self.data_dir / topic_id / 'content' / 'assignments' / 'answers' / 'assignment_answers.json'
+            if not answer_file.exists():
+                raise FileNotFoundError(f'정답 파일을 찾을 수 없습니다: {answer_file}')
+
+            with open(answer_file, 'r', encoding='utf-8') as f:
+                return json.load(f)
+        except Exception as e:
+            raise Exception(f'정답 데이터 로드 중 오류 발생: {str(e)}')
+
     async def analyze(self, assignment_type: str, answer: str, assignment_id: int, topic_id: str, user_id: str) -> Dict[str, Any]:
         """과제 답안 분석"""
         try:
@@ -175,15 +192,18 @@ class AssignmentAnalysisAgent(BaseAgent):
                     'message': attempt_check['error']
                 }
 
-            # 과제 데이터 로드
+            # 과제 데이터와 정답 데이터 로드
             assignment_data = self._load_assignment_data(topic_id)
-            assignment = next((a for a in assignment_data['assignments'] if a['id'] == assignment_id), None)
+            answer_data = self._load_answer_data(topic_id)
             
-            if not assignment:
+            assignment = next((a for a in assignment_data['assignments'] if a['id'] == assignment_id), None)
+            answer_info = next((a for a in answer_data['assignments'] if a['id'] == assignment_id), None)
+            
+            if not assignment or not answer_info:
                 return {'correct': False, 'message': '과제를 찾을 수 없습니다.'}
 
             # LLM을 사용한 답안 분석
-            analysis_result = await self._analyze_with_llm(assignment_type, answer, assignment)
+            analysis_result = await self._analyze_with_llm(assignment_type, answer, assignment, answer_info)
             
             # 제출 횟수 업데이트
             self._update_attempt_count(user_id, topic_id, assignment_id)
@@ -197,75 +217,80 @@ class AssignmentAnalysisAgent(BaseAgent):
         except Exception as e:
             return {'correct': False, 'message': f'채점 중 오류가 발생했습니다: {str(e)}'}
 
-    async def _analyze_with_llm(self, assignment_type: str, answer: str, assignment: Dict) -> Dict[str, Any]:
-        """LLM을 사용한 답안 분석"""
+    async def _analyze_with_llm(self, assignment_type: str, answer: str, assignment: Dict, answer_info: Dict) -> Dict[str, Any]:
+        """답안 분석"""
         try:
-            if assignment_type in ['concept_basic', 'concept_application', 'concept_analysis', 'concept_debug', 'metaphor', 'theory_concept', 'concept_synthesis']:
-                prompt = f"""# 과제 정보
-문제 유형: {assignment_type}
-문제 내용: {assignment['content']}
-제출한 답안: {answer}
-정답: {assignment['correct_answer']}
+            print("\n=== 답안 분석 시작 ===")
+            print(f"과제 유형: {assignment_type}")
+            print(f"제출한 답안: {answer}")
 
-위 정보를 바탕으로 다음을 분석해주세요:
-1. 답안이 정답인가요?
-2. 답안에 대한 구체적인 피드백을 제공해주세요.
-3. 학습자의 이해도를 평가해주세요.
-4. 추가 학습이 필요한 부분이 있다면 제안해주세요."""
-
-            elif assignment_type in ['implementation_playground', 'implementation_modify', 'implementation_creative']:
-                test_cases_str = "\n".join([
-                    f"입력: {tc['input']}, 예상 출력: {tc['output']}"
-                    for tc in assignment['test_cases']
-                ])
-                
-                prompt = f"""# 과제 정보
-문제 유형: {assignment_type}
-문제 내용: {assignment['content']}
-테스트 케이스:
-{test_cases_str}
-
-제출한 코드:
-{answer}
-
-위 정보를 바탕으로 다음을 분석해주세요:
-1. 코드가 문제의 요구사항을 충족하나요?
-2. 코드의 구현 방식과 스타일은 적절한가요?
-3. 개선이 필요한 부분이 있다면 무엇인가요?
-4. 학습자의 코딩 스킬 수준을 평가해주세요."""
-
-            response = await self.anthropic.messages.create(
-                model="claude-3-sonnet-20240229",
-                max_tokens=1024,
-                messages=[{
-                    "role": "user",
-                    "content": prompt
-                }]
-            )
-
-            # LLM 응답 파싱
-            analysis = str(response.content)
-            
             # 객관식 문제의 경우 정답 여부 직접 비교
             if assignment_type in ['concept_basic', 'concept_application', 'concept_analysis', 'concept_debug', 'metaphor', 'theory_concept', 'concept_synthesis']:
-                is_correct = answer == assignment['correct_answer']
+                try:
+                    submitted_answer = int(str(answer).strip())
+                    correct_answer_index = int(answer_info['correct_answer'])
+                    is_correct = submitted_answer == correct_answer_index
+                    
+                    # 선택한 답안과 정답 텍스트 가져오기
+                    choices = assignment.get('choices', [])
+                    if 0 < submitted_answer <= len(choices):
+                        selected_text = choices[submitted_answer - 1]
+                    else:
+                        selected_text = "유효하지 않은 선택"
+                    
+                    print(f"\n정답 비교:")
+                    print(f"제출한 답안 번호: {submitted_answer}")
+                    print(f"정답 번호: {correct_answer_index}")
+                    print(f"선택한 답: {selected_text}")
+                    print(f"정답 여부: {is_correct}")
+                    
+                    # 피드백 메시지 생성
+                    if is_correct:
+                        feedback = random.choice(self.feedback_style['correct_messages'])
+                        analysis = feedback
+                    else:
+                        feedback = random.choice(self.feedback_style['incorrect_messages'])
+                        analysis = feedback
+                        
+                except ValueError:
+                    is_correct = False
+                    analysis = "답안은 1부터 4까지의 숫자여야 합니다."
+                    feedback = analysis
+                    print("답안을 숫자로 변환할 수 없습니다.")
             else:
                 # 구현 문제의 경우 테스트 케이스 실행
-                test_results = self._run_test_cases(answer, assignment['test_cases'])
+                print("\n테스트 케이스 실행 중...")
+                test_results = self._run_test_cases(answer, assignment.get('test_cases', []))
                 is_correct = all(result['passed'] for result in test_results)
+                
+                if is_correct:
+                    analysis = "모든 테스트 케이스를 통과했습니다! 훌륭한 구현입니다."
+                else:
+                    failed_cases = [result for result in test_results if not result['passed']]
+                    analysis = f"{len(failed_cases)}개의 테스트 케이스가 실패했습니다. 다시 시도해보세요."
+                
+                feedback = random.choice(self.feedback_style['implementation_messages']) + "\n\n" + analysis
 
-            # 긍정적인 피드백 선택
-            encouragement = random.choice(self.feedback_style['encouragement_messages'])
-            improvement = random.choice(self.feedback_style['improvement_suggestions'])
+            # 힌트 추가 (2번 이상 틀린 경우)
+            hint = ""
+            if not is_correct and assignment.get('attempts', 0) >= 2:
+                hint = f"\n\n💡 힌트: {answer_info.get('hint', '아직 힌트가 준비되지 않았습니다.')}"
 
-            return {
+            result = {
                 'correct': is_correct,
                 'message': analysis,
-                'feedback': f"{encouragement}\n\n{analysis}\n\n{improvement if not is_correct else ''}",
+                'feedback': feedback + hint,
                 'test_results': test_results if assignment_type in ['implementation_playground', 'implementation_modify', 'implementation_creative'] else None
             }
+            
+            print("\n=== 분석 완료 ===")
+            return result
 
         except Exception as e:
+            print(f"\n!!! 오류 발생 !!!")
+            print(f"답안 분석 중 오류 발생: {str(e)}")
+            import traceback
+            print(f"상세 오류:\n{traceback.format_exc()}")
             return {
                 'correct': False,
                 'message': f'답안 분석 중 오류가 발생했습니다: {str(e)}'
@@ -274,11 +299,12 @@ class AssignmentAnalysisAgent(BaseAgent):
     def _load_assignment_data(self, topic_id: str) -> Dict[str, Any]:
         """과제 데이터 로드"""
         try:
-            answer_file = self.data_dir / topic_id / 'content' / 'assignment_answers.json'
-            if not answer_file.exists():
-                raise FileNotFoundError(f'과제 정답 파일을 찾을 수 없습니다: {answer_file}')
+            # 올바른 경로로 수정
+            assignment_file = self.data_dir / topic_id / 'content' / 'assignments' / 'data' / 'assignment.json'
+            if not assignment_file.exists():
+                raise FileNotFoundError(f'과제 파일을 찾을 수 없습니다: {assignment_file}')
 
-            with open(answer_file, 'r', encoding='utf-8') as f:
+            with open(assignment_file, 'r', encoding='utf-8') as f:
                 return json.load(f)
         except Exception as e:
             raise Exception(f'과제 데이터 로드 중 오류 발생: {str(e)}')
@@ -451,4 +477,23 @@ class AssignmentAnalysisAgent(BaseAgent):
         # 마무리 격려 메시지
         feedback.append("\n💫 계속해서 이렇게 자신만의 방식으로 코드를 작성해보세요! 여러분의 창의성이 빛나고 있어요.")
         
-        return "\n".join(feedback) 
+        return "\n".join(feedback)
+
+    async def process(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        """BaseAgent의 추상 메서드 구현"""
+        try:
+            # analyze 메서드 호출
+            result = await self.analyze(
+                assignment_type=data.get('assignment_type'),
+                answer=data.get('answer'),
+                assignment_id=data.get('assignment_id'),
+                topic_id=data.get('topic_id'),
+                user_id=data.get('user_id')
+            )
+            return result
+        except Exception as e:
+            print(f"과제 처리 중 오류 발생: {str(e)}")
+            return {
+                'success': False,
+                'error': f'과제 처리 중 오류가 발생했습니다: {str(e)}'
+            } 
