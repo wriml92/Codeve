@@ -22,6 +22,7 @@ import re
 from asgiref.sync import sync_to_async
 from .scripts.assignment_tools import AssignmentDataManager, CodeSubmissionAnalyzer, CodeAnalysisResult
 from .llm.practice_llm import PracticeAnalysisAgent
+from .agents.assignment_analysis_agent import AssignmentAnalysisAgent
 from datetime import datetime
 from django.contrib.auth import get_user_model
 from django.core.files.uploadedfile import UploadedFile
@@ -495,12 +496,6 @@ def assignment_view(request, topic_id=None):
                 'assignments': assignment_data.get('assignments', [])
             }
 
-        # 렌더링된 HTML 확인
-        from django.template.loader import render_to_string
-        rendered_html = render_to_string(
-            'courses/assignment.html', context, request)
-        print(f"렌더링된 HTML (일부): {rendered_html[:1000]}")  # 처음 1000자만 출력
-
         return render(request, 'courses/assignment.html', context)
 
     except Exception as e:
@@ -671,3 +666,87 @@ def save_file_chunks(file_obj: UploadedFile, temp_file_path: str) -> None:
         print(f"이미지 변환 중 오류 발생: {str(e)}")
         raise
     print("save_file_chunks 완료")
+
+@async_login_required
+@csrf_exempt
+@require_POST
+async def submit_assignment(request, topic_id):
+    """과제 제출 처리"""
+    try:
+        print("\n=== 과제 제출 처리 시작 ===")
+        print(f"Topic ID: {topic_id}")
+        print(f"Request method: {request.method}")
+        print(f"Request body: {request.body}")
+        
+        # 요청 데이터 파싱
+        try:
+            data = json.loads(request.body)
+            assignment_type = data.get('type')
+            answer = data.get('answer')
+            assignment_id = data.get('assignment_id')
+            
+            print(f"과제 유형: {assignment_type}")
+            print(f"답안: {answer}")
+            print(f"과제 ID: {assignment_id}")
+            
+            if not all([assignment_type, answer, assignment_id]):
+                return await async_json_response({
+                    'success': False,
+                    'error': '필수 파라미터가 누락되었습니다.'
+                }, status=400)
+                
+        except json.JSONDecodeError as e:
+            print(f"JSON 파싱 오류: {str(e)}")
+            return await async_json_response({
+                'success': False,
+                'error': '잘못된 요청 형식입니다.'
+            }, status=400)
+
+        # 사용자 ID 가져오기
+        try:
+            print("사용자 ID 가져오기 시도...")
+            user_id = await get_user_id_from_request(request)
+            print(f"가져온 사용자 ID: {user_id}")
+        except Exception as e:
+            print(f"사용자 ID 가져오기 실패: {str(e)}")
+            return await async_json_response({
+                'success': False,
+                'error': '사용자 인증이 필요합니다.'
+            }, status=401)
+
+        # 과제 분석 에이전트 초기화 및 처리
+        try:
+            print("분석 에이전트 초기화 및 처리 시작...")
+            agent = AssignmentAnalysisAgent()
+            result = await agent.process({
+                'assignment_type': assignment_type,
+                'answer': answer,
+                'assignment_id': assignment_id,
+                'topic_id': topic_id,
+                'user_id': user_id
+            })
+            print(f"분석 결과: {result}")
+            
+            return await async_json_response({
+                'success': True,
+                **result
+            })
+            
+        except Exception as e:
+            print(f"분석 처리 중 오류 발생: {str(e)}")
+            import traceback
+            print(f"상세 오류:\n{traceback.format_exc()}")
+            return await async_json_response({
+                'success': False,
+                'error': f'과제 분석 중 오류가 발생했습니다: {str(e)}'
+            }, status=500)
+
+    except Exception as e:
+        print(f"과제 제출 처리 중 오류 발생: {str(e)}")
+        print(f"오류 상세: {type(e).__name__}")
+        import traceback
+        print(f"스택 트레이스:\n{traceback.format_exc()}")
+        return await async_json_response({
+            'success': False,
+            'error': f'서버 오류가 발생했습니다: {str(e)}'
+        }, status=500)
