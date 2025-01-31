@@ -1,5 +1,5 @@
 # CODEVE 프로젝트
-사이트 바로가기: http://codeve.site
+사이트 바로가기: https://codeve.site
 
 ![로고](https://s3.ap-northeast-2.amazonaws.com/codeve.site/static/images/codeve.png)
 ![로고](https://images.velog.io/images/hwanghye/post/4bea2bd0-0fd5-46d1-9941-6370526ffb7e/sparta.png)
